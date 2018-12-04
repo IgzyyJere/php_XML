@@ -1,7 +1,7 @@
 <?php
 
 /** create XML file */
-$mysqli = new mysqli("localhost", "root", "", "nekretnine");
+$mysqli = new mysqli("localhost", "root", "", "nekretninedb");
 mysqli_set_charset($mysqli,"utf8");
 
 /* check connection */
@@ -74,14 +74,14 @@ SELECT vivozemljista.id, grupe.naziv AS 'vrsta', grupe.vrsta AS 'status', vivoze
 vivozemljista.mikrolokacija, vivozemljista.povrsina, vivozemljista.cijena, vivozemljista.mjesto as 'grad', vivozemljista.adresa, vivozemljista.vlasnickiList, vivozemljista.sirina,
 vivozemljista.duzina, vivozemljista.napomena, vivozemljista.struja, vivozemljista.voda, vivozemljista.kanalizacija, vivozemljista.plin, vivozemljista.telefon,
 vivozemljista.gradevinska, kvartovi.naziv AS 'kvart',  vivozemljista.datoteke, vivozemljista.lat, vivozemljista.lon, vivozemljista.agent, vivozemljista.mjesto  AS 'naslov',
-vivozemljista.moreUdaljenost, vivozemljista.morePogled, teksttransferzemlja.tekst, sliketransfer.slk1, sliketransfer.slk2,
-sliketransfer.slk3, sliketransfer.slk4, sliketransfer.slk5, sliketransfer.slk6, sliketransfer.slk7
+vivozemljista.moreUdaljenost, vivozemljista.morePogled, teksttransferzemlja.tekst, slikezemljista.slk1, slikezemljista.slk2,
+slikezemljista.slk3, slikezemljista.slk4, slikezemljista.slk5, slikezemljista.slk6, slikezemljista.slk7
 FROM vivozemljista LEFT JOIN grupe ON vivozemljista.grupa = grupe.id
 LEFT JOIN regije ON vivozemljista.regija = regije.id
 LEFT JOIN zupanije ON vivozemljista.zupanija = zupanije.id
 LEFT JOIN kvartovi ON kvartovi.id = vivozemljista.kvart
 LEFT JOIN teksttransferzemlja ON vivozemljista.id = teksttransferzemlja.spojenoNa
-LEFT JOIN sliketransfer ON sliketransfer.ID_nekrenina = vivozemljista.id
+LEFT JOIN slikezemljista ON slikezemljista.ID_nekrenina = vivozemljista.id
 where vivozemljista.aktivno = 1 AND vivozemljista.id > 320 AND vivozemljista.id < 450;";
 
 //where vivozemljista.aktivno = 1 AND vivozemljista.id < 207;";
@@ -117,7 +117,7 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'nekretnine_zemlja_3.xml';
+   $filePath = 'nekretnine_zemlja_1.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
 //  $dom = new DOMDocument('1.0', 'ISO-8859-1');
@@ -306,29 +306,75 @@ function createXMLfile($nekrsArray){
      $napomena = $dom->createElement('napomena', $nekretninaNap);
      $nekretnina->appendChild($napomena);
 
-      $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
-      $nekretnina-> appendChild($slike1);
 
 
-      $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
-      $nekretnina -> appendChild($slike2);
+     //slike
+     if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/slike/'){
+      $nekretnine_slk1 = '';
+     }else{
+       $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
+     }
+       $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
+     $nekretnina-> appendChild($slike1);
 
 
-      $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
-      $nekretnina -> appendChild($slike3);
+     if($nekretnine_slk2 == 'http://nekretnine-tomislav.hr/slike/'){
+       $nekretnine_slk2 = '';
+     }else{
+         $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
+       }
+       $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
+     $nekretnina -> appendChild($slike2);
 
 
-      $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
-      $nekretnina -> appendChild($slike4);
+     if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/slike/'){
+       $nekretnine_slk3 = '';
+     }else{
+       $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
+       }
+     $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
+     $nekretnina -> appendChild($slike3);
 
-      $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
-      $nekretnina -> appendChild($slike5);
 
-      $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
-      $nekretnina -> appendChild($slike6);
+       if($nekretnine_slk4 == 'http://nekretnine-tomislav.hr/slike/'){
+           $nekretnine_slk4 = '';
+       }else{
+           $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
+       }
+     $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
+     $nekretnina -> appendChild($slike4);
 
-      $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
-      $nekretnina -> appendChild($slike7);
+
+
+     if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/slike/'){
+       $nekretnine_slk5 = '';
+     }else{
+       $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
+     }
+     $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
+     $nekretnina -> appendChild($slike5);
+
+
+     if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/slike/'){
+       $nekretnine_slk6 = '';
+     }else{
+         $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
+     }
+     $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
+     $nekretnina -> appendChild($slike6);
+
+
+     if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/slike/'){
+       $nekretnine_slk7 = '';
+     }else{
+       $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
+     }
+     $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
+     $nekretnina -> appendChild($slike7);
+
+
+
+
 
 
      $Lat = $dom->createElement('lat', $nekretninaLat);

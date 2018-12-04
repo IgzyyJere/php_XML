@@ -1,7 +1,7 @@
 <?php
 
 /** create XML file */
-$mysqli = new mysqli("localhost", "root", "", "nekretnine");
+$mysqli = new mysqli("localhost", "root", "", "nekretninedb");
 mysqli_set_charset($mysqli,"utf8");
 
 /* check connection */
@@ -44,8 +44,6 @@ function mapa($ulicaNaziva_, $broj_, $grad_)
 
 
 }
-
-
 
 
 // $query = "SELECT* FROM grupe";
@@ -140,7 +138,7 @@ function createXMLfile($nekrsArray){
 
       $nekretninaNap  =  $nekrsArray[$i]['napomena'];
 
-      //$nekretninaSlike  =  $nekrsArray[$i]['slike'];
+
       $nekretnine_slk1 =  $nekrsArray[$i]['slk1'];
         $nekretnine_slk2 = $nekrsArray[$i]['slk2'];
           $nekretnine_slk3 = $nekrsArray[$i]['slk3'];
@@ -231,29 +229,73 @@ function createXMLfile($nekrsArray){
      // $nekretnina->appendChild($slike);
 
 
-      $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
-      $nekretnina-> appendChild($slike1);
+
+           if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+            $nekretnine_slk1 = '';
+           }else{
+             $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
+           }
+             $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
+           $nekretnina-> appendChild($slike1);
 
 
-      $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
-      $nekretnina -> appendChild($slike2);
+           if($nekretnine_slk2 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+             $nekretnine_slk2 = '';
+           }else{
+               $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
+             }
+             $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
+           $nekretnina -> appendChild($slike2);
 
 
-      $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
-      $nekretnina -> appendChild($slike3);
+           if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+             $nekretnine_slk3 = '';
+           }else{
+             $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
+             }
+           $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
+           $nekretnina -> appendChild($slike3);
 
 
-      $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
-      $nekretnina -> appendChild($slike4);
+             if($nekretnine_slk4 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                 $nekretnine_slk4 = '';
+             }else{
+                 $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
+             }
+           $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
+           $nekretnina -> appendChild($slike4);
 
-      $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
-      $nekretnina -> appendChild($slike5);
 
-      $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
-      $nekretnina -> appendChild($slike6);
 
-      $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
-      $nekretnina -> appendChild($slike7);
+           if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+             $nekretnine_slk5 = '';
+           }else{
+             $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
+           }
+           $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
+           $nekretnina -> appendChild($slike5);
+
+
+           if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+             $nekretnine_slk6 = '';
+           }else{
+               $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
+           }
+           $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
+           $nekretnina -> appendChild($slike6);
+
+
+           if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+             $nekretnine_slk7 = '';
+           }else{
+             $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
+           }
+           $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
+           $nekretnina -> appendChild($slike7);
+
+
+
+
 
 
      $vrstPonude = $dom->createElement('vrstaPonude', $nekretninaVrstPonude);
@@ -311,4 +353,4 @@ function createXMLfile($nekrsArray){
 
  ?>
 
-  <?print $karta?>
+  <!--?print $karta?-->
