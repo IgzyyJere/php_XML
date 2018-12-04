@@ -170,7 +170,7 @@ function createXMLfile($nekrsArray){
       $nekretnina = $dom->createElement('post');
 
 
-
+  
 
     // $nekretnina->setAttribute('id', "garag".$nekrID);
      $IDNk = $dom-> createElement('id', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);

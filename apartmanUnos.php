@@ -220,6 +220,8 @@ function createXMLfile($nekrsArray){
        $naslovM = $nekrMikrolokacija;
      }
 
+
+
      $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID . ", apartman");
      $nekretnina->appendChild($IDNk);
 

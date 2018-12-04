@@ -201,12 +201,20 @@ function createXMLfile($nekrsArray){
       $nekretnina = $dom->createElement('post');
 
 
+      if($nekretninaNaslov == "" || $nekretninaNaslov == 0){
+        $naslovM = $nekrenineKvart;
+      } else{
+        $naslovM = $nekrMikrolokacija;
+      }
+
+
+
     // $nekretnina->setAttribute('id', "garag".$nekrID);
-     $IDNk = $dom-> createElement('id', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
+     $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID . ", " .$nekrVrsta);
      $nekretnina->appendChild($IDNk);
 
 
-     $naslov  = $dom->createElement('naslov', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
+     $naslov  = $dom->createElement('naslov', $naslovM . " - ".$nekrID . ", " .$nekrVrsta);
      $nekretnina->appendChild($naslov);
 
      $name  = $dom->createElement('vrsta', $nekrVrsta);
@@ -309,7 +317,7 @@ function createXMLfile($nekrsArray){
 
 
      //slike
-     if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/slike/'){
+     if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
       $nekretnine_slk1 = '';
      }else{
        $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
@@ -318,7 +326,7 @@ function createXMLfile($nekrsArray){
      $nekretnina-> appendChild($slike1);
 
 
-     if($nekretnine_slk2 == 'http://nekretnine-tomislav.hr/slike/'){
+     if($nekretnine_slk2 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
        $nekretnine_slk2 = '';
      }else{
          $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
@@ -327,7 +335,7 @@ function createXMLfile($nekrsArray){
      $nekretnina -> appendChild($slike2);
 
 
-     if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/slike/'){
+     if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
        $nekretnine_slk3 = '';
      }else{
        $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
@@ -336,7 +344,7 @@ function createXMLfile($nekrsArray){
      $nekretnina -> appendChild($slike3);
 
 
-       if($nekretnine_slk4 == 'http://nekretnine-tomislav.hr/slike/'){
+       if($nekretnine_slk4 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
            $nekretnine_slk4 = '';
        }else{
            $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
@@ -346,7 +354,7 @@ function createXMLfile($nekrsArray){
 
 
 
-     if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/slike/'){
+     if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
        $nekretnine_slk5 = '';
      }else{
        $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
@@ -355,7 +363,7 @@ function createXMLfile($nekrsArray){
      $nekretnina -> appendChild($slike5);
 
 
-     if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/slike/'){
+     if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
        $nekretnine_slk6 = '';
      }else{
          $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
@@ -364,14 +372,13 @@ function createXMLfile($nekrsArray){
      $nekretnina -> appendChild($slike6);
 
 
-     if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/slike/'){
+     if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
        $nekretnine_slk7 = '';
      }else{
        $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
      }
      $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
      $nekretnina -> appendChild($slike7);
-
 
 
 
