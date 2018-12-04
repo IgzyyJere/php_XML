@@ -92,7 +92,7 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'nekretnine.xml';
+   $filePath = 'garaze.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
 //  $dom = new DOMDocument('1.0', 'ISO-8859-1');
