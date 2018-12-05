@@ -1,7 +1,7 @@
 <?php
 
 /** create XML file */
-$mysqli = new mysqli("localhost", "root", "", "nekretnine");
+$mysqli = new mysqli("localhost", "root", "", "nekretninedb");
 mysqli_set_charset($mysqli,"utf8");
 
 /* check connection */
@@ -29,19 +29,17 @@ function encode_to_utf8_if_needed($string)
 // $query = "SELECT* FROM grupe";
 
 $query = "
-SELECT vivoostalo.id, grupe.naziv AS 'vrsta', grupe.vrsta AS 'status', vivoostalo.regija, regije.naziv, vivoostalo.zupanija, zupanije.nazivZupanije ,vivoostalo.mikrolokacija, vivoostalo.povrsina,
-vivoostalo.cijena,vivoostalo.mjesto, vivoostalo.adresa, vivoostalo.imeIPrezime, vivoostalo.mobitel,
-vivoostalo.minCijena, vivoostalo.maxCijena, vivoostalo.email, vivoostalo.napomena,
-vivoostalo.vrstaPonude, vivoostalo.lat, vivoostalo.lon, vivoostalo.agent, vivoostalo.mjesto  AS 'naslov',
-vivoostalo.tlocrtPDF, vivoostalo.moreUdaljenost, vivoostalo.morePogled, texttransfer.tekst, sliketransfer.slk1, sliketransfer.slk2,
-sliketransfer.slk3, sliketransfer.slk4, sliketransfer.slk5, sliketransfer.slk6, sliketransfer.slk7
+SELECT vivostanovi.id, grupe.naziv as 'vrsta', grupe.vrsta AS 'status',  zupanije.nazivZupanije, vivostanovi.mikrolokacija, vivostanovi.mjesto as 'naslov', vivostanovi.mjesto, vivostanovi.ukupnaPovrsina,
+vivostanovi.cijena, vivostanovi.katValue as 'stan na katu', vivostanovi.ukupnoKat as 'ukupno katova', vivostanovi.brojEtaza, vivostanovi.grijanje,
+vivostanovi.godinaIzgradnjeValue as 'godina izgradnje', vivostanovi.balkonValue, vivostanovi.loggiaValue, vivostanovi.vrtValue as 'vrt', vivostanovi.terasaValue, vivostanovi.lift, vivostanovi.stolarija,
+vivostanovi.alarm, vivostanovi.protupozar, vivostanovi.protuprovala, vivostanovi.parket, vivostanovi.laminat, vivostanovi.klima, vivostanovi.kabel, vivostanovi.satelit, vivostanovi.internet, vivostanovi.rostilj,
+vivostanovi.bazen
 
-FROM vivoostalo LEFT JOIN grupe ON vivoostalo.grupa = grupe.id
-LEFT JOIN texttransfer ON vivoostalo.id = texttransfer.spojenoNa
-LEFT JOIN regije ON vivoostalo.regija = regije.id
-LEFT JOIN zupanije ON vivoostalo.zupanija = zupanije.id
-LEFT JOIN sliketransfer ON sliketransfer.ID_nekrenina = vivoostalo.id
-where vivoostalo.aktivno = 1;";
+from vivostanovi LEFT JOIN grupe ON vivostanovi.grupa = grupe.id
+LEFT JOIN regije ON vivostanovi.regija = regije.id
+LEFT JOIN zupanije ON vivostanovi.zupanija = zupanije.id
+LEFT JOIN kvartovi ON kvartovi.id = vivostanovi.kvart
+where vivostanovi.aktivno = 1;";
 
 
 
@@ -70,7 +68,7 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'nekretnine.xml';
+   $filePath = 'nekretnine_stanovi_1.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
 //  $dom = new DOMDocument('1.0', 'ISO-8859-1');

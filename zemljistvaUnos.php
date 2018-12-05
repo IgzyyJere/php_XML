@@ -82,10 +82,14 @@ LEFT JOIN zupanije ON vivozemljista.zupanija = zupanije.id
 LEFT JOIN kvartovi ON kvartovi.id = vivozemljista.kvart
 LEFT JOIN teksttransferzemlja ON vivozemljista.id = teksttransferzemlja.spojenoNa
 LEFT JOIN slikezemljista ON slikezemljista.ID_nekrenina = vivozemljista.id
-where vivozemljista.aktivno = 1 AND vivozemljista.id > 320 AND vivozemljista.id < 450;";
+where vivozemljista.aktivno = 1 AND vivozemljista.id > 220 AND vivozemljista.id < 320;";
 
 //where vivozemljista.aktivno = 1 AND vivozemljista.id < 207;";
-//where vivozemljista.aktivno = 1 AND vivozemljista.id > 207 AND vivozemljista.id < 220;";
+//where vivozemljista.aktivno = 1 AND vivozemljista.id > 205 AND vivozemljista.id < 220;";
+
+
+
+
 //where vivozemljista.aktivno = 1 AND vivozemljista.id > 220 AND vivozemljista.id < 320;";
 
 
@@ -117,7 +121,7 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'nekretnine_zemlja_1.xml';
+   $filePath = 'nekretnine_zemlja_3.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
 //  $dom = new DOMDocument('1.0', 'ISO-8859-1');
@@ -241,14 +245,17 @@ function createXMLfile($nekrsArray){
      $adresa = $dom->createElement('adresa', $nekretninaAdresa);
      $nekretnina->appendChild($adresa);
 
-     if($nekretninaVlList == 0)   {
-       $nekretninaVlList = "nema";
-     }
-     else {
-       $nekretninaVlList = "ima";
-     }
 
-     $vlasnickiList = $dom -> createElement('vlasnickiList', $nekretninaVlList);
+
+
+
+
+     if($nekretninaVlList == 0)   {
+       $nekretninaVlList = '';
+     }else {
+       $nekretninaVlList = "Vlasnički list";
+     }
+     $vlasnickiList = $dom -> createElement('VlasnickiList', $nekretninaVlList);
      $nekretnina -> appendChild($vlasnickiList);
 
      $sirina = $dom -> createElement('sirina', $nekretninaSirina);
@@ -260,9 +267,9 @@ function createXMLfile($nekrsArray){
 
       //nekrenine struja
      if($nekretninaStruja == 0){
-       $nekretninaStruja = 'nema';
+       $nekretninaStruja = '';
      }else{
-       $nekretninaStruja = 'ima';
+       $nekretninaStruja = 'Uvedena struja';
      }
 
      $struja = $dom -> createElement('struja', $nekretninaStruja);
@@ -271,9 +278,9 @@ function createXMLfile($nekrsArray){
 
      //nekrenine voda
     if($nekretninaVoda == '0'){
-          $nekretninaVoda = 'nema';
+          $nekretninaVoda = '';
     }else{
-          $nekretninaVoda = 'ima';
+          $nekretninaVoda = 'Uvedena voda';
     }
 
      $voda = $dom -> createElement('voda', $nekretninaVoda);
@@ -281,9 +288,9 @@ function createXMLfile($nekrsArray){
 
      //nekrenine kanalizacija
     if($nekreninaKanalizacija == '0'){
-        $nekreninaKanalizacija = 'nema';
+        $nekreninaKanalizacija = '';
     }else{
-        $nekreninaKanalizacija = 'ima';
+        $nekreninaKanalizacija = 'Kanalizacija';
     }
 
      $kanalizacija = $dom -> createElement('kanalizacija', $nekreninaKanalizacija);
@@ -291,9 +298,9 @@ function createXMLfile($nekrsArray){
 
      //nekrenine plin
     if($nekreninaPlin == '0'){
-      $nekreninaPlin = 'nema';
+      $nekreninaPlin = '';
     }else{
-      $nekreninaPlin = 'ima';
+      $nekreninaPlin = 'Uveden plin';
     }
 
      $plin = $dom -> createElement('plin', $nekreninaPlin);
@@ -301,13 +308,13 @@ function createXMLfile($nekrsArray){
 
      //nekrenine plin
     if($instalacijaTel == '0'){
-      $instalacijaTel = "nema";
+      $instalacijaTel = '';
     }else{
-      $instalacijaTel = "ima";
+      $instalacijaTel = "Uveden telefon";
     }
 
-     $instalacijaTel = $dom -> createElement('telefon');
-     $nekretnina -> appendChild($instalacijaTel);
+     $Tel = $dom -> createElement('telefon', $instalacijaTel);
+     $nekretnina -> appendChild($Tel);
 
 
 
