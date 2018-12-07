@@ -260,16 +260,26 @@ function createXMLfile($nekrsArray){
 
       $nekretnina = $dom->createElement('post');
 
-     if($nekrNaslov == "" || $nekrNaslov == 0){
+     if($nekrNaslov === "" || $nekrNaslov === 0){
 
-       if($nekretninaMjesto == ""){
-           $naslovM = $nekrZupanija;
-       }
-       else{$naslovM = $nekretninaMjesto;}
-     }else{
+             elseif($nekretninaMjesto === "" && $nekrZupanija === "" && $nekrMikrolokacija !== "" && $nekretninaMjesto === "0"){
+                 $naslovM = $nekrMikrolokacija; //prazno
+             }
+             elseif ($nekretninaMjesto === "" && $nekrZupanija !== ""  && $nekrMikrolokacija === "" && $nekretninaMjesto === "0") {
+              $naslovM = $nekrZupanija;
+             }
+             elseif ($nekretninaMjesto !== "" && $nekrZupanija === ""  && $nekrMikrolokacija !== "" && $nekretninaMjesto <> 0) {
+              $naslovM = $nekretninaMjesto;
+             }
+             elseif ($naslovM === 0 || $naslovM === '0'){
+               $naslovM = "cc";
+             }
 
-       $naslovM = $nekrNaslov;
-     }
+      }
+     // }else{
+     //
+     //   $naslovM = $nekrNaslov;
+     // }
 
 
      $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID .", ". $nekrVrsta);
@@ -378,7 +388,7 @@ function createXMLfile($nekrsArray){
      if($nekretninaAlarm == '0'){
       $nekretninaAlarm = '';
      }else{
-        $nekretninaAlarm = 'alarm';
+        $nekretninaAlarm = 'Alarm';
      }
      $alarm = $dom ->createElement('alarm', $nekretninaAlarm);
      $nekretnina -> appendChild($alarm);
@@ -387,7 +397,7 @@ function createXMLfile($nekrsArray){
      if($nekretninaProtuPozarni  == '0'){
       $nekretninaProtuPozarni  = '';
      }else{
-        $nekretninaProtuPozarni  = 'protuPozar';
+        $nekretninaProtuPozarni  = 'Protupožarni';
      }
      $pozarni = $dom ->createElement('protuPozarniAlaram', $nekretninaProtuPozarni);
      $nekretnina -> appendChild($pozarni);
@@ -396,7 +406,7 @@ function createXMLfile($nekrsArray){
      if($nekretninaProtuprovala  == '0'){
       $nekretninaProtuprovala  = '';
      }else{
-      $nekretninaProtuprovala  = 'protuProval';
+      $nekretninaProtuprovala  = 'Protuprovalni';
      }
      $provalni = $dom ->createElement('protuProvalni', $nekretninaProtuprovala);
      $nekretnina -> appendChild($provalni);
@@ -405,7 +415,7 @@ function createXMLfile($nekrsArray){
      if($nekretninaParket  == '0'){
       $nekretninaParket  = '';
      }else{
-      $nekretninaParket = 'parket';
+      $nekretninaParket = 'Parket';
      }
      $parket = $dom ->createElement('parket', $nekretninaParket);
      $nekretnina -> appendChild($parket);
@@ -413,7 +423,7 @@ function createXMLfile($nekrsArray){
      if($nekretninaLaminat  == '0'){
       $nekretninaLaminat  = '';
      }else{
-      $nekretninaLaminat = 'laminat';
+      $nekretninaLaminat = 'Laminat';
      }
      $laminat = $dom ->createElement('laminat', $nekretninaLaminat);
      $nekretnina -> appendChild($laminat);
