@@ -69,6 +69,7 @@ function mapaLtd($lat_, $lon_)
 // $query = "SELECT* FROM grupe";
 
 $query = "
+
 SELECT vivostanovi.id, grupe.naziv as 'vrsta', grupe.vrsta AS 'status',  zupanije.nazivZupanije, vivostanovi.mikrolokacija as 'kvart', vivostanovi.mjesto as 'grad',
 vivostanovi.mjesto as 'naslov', vivostanovi.ukupnaPovrsina,
 vivostanovi.cijena, vivostanovi.katValue as 'stan na katu', vivostanovi.ukupnoKat as 'ukupno katova',vivostanovi.brojEtaza, vivostanovi.grijanje,
@@ -79,7 +80,8 @@ vivostanovi.kabel, vivostanovi.satelit, vivostanovi.internet, vivostanovi.rostil
 vivostanovi.vlasnickiList, vivostanovi.osPosude, vivostanovi.perilica, vivostanovi.perilicaSuda, vivostanovi.zivotinje, vivostanovi.garazaOption, vivostanovi.kupaone,
 vivostanovi.namjestaj, vivostanovi.brojSoba, vivostanovi.gradevinska, vivostanovi.uporabna, vivostanovi.orijentacija, vivostanovi.adaptacija, vivostanovi.morePogled,
 vivostanovi.moreUdaljenost, vivostanovi.lon, vivostanovi.lat , slikestanovitransfer.slk1, slikestanovitransfer.slk2, slikestanovitransfer.slk3, slikestanovitransfer.slk4,
-slikestanovitransfer.slk5, slikestanovitransfer.slk6, slikestanovitransfer.slk7, slikestanovitransfer.slk8, slikestanovitransfer.slk9
+slikestanovitransfer.slk5, slikestanovitransfer.slk6, slikestanovitransfer.slk7, slikestanovitransfer.slk8
+
 
 FROM vivostanovi LEFT JOIN grupe ON vivostanovi.grupa = grupe.id
 LEFT JOIN regije ON vivostanovi.regija = regije.id
@@ -243,7 +245,7 @@ function createXMLfile($nekrsArray){
       $nekretnine_slk6 = $nekrsArray[$i]['slk6'];
       $nekretnine_slk7 = $nekrsArray[$i]['slk7'];
       $nekretnine_slk8 = $nekrsArray[$i]['slk8'];
-      $nekretnine_slk9 = $nekrsArray[$i]['slk9'];
+      //$nekretnine_slk9 = $nekrsArray[$i]['slk9'];
 
 
       $nekretninaLat  =  $nekrsArray[$i]['lat'];
@@ -739,13 +741,13 @@ function createXMLfile($nekrsArray){
       $nekretnina -> appendChild($slike8);
 
 
-      if($nekretnine_slk9 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-        $nekretnine_slk9 = '';
-      }else{
-        $slike9 = $dom -> createElement('slk9',  $nekretnine_slk9);
-      }
-      $slike9 = $dom -> createElement('slk9',  $nekretnine_slk9);
-      $nekretnina -> appendChild($slike9);
+      // if($nekretnine_slk9 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+      //   $nekretnine_slk9 = '';
+      // }else{
+      //   $slike9 = $dom -> createElement('slk9',  $nekretnine_slk9);
+      // }
+      // $slike9 = $dom -> createElement('slk9',  $nekretnine_slk9);
+      // $nekretnina -> appendChild($slike9);
 
 
 
