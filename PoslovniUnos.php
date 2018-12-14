@@ -727,7 +727,7 @@ function createXMLfile($nekrsArray){
         if($nekretninaVlasnickiList == '0'){
               $nekretninaVlasnickiList = '';
         }else{
-             $nekretninaVlasnickiList = 'Vlasnički list - dostupna';
+             $nekretninaVlasnickiList = 'Vlasnički list - dostupan';
         }
 
          $vlasnik = $dom -> createElement('vlasnicki_List', $nekretninaVlasnickiList);
