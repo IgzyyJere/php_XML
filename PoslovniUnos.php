@@ -68,7 +68,7 @@ function mapaLtd($lat_, $lon_)
       if(!isset($lat) || is_null($lat) || trim($lat) == '' && !isset($lon)  || is_null($lon) || trim($lat) == ''){
           return ''; //ako je prazno
       }
-      elseif ($lat < 0 && $lon < 0){
+        elseif ($lat < 1 && $lon < 1){
         return ''; //ako je prazno
      }
       else{
@@ -323,7 +323,6 @@ function createXMLfile($nekrsArray){
                     $naslovM = $nekrMikrolokacija; //kvart
                  }
 
-
          }
 
                else{
@@ -376,18 +375,19 @@ function createXMLfile($nekrsArray){
      echo'<br/> <iframe
      src="'.$GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon).'"
      width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
-     </iframe>';
+     </iframe> <br/>';
+     echo $nekretninaLat ."----, ---". $nekretninaLon;
 
 
-     echo'<br/> --- <h3>po ulici</h3> ';
+     echo'<br/> --- <h3>po adresi</h3> ';
      echo'<br/> <iframe
      src="'.$GoogleKarta = mapa($nekretninaAdresa, "", "").'"
      width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
      </iframe>';
-     echo $nekretninaLat ."----, ---". $nekretninaLon;
+     echo $nekretninaAdresa;
+
 
      $naslovM = ''; //prazni varijablu
-
 
 
      $name  = $dom->createElement('vrsta', $nekrVrsta);

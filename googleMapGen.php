@@ -43,12 +43,14 @@ function mapa($ulicaNaziva_, $broj_, $grad_)
         $part = "()&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
         $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
 
-if(isset($ulicaNaziva_)){
+if(isset($ulicaNaziva_) && trim($ulicaNaziva_) != ''){
     return $mapa_emb;
       }elseif(!isset($broj_) || trim($broj_) == '' || is_null($broj_) && is_null($grad_) || trim($grad_) == '' || !isset($grad_)){
-          return 0;
+          return '';
+        }elseif (!isset($ulicaNaziva_) || trim($ulicaNaziva_) === '') {
+          return '';
         }else{
-        return $mapa_emb;
+      return $mapa_emb;
       }
 }
 
@@ -72,7 +74,7 @@ function mapaLtd($lat_, $lon_)
       if(!isset($lat) || is_null($lat) || trim($lat) == '' && !isset($lon)  || is_null($lon) || trim($lat) == ''){
           return ''; //ako je prazno
       }
-      elseif ($lat < 0 && $lon < 0){
+      elseif ($lat < 1 && $lon < 1){
         return ''; //ako je prazno
      }
       else{
@@ -83,14 +85,14 @@ function mapaLtd($lat_, $lon_)
  ?>
 
 
-<div style="width: 100%"><iframe width="100%" height="600" src="<?php print mapa('Vlaška ulica 115', '', '')?>" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.maps.ie/create-google-map/">Embed Google Map</a></iframe></div><br />
+<div style="width: 100%"><iframe width="100%" height="600" src="<?php print mapa('', '', '')?>" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.maps.ie/create-google-map/">Embed Google Map</a></iframe></div><br />
 <!-- <?php print $mapa?> -->
 <?php print 'embaded :'. mapa('Horvacanska', '122', 'Zagreb') ?>
 
 
 <h1>generirani s kordinatama</h1>
 <iframe
-src="<?php print mapaLtd('', '')?>"
+src="<?php print mapaLtd('0.0000000000', '0.0000000000')?>"
 width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
 </iframe>
 <br/>
