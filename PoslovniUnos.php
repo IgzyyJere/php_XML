@@ -40,12 +40,14 @@ function mapa($ulicaNaziva_, $broj_, $grad_)
         $part = "()&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
         $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
 
-        if(isset($ulicaNaziva_)){
+        if(isset($ulicaNaziva_) && trim($ulicaNaziva_) != ''){
             return $mapa_emb;
               }elseif(!isset($broj_) || trim($broj_) == '' || is_null($broj_) && is_null($grad_) || trim($grad_) == '' || !isset($grad_)){
-                  return 0;
+                  return '';
+                }elseif (!isset($ulicaNaziva_) || trim($ulicaNaziva_) === '') {
+                  return '';
                 }else{
-                return $mapa_emb;
+              return $mapa_emb;
               }
 }
 
@@ -61,11 +63,7 @@ function mapaLtd($lat_, $lon_)
         $lon = $lon_;
         $part = "&hl=es;z=14&amp;output=embed";
         $mapa_emb = $mapa.$lat.",".$lon.$part;
-
-
-
-
-      if(!isset($lat) || is_null($lat) || trim($lat) == '' && !isset($lon)  || is_null($lon) || trim($lat) == ''){
+        if(!isset($lat) || is_null($lat) || trim($lat) == '' && !isset($lon)  || is_null($lon) || trim($lat) == ''){
           return ''; //ako je prazno
       }
         elseif ($lat < 1 && $lon < 1){
@@ -75,6 +73,7 @@ function mapaLtd($lat_, $lon_)
         return $mapa_emb; //ako je puno
       }
 
+
 }
 
 
@@ -83,7 +82,7 @@ function mapaLtd($lat_, $lon_)
 // $query = "SELECT* FROM grupe";
 
 $query = "
-SELECT vivoposlovni.id, grupe.naziv as 'vrsta', grupe.vrsta AS 'status',  zupanije.nazivZupanije, vivoposlovni.mikrolokacija as 'kvart', vivoposlovni.mjesto as 'grad',
+SELECT DISTINCT vivoposlovni.id, grupe.naziv as 'vrsta', grupe.vrsta AS 'status',  zupanije.nazivZupanije, vivoposlovni.mikrolokacija as 'kvart', vivoposlovni.mjesto as 'grad',
 vivoposlovni.mjesto as 'naslov', vivoposlovni.ukupnaPovrsina, vivoposlovni.cijena, vivoposlovni.cijena, vivoposlovni.katValue as 'stan na katu',
 vivoposlovni.ukupnoKat as 'ukupno katova', vivoposlovni.grijanje,  vivoposlovni.stanje, vivoposlovni.godinaIzgradnjeValue, vivoposlovni.brojProstorija, vivoposlovni.lift,
 vivoposlovni.stolarija, vivoposlovni.alarm, vivoposlovni.protupozar, vivoposlovni.protuprovala, vivoposlovni.parket, vivoposlovni.laminat, vivoposlovni.klima, vivoposlovni.kabel,
@@ -91,9 +90,12 @@ vivoposlovni.satelit, vivoposlovni.internet, vivoposlovni.mozdaStambeni, vivopos
 vivoposlovni.vlasnickiList, vivoposlovni.parking, vivoposlovni.telefon, vivoposlovni.sanitarni, vivoposlovni.cajnaKuhinja, vivoposlovni.garazaValue, vivoposlovni.brojEtaza,
 vivoposlovni.namjestaj, vivoposlovni.prijevoz, vivoposlovni.gradevinska, vivoposlovni.uporabna, vivoposlovni.kombinacija, vivoposlovni.orijentacija,
 vivoposlovni.adaptacija, vivoposlovni.skladiste, vivoposlovni.morePogled, vivoposlovni.moreUdaljenost, vivoposlovni.pologOption, vivoposlovni.naslovoglasa,
+
+
 sliketransferposlovno.slk1, sliketransferposlovno.slk2, sliketransferposlovno.slk3, sliketransferposlovno.slk4, sliketransferposlovno.slk5, sliketransferposlovno.slk6,
 sliketransferposlovno.slk7, sliketransferposlovno.slk8, sliketransferposlovno.slk9, teksttransferposlovno.tekst,
-vivoposlovni.lat, vivoposlovni.lon, vivoposlovni.adresa
+
+vivoposlovni.lat, vivoposlovni.lon, vivoposlovni.adresa, vivoposlovni.orijentacija
 
 from vivoposlovni
 LEFT JOIN grupe ON vivoposlovni.grupa = grupe.id
@@ -101,7 +103,8 @@ LEFT JOIN regije ON vivoposlovni.regija = regije.id
 LEFT JOIN zupanije ON vivoposlovni.zupanija = zupanije.id
 LEFT JOIN sliketransferposlovno ON vivoposlovni.id = sliketransferposlovno.ID_nekrenina
 LEFT JOIN teksttransferposlovno ON vivoposlovni.id = teksttransferposlovno.spojenoNa
-where vivoposlovni.aktivno = 1";
+where vivoposlovni.aktivno = 1
+order by vivoposlovni.id asc";
 
 
 
@@ -262,7 +265,7 @@ function createXMLfile($nekrsArray){
 
       $nekretninaUporabna =  $nekrsArray[$i]['uporabna'];
 
-     //  $nekretninaOrijentacija =  $nekrsArray[$i]['orijentacija'];
+      $nekretninaOrijentacija =  $nekrsArray[$i]['orijentacija'];
 
       $nekretninaAdaptacija =  $nekrsArray[$i]['adaptacija'];
 
@@ -288,10 +291,11 @@ function createXMLfile($nekrsArray){
      //
 
 
-    $GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon);
+
+     $GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon);
 
 
-     $nekretninaMoreUdaljenost = $nekrsArray[$i]['moreUdaljenost'];
+      $nekretninaMoreUdaljenost = $nekrsArray[$i]['moreUdaljenost'];
      //
       $nekretninaMorePogled = $nekrsArray[$i]['morePogled'];
      //
@@ -301,15 +305,7 @@ function createXMLfile($nekrsArray){
 
 
 
-
-
-
      $nekretnina = $dom->createElement('post');
-
-     //195,233,150
-
-
-
 
      if($nekretnineNaslovOglasa == '' & $nekretnineNaslovOglasa === 0 || is_numeric($nekretnineNaslovOglasa) || is_numeric($nekretnineNaslovOglasa) || is_null($nekretnineNaslovOglasa))
        {
@@ -368,23 +364,23 @@ function createXMLfile($nekrsArray){
 
 
 
-     echo'<br/>--------------------------------------------------------------------';
-
-     echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
-
-     echo'<br/> <iframe
-     src="'.$GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon).'"
-     width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
-     </iframe> <br/>';
-     echo $nekretninaLat ."----, ---". $nekretninaLon;
 
 
-     echo'<br/> --- <h3>po adresi</h3> ';
-     echo'<br/> <iframe
-     src="'.$GoogleKarta = mapa($nekretninaAdresa, "", "").'"
-     width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
-     </iframe>';
-     echo $nekretninaAdresa;
+    // echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
+
+     // echo'<br/> <iframe
+     // src="'.$GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon).'"
+     // width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
+     // </iframe> <br/>';
+     // echo $nekretninaLat ."----, ---". $nekretninaLon;
+
+
+    // echo'<br/> --- <h3>po adresi</h3> ';
+     // echo'<br/> <iframe
+     // src="'.$GoogleKarta = mapa($nekretninaAdresa, "", "").'"
+     // width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
+     // </iframe>';
+    // echo $nekretninaAdresa;
 
 
      $naslovM = ''; //prazni varijablu
@@ -412,8 +408,16 @@ function createXMLfile($nekrsArray){
      $mjesto  = $dom->createElement('grad', $nekretninaMjesto);
      $nekretnina ->appendChild($mjesto);
 
-     $kat  = $dom->createElement('kat', $nekretninaKat);
+
+      //kat
+     if(is_numeric($nekretninaKat) == 0 || trim($nekretninaKat) == '0' || is_null($nekretninaKat)){
+       $nekretninaKat =  '';
+     }else{
+       $nekretninaKat = 'Kat '.$nekretninaKat;
+     }
+     $kat  = $dom->createElement('Kat', $nekretninaKat);
      $nekretnina ->appendChild($kat);
+
 
      $Broj_etaza  = $dom->createElement('broj_etaza', $nekretninaEtaza);
      $nekretnina ->appendChild($Broj_etaza);
@@ -429,8 +433,12 @@ function createXMLfile($nekrsArray){
       $namjestaj = $dom->createElement('namjestaj', $nekretninaNamjestaj);
       $nekretnina -> appendChild($namjestaj);
 
-
-
+     //broj katova
+     if(is_numeric($nekretninaUkupnoKat) < 1 || trim($nekretninaUkupnoKat) == '' || is_null($nekretninaUkupnoKat)){
+         $nekretninaUkupnoKat = '';
+     }else{
+         $nekretninaUkupnoKat = 'Zgrada ima katova : '.$nekretninaUkupnoKat;
+     }
      $Broj_kat  = $dom->createElement('broj_kat', $nekretninaUkupnoKat);
      $nekretnina ->appendChild($Broj_kat);
 
@@ -444,6 +452,12 @@ function createXMLfile($nekrsArray){
      $nekretnina ->appendChild($Cajna_kuh);
 
 
+     //godina izgradnje
+     if(is_numeric($godinaIzgradnjeValue) < 1 || trim($godinaIzgradnjeValue) == '' || is_null($godinaIzgradnjeValue)){
+       $godinaIzgradnjeValue = '';
+     }else{
+       $godinaIzgradnjeValue = 'Godina izgradnje : '.$godinaIzgradnjeValue;
+     }
      $godinaIzgradnje = $dom ->createElement('GodinaGradnje', $godinaIzgradnjeValue);
      $nekretnina -> appendChild($godinaIzgradnje);
 
@@ -461,33 +475,7 @@ function createXMLfile($nekrsArray){
      $nekretnina -> appendChild($prijevoz);
 
 
-    //  if($nekretninaLogia == '0'){
-    //    $nekretninaLogia = '';
-    //  }else{
-    //    $nekretninaLogia = 'Lođa';
-    //  }
-    //  $logia = $dom ->createElement('lođa', $nekretninaLogia);
-    //  $nekretnina -> appendChild($logia);
-    //
-    //
-    //  if($nekretninaVrt == '0'){
-    //    $nekretninaVrt = '';
-    //  }else{
-    //    $nekretninaVrt = 'Vrt';
-    //  }
-    //  $vrt = $dom ->createElement('vrt', $nekretninaVrt);
-    //  $nekretnina -> appendChild($vrt);
-    //
-    //  if($nekretninaTerasa == '0'){
-    //   $nekretninaTerasa = '';
-    //  }else{
-    //      $nekretninaTerasa = 'Terasa';
-    //  }
-    //  $terasa = $dom ->createElement('terasa',   $nekretninaTerasa);
-    //  $nekretnina -> appendChild($terasa);
-    //
-    //
-    //
+
      if($nekretninaLift == '0' || $nekretninaLift == 0 || $nekretninaLift == ''){
       $nekretninaLift = '';
      }else{
@@ -506,7 +494,7 @@ function createXMLfile($nekrsArray){
      $nekretnina -> appendChild($Tlift);
 
 
-     if($nekretninaSkladiste == '0' || $nekretninaSkladiste == 0 || $nekretninaSkladiste == ''){
+     if(trim($nekretninaSkladiste) == '0' || is_numeric($nekretninaSkladiste) == 0 || trim($nekretninaSkladiste) == ''){
        $nekretninaSkladiste = '';
      }else{
          $nekretninaSkladiste = 'Skladiste';
@@ -516,18 +504,18 @@ function createXMLfile($nekrsArray){
 
 
 
-
-
-     if($nekretnineIzlog == '0' || $nekretnineIzlog == 0 || $nekretnineIzlog == ''){
+    //
+    //
+     if(trim($nekretnineIzlog) == '0' || is_numeric($nekretnineIzlog) == 0){
        $nekretnineIzlog = '';
      }else{
          $nekretnineIzlog = 'Izlog';
      }
      $Izlog = $dom ->createElement('Izlog', $nekretnineIzlog);
      $nekretnina -> appendChild($Izlog);
-
-
-    //  //stolarija
+    //
+    //
+    // //  //stolarija
      if($nekretninaStolarija == '0'){
       $nekretninaStolarija = '';
       }elseif($nekretninaStolarija == 1){
@@ -540,11 +528,10 @@ function createXMLfile($nekrsArray){
        $nekretninaStolarija = 'Stanje stolarije je - odlično';}
      $stolarija = $dom ->createElement('Stolarija',   $nekretninaStolarija);
      $nekretnina -> appendChild($stolarija);
-    //
-    //
 
+    //
       if($StanbeniKredit == 0 || $StanbeniKredit == ''){
-       $StanbeniKredit = 'nema';
+       $StanbeniKredit = '';
      }
 
      elseif($StanbeniKredit == '1'){
@@ -552,135 +539,134 @@ function createXMLfile($nekrsArray){
        }
       $StKredit = $dom ->createElement('StKredit',  $StanbeniKredit);
       $nekretnina -> appendChild($StKredit);
-
-
-
+    //
+    //
+    //
      if($nekretninaAlarm == '0' || $nekretninaAlarm == 0 || $nekretninaAlarm == ''){
       $nekretninaAlarm = '';
      }else{
-        $nekretninaAlarm = 'Alarm';
+        $nekretninaAlarm = 'Alarm instaliran';
      }
      $alarm = $dom ->createElement('alarm', $nekretninaAlarm);
      $nekretnina -> appendChild($alarm);
-    //
-    //
+    // //
+    // //
      if($nekretninaProtuPozarni  == '0' || $nekretninaProtuPozarni == ''){
       $nekretninaProtuPozarni  = '';
      }else{
-        $nekretninaProtuPozarni  = 'Protupožarni';
+        $nekretninaProtuPozarni  = 'Protupožarni alarm';
      }
      $pozarni = $dom ->createElement('protuPozarniAlaram', $nekretninaProtuPozarni);
      $nekretnina -> appendChild($pozarni);
-
     //
+    // //
      if($nekretninaProtuprovala  == '0' || $nekretninaProtuprovala == ''){
       $nekretninaProtuprovala  = '';
      }else{
-      $nekretninaProtuprovala  = 'Protuprovalni';
+      $nekretninaProtuprovala  = 'Protuprovalni alarm';
      }
      $provalni = $dom ->createElement('protuProvalni', $nekretninaProtuprovala);
      $nekretnina -> appendChild($provalni);
-    //
-    //
+    // //
+    // //
      if($nekretninaParket  == '0'){
       $nekretninaParket  = '';
      }else{
-      $nekretninaParket = 'Parket';
+      $nekretninaParket = 'Podni parket';
      }
      $parket = $dom ->createElement('parket', $nekretninaParket);
      $nekretnina -> appendChild($parket);
-    //
+    // //
      if($nekretninaLaminat  == '0'){
       $nekretninaLaminat  = '';
      }else{
-      $nekretninaLaminat = 'Laminat';
+      $nekretninaLaminat = 'Podni laminat';
      }
      $laminat = $dom ->createElement('laminat', $nekretninaLaminat);
      $nekretnina -> appendChild($laminat);
+    // //
+    // //  //nekretnine features
     //
-    //  //nekretnine features
-
-
-     //ima nema grijanje
+    //
+    //  //ima nema grijanje
      if($nekretninaGrijanje == '0'){
          $nekretninaGrijanje = '';
      }else{
-         $nekretninaGrijanje = 'Grijanje';
+         $nekretninaGrijanje = 'Grijanje prostora';
      }
 
      $grijanje = $dom -> createElement('Grijanje', $nekretninaGrijanje);
      $nekretnina -> appendChild($grijanje);
-
-
-    // nekrenine telefon
+    //
+    //
+    // // nekrenine telefon
     if($nekretninaTelefon == 0){
       $nekretninaTelefon = '';
     }else{
-      $nekretninaTelefon = 'Telefon';
+      $nekretninaTelefon = 'Telefon (infrastruktura ili upotreba)';
     }
 
     $tel = $dom -> createElement('Telefon', $nekretninaTelefon);
     $nekretnina -> appendChild($tel);
-
-
-    // nekretnina sanitarni
+    //
+    //
+    // // nekretnina sanitarni
     if($nekretninaSanitarni == 0){
       $nekretninaSanitarni = '';
     }else{
-      $nekretninaSanitarni = 'Sanitarni';
+      $nekretninaSanitarni = 'Sanitarni čvor';
     }
 
     $sanitarni = $dom -> createElement('Sanitarni', $nekretninaSanitarni);
     $nekretnina -> appendChild($sanitarni);
-
-
-    //  //nekrenine klima
+    //
+    //
+    // //  //nekrenine klima
     if($nekretninaKlima == 0){
       $nekretninaKlima = '';
     }else{
-      $nekretninaKlima = 'Klima uređaj';
+      $nekretninaKlima = 'Instalirana Klima';
     }
 
     $klima = $dom -> createElement('Klima', $nekretninaKlima);
     $nekretnina -> appendChild($klima);
-    //
-    //
-    //   //nekrenine internet
+
+
+    // //   //nekrenine internet
      if($nekretninaInternet == 0){
        $nekretninaInternet = '';
      }else{
-       $nekretninaInternet = 'Internet';
+       $nekretninaInternet = 'Internet (infrastruktura ili upotreba)';
      }
 
      $internet = $dom -> createElement('Internet', $nekretninaInternet);
      $nekretnina -> appendChild($internet);
-
-
-
-      // nekretnina mreza
+    //
+    //
+    //
+    //   // nekretnina mreza
       if($nekretnineMreza == 0 || $nekretnineMreza == ''){
         $nekretnineMreza = '';
       }else{
-        $nekretnineMreza = 'Mreza';
+        $nekretnineMreza = 'Mreža (instalacija)';
       }
 
       $mreza = $dom -> createElement('Mreza', $nekretnineMreza);
       $nekretnina -> appendChild($mreza);
 
 
-
-    //  //nekrenine satelitska
+    // //  //nekrenine satelitska
     if($nekretninaSatelitska == '0'){
           $nekretninaSatelitska = '';
     }else{
           $nekretninaSatelitska = 'Satelitska';
     }
-
      $satelitska = $dom -> createElement('Instalirana_satelitska', $nekretninaSatelitska);
      $nekretnina -> appendChild($satelitska);
-    //
-    //
-    //  //nekrenine kablovska
+
+
+
+    // //  //nekrenine kablovska
     if($nekretninaKablovska == '0'){
           $nekretninaKablovska = '';
     }else{
@@ -689,137 +675,69 @@ function createXMLfile($nekrsArray){
 
      $kabel = $dom -> createElement('Kablovska_tv', $nekretninaKablovska);
      $nekretnina -> appendChild($kabel);
-
-
-
-      //garaža mjesta
+    //
+    //
+    //
+    //   //garaža mjesta
          if($nekretninaGarazaV == '0'){
                $nekretninaGarazaV = '';
          }else{
-               $nekretninaGarazaV = 'Garažna mjesta '. $nekretninaGarazaV;
+               $nekretninaGarazaV = 'Dostupno garažnih mjesta '. $nekretninaGarazaV;
          }
 
           $garazna_M = $dom -> createElement('Garazna_mjesta', $nekretninaGarazaV);
           $nekretnina -> appendChild($garazna_M);
-
-
-
-          //polog
+    //
+    //
+    //
+    //       //polog
              if($nekretninaPolog == 0 || $nekretninaPolog == ''){
                    $nekretninaPolog = '';
              }else{
-                   $nekretninaPolog = 'Obavezan polog';
+                   $nekretninaPolog = 'Obavezan polog!';
              }
 
               $polog = $dom -> createElement('Polog', $nekretninaPolog);
               $nekretnina -> appendChild($polog);
-
-
-
-
-
     //
     //
-    // //roštilj
-    // if($nekretninaRostilj == '0'){
-    //       $nekretninaRostilj = '';
-    // }else{
-    //       $nekretninaRostilj = 'Roštilj';
-    // }
-    //
-    //  $rostilj = $dom -> createElement('Roštilj', $nekretninaRostilj);
-    //  $nekretnina -> appendChild($rostilj);
     //
     //
-    //  //bazen
-    //  if($nekretninaBazen == '0'){
-    //        $nekretninaBazen = '';
-    //  }else{
-    //       $nekretninaBazen = 'Bazen';
-    //  }
     //
-    //   $bazen = $dom -> createElement('Bazen', $nekretninaBazen);
-    //   $nekretnina -> appendChild($bazen);
-    //
-    //
-    //   //šupa
       if($nekretninaSupa == '0'){
             $nekretninaSupa = '';
       }else{
-           $nekretninaSupa = 'Šupa';
+           $nekretninaSupa = 'Šupa dostupna';
       }
-
        $supa = $dom -> createElement('Supa', $nekretninaSupa);
        $nekretnina -> appendChild($supa);
     //
     //
-    //
-    //    //parking
-       if($nekretninaParking == '0'){
-             $nekretninaParkinga = '';
+       if(trim($nekretninaParking) == '0' || is_numeric($nekretninaParking) < 1 || is_null($nekretninaParking)){
+             $nekretninaParking = '';
        }else{
-            $nekretninaParkinga = 'Parking';
+            $nekretninaParking = 'Parking mjesta '.$nekretninaParking;
        }
 
         $parking = $dom -> createElement('Parking', $nekretninaParking);
         $nekretnina -> appendChild($parking);
-    //
-    //
-    //     //vlasnicki list
+    // //
+    // //
+    // //     //vlasnicki list
         if($nekretninaVlasnickiList == '0'){
               $nekretninaVlasnickiList = '';
         }else{
-             $nekretninaVlasnickiList = 'Vlasnički list';
+             $nekretninaVlasnickiList = 'Vlasnički list - dostupna';
         }
 
          $vlasnik = $dom -> createElement('vlasnicki_List', $nekretninaVlasnickiList);
          $nekretnina -> appendChild($vlasnik);
-    //
-    //      //perilica
-    //      if($nekretninaPerilica == '0'){
-    //            $nekretninaPerilica = '';
-    //      }else{
-    //           $nekretninaPerilica = 'Perilica';
-    //      }
-    //
-    //       $peri = $dom -> createElement('Perilica', $nekretninaPerilica);
-    //       $nekretnina -> appendChild($peri);
-    //
-    //
-    //       //perilica sudja
-    //       if($nekretninaPerilicaS == '0'){
-    //             $nekretninaPerilicaS = '';
-    //       }else{
-    //            $nekretninaPerilicaS = 'Perilica suđa';
-    //       }
-    //
-    //        $periS = $dom -> createElement('Perilica_posudje', $nekretninaPerilicaS);
-    //        $nekretnina -> appendChild($periS);
-    //
-    //
-    //        //životinje
-    //        if($nekretninaZivotinje == '0'){
-    //               $nekretninaZivotinje = '';
-    //        }else{
-    //              $nekretninaZivotinje = 'Životinje';
-    //        }
-    //         $ziv = $dom -> createElement('Zivotinje',  $nekretninaZivotinje);
-    //         $nekretnina -> appendChild($ziv);
-    //
-    //
-    //
-    //         //garažarray
-    //         if($nekreninaGaraga == '0'){
-    //                $nekreninaGaraga = '';
-    //         }else{
-    //             $nekreninaGaraga= 'Garaža';
-    //         }
-    //          $garage = $dom -> createElement('Garaža',  $nekreninaGaraga);
-    //          $nekretnina -> appendChild($garage);
-    //
+
+
+
 
     //
-    //           //namještaj
+    // //           //namještaj
               if($nekretninaNamjestaj == '0'){
                      $nekretninaNamjestaj = '';
               }else{
@@ -827,40 +745,27 @@ function createXMLfile($nekrsArray){
               }
               $namjestaj = $dom -> createElement('Namjestaj',  $nekretninaNamjestaj);
               $nekretnina -> appendChild($namjestaj);
-    //
-    //           //broj soba $nekretninaBrSoba
-    //           if($nekretninaBrSoba == '0'){
-    //                  $nekretninaBrSoba = 'Broj soba - 1';
-    //                  $brojSoba = 1;
-    //           }else{
-    //               $brojSoba = $nekretninaBrSoba;
-    //               $nekretninaBrSoba = 'Broj soba - '.$nekretninaBrSoba;
-    //
-    //           }
-    //           $sobe = $dom -> createElement('Broj_soba',  $brojSoba);
-    //           $nekretnina -> appendChild($sobe);
-    //
-    //           $SobaBroj = $dom -> createElement('Broj_sobaNum', $brojSoba);
-    //           $nekretnina -> appendChild($SobaBroj);
+    // //
     //
     //
-    //           //građevinska dozvola
+    // //
+    // //           //građevinska dozvola
               if($nekretninaGradjevniska == '0'){
                      $nekretninaGradjevniska = '';
               }else{
-                  $nekretninaGradjevniska = 'Građevinska dozvola';
+                  $nekretninaGradjevniska = 'Građevinska dozvola - dostupna';
               }
               $gradevisnka = $dom -> createElement('Gradevisnka_dozvola',  $nekretninaGradjevniska);
               $nekretnina -> appendChild($gradevisnka);
-
-
-
-
-          //uporabna dozvola $nekretninaUporabna
+    //
+    //
+    //
+    //
+    //       //uporabna dozvola $nekretninaUporabna
               if($nekretninaUporabna == '0'){
                      $nekretninaUporabna = '';
               }else{
-                  $nekretninaUporabna = 'Uporabna dozvola';
+                  $nekretninaUporabna = 'Uporabna dozvola - dostupna';
               }
               $uporabna = $dom -> createElement('Uporabna_dozvola',  $nekretninaUporabna);
               $nekretnina -> appendChild($uporabna);
@@ -868,29 +773,29 @@ function createXMLfile($nekrsArray){
 
 
 
-    //           //orijentacija $nekretninaOrijentacija
-    //           if($nekretninaOrijentacija == '0'){
-    //                  $nekretninaOrijentacija = '';
-    //           }else{
-    //               $nekretninaOrijentacija = 'Orijentacija';
-    //           }
-    //           $orijentacija = $dom -> createElement('orijentacija',  $nekretninaOrijentacija);
-    //           $nekretnina -> appendChild($orijentacija);
-    //
-    //
-    //
-              //adaptacija  $nekretninaAdaptacija
+               //adaptacija  $nekretninaAdaptacija
+              if(trim($nekretninaAdaptacija) == '0' || is_numeric($nekretninaAdaptacija) < 1 || is_null($nekretninaAdaptacija)){
+                      $nekretninaAdaptacija = '';
+              }else{
+                      $nekretninaAdaptacija = 'Adaptacija : '.$nekretninaAdaptacija.'g';
+              }
               $adap = $dom -> createElement('adaptacija',  $nekretninaAdaptacija);
               $nekretnina -> appendChild($adap);
     //
     //
+
+         if(trim($nekretninaMoreUdaljenost) == '0' || is_null($nekretninaMoreUdaljenost) || is_numeric($nekretninaMoreUdaljenost) < 1){
+           $nekretninaMoreUdaljenost = '';
+         }else{
+                $nekretninaMoreUdaljenost = 'Udaljenost do mora : '.$nekretninaMoreUdaljenost.'m';
+         }
          $moreUda = $dom->createElement('UdaljenostMore', $nekretninaMoreUdaljenost);
          $nekretnina->appendChild($moreUda);
-    //
-    //
-    //
-    //
-    //   //slike
+    // //
+    // //
+    // //
+    // //
+    // //   //slike
       if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
        $nekretnine_slk1 = '';
       }else{
@@ -907,8 +812,8 @@ function createXMLfile($nekrsArray){
         }
         $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
       $nekretnina -> appendChild($slike2);
-
-
+    //
+    //
       if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
         $nekretnine_slk3 = '';
       }else{
@@ -925,9 +830,9 @@ function createXMLfile($nekrsArray){
         }
       $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
       $nekretnina -> appendChild($slike4);
-
-
-
+    //
+    //
+    //
       if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
         $nekretnine_slk5 = '';
       }else{
@@ -935,8 +840,8 @@ function createXMLfile($nekrsArray){
       }
       $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
       $nekretnina -> appendChild($slike5);
-
-
+    //
+    //
       if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
         $nekretnine_slk6 = '';
       }else{
@@ -944,8 +849,8 @@ function createXMLfile($nekrsArray){
       }
       $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
       $nekretnina -> appendChild($slike6);
-
-
+    //
+    //
       if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
         $nekretnine_slk7 = '';
       }else{
@@ -953,8 +858,8 @@ function createXMLfile($nekrsArray){
       }
       $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
       $nekretnina -> appendChild($slike7);
-
-
+    //
+    //
       if($nekretnine_slk8 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
         $nekretnine_slk8 = '';
       }else{
@@ -962,8 +867,8 @@ function createXMLfile($nekrsArray){
       }
       $slike8 = $dom -> createElement('slk8',  $nekretnine_slk8);
       $nekretnina -> appendChild($slike8);
-
-
+    //
+    //
       if($nekretnine_slk9 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
         $nekretnine_slk9 = '';
       }else{
@@ -971,26 +876,35 @@ function createXMLfile($nekrsArray){
       }
       $slike9 = $dom -> createElement('slk9',  $nekretnine_slk9);
       $nekretnina -> appendChild($slike9);
-    //
-    //
-    //
-    //
+    // //
+    // //
+    // //
+    // //
      $Lat = $dom->createElement('lat', $nekretninaLat);
      $nekretnina->appendChild($Lat);
 
      $Lon = $dom->createElement('lon', $nekretninaLon);
      $nekretnina->appendChild($Lon);
-    //
-    //
+    // //
+    // //
      $karta = $dom ->createElement('karta', $GoogleKarta); //$GoogleKarta
      $nekretnina -> appendChild($karta);
 
-     $kartaKordina = $dom ->createElement('kartaKord', $GoogleKorKarta); //$GoogleKarta
-     $nekretnina -> appendChild($kartaKordina);
-    //
-    //
-    //
-    //
+
+
+    // if( $nekrID == 103 && $nekrID == 108){
+    //   $GoogleKorKarta = '';
+    //   htmlspecialchars($GoogleKorKarta);
+    //   htmlEntities($GoogleKorKarta);
+    // }
+    // else {
+      $kartaKordina = $dom ->createElement('kartaKord',   htmlEntities($GoogleKorKarta)); //$GoogleKarta
+      $nekretnina -> appendChild($kartaKordina);
+    //}
+
+
+
+
     //  //nekrenine pogled na more
       if($nekretninaMorePogled == 0){
         $nekretninaMorePogled = '';
@@ -1005,6 +919,24 @@ function createXMLfile($nekrsArray){
      $nekretnina->appendChild($tekst);
 
 
+     if(trim($nekretninaAdresa) == '' || is_null($nekretninaAdresa)){
+       $nekretninaAdresa = '';
+     }else{
+       $nekretninaAdresa = 'Adresa : '.$nekretninaAdresa;
+     }
+     $adresa = $dom->createElement('adresa', $nekretninaAdresa);
+     $nekretnina->appendChild($adresa);
+
+
+     if(trim($nekretninaOrijentacija) == '' || is_null($nekretninaOrijentacija)){
+
+     }else{
+       $nekretninaOrijentacija = 'Orijentacija - '.$nekretninaOrijentacija;
+     }
+     $orijent = $dom->createElement('orijentacija', $nekretninaOrijentacija);
+     $nekretnina->appendChild($orijent);
+
+
      $root->appendChild($nekretnina);
 
    }
@@ -1013,10 +945,6 @@ function createXMLfile($nekrsArray){
 
    $dom->save($filePath);
    echo'<h1>Uspjeh , rješeni poslovni</h1>';
-
-
-
-
 
  }
  ?>
