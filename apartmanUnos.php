@@ -24,67 +24,75 @@ function encode_to_utf8_if_needed($string)
 
 function mapa($ulicaNaziva_, $broj_, $grad_)
 {
-  $mapa = "https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=";
-  $ulica_naziv = $ulicaNaziva_;
-  if($broj_ == ""){
-    $brojulica='';
-  }else{
-    $brojulica = $broj_;
-  }
+        $mapa = "https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=";
+        $ulica_naziv = $ulicaNaziva_;
+        if($broj_ == ""){
+          $brojulica='';
+        }else{
+          $brojulica = $broj_;
+        }
 
-  $grad =  $grad_;
-  $drzava = "Croatia";
-  $part = "()&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
-  $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
+        $grad =  $grad_;
+        $drzava = "Croatia";
+        $part = "()&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
+        $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
 
-  //echo $mapa_emb;
-  return $mapa_emb;
-
-
+        if(isset($ulicaNaziva_) && trim($ulicaNaziva_) != ''){
+            return $mapa_emb;
+              }elseif(!isset($broj_) || trim($broj_) == '' || is_null($broj_) && is_null($grad_) || trim($grad_) == '' || !isset($grad_)){
+                  return '';
+                }elseif (!isset($ulicaNaziva_) || trim($ulicaNaziva_) === '') {
+                  return '';
+                }else{
+              return $mapa_emb;
+              }
 }
 
 
 
 function mapaLtd($lat_, $lon_)
 {
-  $mapa = "https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;coord=";
 
-  $lat = $lat_;
-  $lon = $lon_;
+        $mapa = "https://maps.google.com/maps?q=";
+        $lat = $lat_;
+        $lon = $lon_;
+        $part = "&hl=es;z=14&amp;output=embed";
+        $mapa_emb = $mapa.$lat.",".$lon.$part;
+        if(!isset($lat) || is_null($lat) || trim($lat) == '' && !isset($lon)  || is_null($lon) || trim($lat) == ''){
+          return ''; //ako je prazno
+      }
+        elseif ($lat < 1 && $lon < 1){
+        return ''; //ako je prazno
+     }
+      else{
+        return $mapa_emb; //ako je puno
+      }
 
 
-  $part = "&amp;q=+(My%20Business%20Name)&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
-  $mapa_emb = $mapa.$lat.",".$lon.$part;
-
-//  $mapa_emb = "<iframe width="100%" height="600" src="'".$mapa_emb.";
-
-  //echo $mapa_emb;
- return $mapa_emb;
 }
 
 
 $query = "
 SELECT vivoturizam.id, grupe.naziv as 'vrsta', grupe.vrsta AS 'status',  zupanije.nazivZupanije, vivoturizam.mikrolokacija, vivoturizam.mjesto as 'naslov',
+vivoturizam.naslovoglasa,
 vivoturizam.cijena, vivoturizam.mjesto as 'grad', vivoturizam.adresa, vivoturizam.cvrstiObjektm2,
 vivoturizam.napomena, vivoturizam.grijanje, vivoturizam.klima, vivoturizam.kabel, vivoturizam.telefon, vivoturizam.internet, kvartovi.naziv AS 'kvart',
 vivoturizam.satelit, vivoturizam.lat, vivoturizam.lon, vivoturizam.agent, vivoturizam.udaljenostMore, vivoturizam.pogledMore,
 vivoturizam.udaljenostCentar, vivoturizam.udaljenostAerodrom, vivoturizam.udaljenostAutobus, vivoturizam.udaljenostPlaza, vivoturizam.udaljenostMarina , vivoturizam.udaljenostTrajekt,
 vivoturizam.udaljenostTrgovina ,vivoturizam.udaljenostRestoran ,vivoturizam.udaljenostAmbulanta ,vivoturizam.udaljenostLjekarna, vivoturizam.udaljenostPrometnica,
 vivoturizam.pogledZelenilo, vivoturizam.udaljenostParkiralista, vivoturizam.dostupnostAutomobilom, vivoturizam.zemljistem2, vivoturizam.pogledPlanine,
-
 vivoturizam.parkirnaMjestabroj, vivoturizam.garaznaMjestaBroj, vivoturizam.godinaIzgradnjeValue, tekstTransferTurizam.tekst,
 sliketransferTurizam.slk1, sliketransferTurizam.slk2, sliketransferTurizam.slk3, sliketransferTurizam.slk4, sliketransferTurizam.slk5, sliketransferTurizam.slk6,
 sliketransferTurizam.slk7
 
-
 FROM vivoturizam LEFT JOIN grupe ON vivoturizam.grupa = grupe.id
-
 LEFT JOIN regije ON vivoturizam.regija = regije.id
 LEFT JOIN zupanije ON vivoturizam.zupanija = zupanije.id
 LEFT JOIN kvartovi ON kvartovi.id = vivoturizam.kvart
 LEFT JOIN tekstTransferTurizam ON tekstTransferTurizam.spojenoNa = vivoturizam.id
 LEFT JOIN sliketransferTurizam ON sliketransferTurizam.ID_nekrenina = vivoturizam.id
-where vivoturizam.aktivno = 1;";
+where vivoturizam.aktivno = 1
+order by vivoturizam.id asc;";
 //where vivoturizam.aktivno = 1 AND vivozemljista.id > 320 AND vivozemljista.id < 450;";
 
 
@@ -106,6 +114,18 @@ if ($result = $mysqli->query($query)) {
     $result->free();
 }
 
+
+/*counter*/
+$counquery = "SELECT vivostanovi.id from vivostanovi";
+$num_rows = $mysqli->query($counquery);
+$num_rows = count($nekrsArray);
+
+$str1= $num_rows;
+$str2="Broj koji je prebaćen ";
+echo "<h4>".$str1 . " " . $str2."</h4>";
+
+
+
 /* close connection */
 $mysqli->close();
 
@@ -122,11 +142,13 @@ function createXMLfile($nekrsArray){
 
      $nekrID  =  $nekrsArray[$i]['id'];
 
+     $nekrNaslov  =  $nekrsArray[$i]['naslov'];
+
      $nekrVrsta  =  $nekrsArray[$i]['vrsta'];
 
      $nekrStatus  =  $nekrsArray[$i]['status'];
 
-     $nekrZupanija =  $nekrsArray[$i]['nazivZupanije'];
+      $nekrZupanija =  $nekrsArray[$i]['nazivZupanije'];
 
       $nekretninaPovrsina  =  $nekrsArray[$i]['cvrstiObjektm2'];
 
@@ -186,7 +208,7 @@ function createXMLfile($nekrsArray){
 
       $godinaIzgradnjeValue = $nekrsArray[$i]['godinaIzgradnjeValue'];
 
-      $GoogleKarta = mapa($nekrMikrolokacija, "", $nekretninaMjesto);
+    $GoogleKarta = mapa($nekrMikrolokacija, "", $nekretninaMjesto);
 
       $nekretninaNap  =  $nekrsArray[$i]['napomena'];
       $nekretnine_slk1 =  $nekrsArray[$i]['slk1'];
@@ -209,24 +231,52 @@ function createXMLfile($nekrsArray){
       $nekretninaTekst = $nekrsArray[$i]['tekst'];
       $nekretninaTekst = strip_tags($nekretninaTekst);
 
+
+
+
+
+
       $nekretnina = $dom->createElement('post');
 
+     // if($nekrMikrolokacija == "" || $nekrMikrolokacija == 0){
+     //   $naslovM = $nekrenineKvart;
+     // } else{
+     //   $naslovM = $nekrMikrolokacija;
+     // }
+     //
+     //
+     //
+     // $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID . ", apartman");
+     // $nekretnina->appendChild($IDNk);
+     //
+     // $naslov  = $dom->createElement('naslov', $naslovM . " - ".$nekrID . ", apartman");
+     // $nekretnina->appendChild($naslov);
 
 
 
-     if($nekrMikrolokacija == "" || $nekrMikrolokacija == 0){
-       $naslovM = $nekrenineKvart;
-     } else{
-       $naslovM = $nekrMikrolokacija;
-     }
+     $nekretnina = $dom->createElement('post');
 
+    if(trim($nekrNaslov) == "" || is_numeric($nekrNaslov) == 0 || is_null($nekrNaslov)){
+      if(is_numeric($nekretninaMjesto) == 0 || is_null($nekretninaMjesto)){
+        if(trim($nekrZupanija) != ""){
+          $naslovM = $nekrZupanija;
+          }
+        }
+        else{
+             $naslovM = $nekrenineKvart;
+          }
 
+    }
 
-     $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID . ", apartman");
-     $nekretnina->appendChild($IDNk);
+    else{
+    $naslovM = $nekrenineKvart;
+    }
 
-     $naslov  = $dom->createElement('naslov', $naslovM . " - ".$nekrID . ", apartman");
-     $nekretnina->appendChild($naslov);
+    $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID .", ". $nekrVrsta);
+    $nekretnina->appendChild($IDNk);
+
+    $naslov  = $dom->createElement('naslov', $naslovM . " - ".$nekrID . ", ".$nekrVrsta);
+    $nekretnina->appendChild($naslov);
 
 
 
@@ -454,7 +504,7 @@ function createXMLfile($nekrsArray){
      $karta = $dom ->createElement('karta', $GoogleKarta); //$GoogleKarta
      $nekretnina -> appendChild($karta);
 
-     $kartaKordina = $dom ->createElement('kartaKord', $GoogleKorKarta); //$GoogleKarta
+     $kartaKordina = $dom ->createElement('kartaKord', htmlEntities($GoogleKorKarta)); //$GoogleKarta
      $nekretnina -> appendChild($kartaKordina);
 
      $godinaIzgradnje = $dom ->createElement('GodinaGradnje', $godinaIzgradnjeValue); //$GoogleKarta
