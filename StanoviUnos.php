@@ -272,71 +272,91 @@ function createXMLfile($nekrsArray){
       $nekretninaTekst = $nekrsArray[$i]['tekst'];
       $nekretninaTekst = strip_tags($nekretninaTekst);
 
+
+
+
+
       $nekretnina = $dom->createElement('post');
 
-     if($nekrNaslov == "" || $nekrNaslov == 0){
-
-       if($nekretninaMjesto == ""){
-           $naslovM = $nekrZupanija;
-       }
-       else{$naslovM = $nekretninaMjesto;}
-     }else{
-
-       $naslovM = $nekrNaslov;
-     }
+      if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto)){
 
 
+               //ako je prioritet da bude županija
+                // if($nekrZupanija != '' || is_null($nekrZupanija)){
+                //   $naslovM = $nekrZupanija;
+                // }
+                //
+                // else{
+                //   $naslovM = $nekrenineKvart;
+                // }
 
-    if(is_numeric($nekrID) == 2108 || is_numeric($nekrID) == 2139 || is_numeric($nekrID) == 2317 || is_numeric($nekrID) == 2339 || is_numeric($nekrID) == 2372 ||
-       is_numeric($nekrID) == 2470 || is_numeric($nekrID) == 2530 || is_numeric($nekrID) == 2635 || is_numeric($nekrID) == 2926 || is_numeric($nekrID) == 3210 ||
-       is_numeric($nekrID) == 3332 || is_numeric($nekrID) == 3356 || is_numeric($nekrID) == 3527 ||  is_numeric($nekrID) == 3539 ||  is_numeric($nekrID) == 3541 ||
-       is_numeric($nekrID) == 3541 || is_numeric($nekrID) == 3582 || is_numeric($nekrID) == 3587 || is_numeric($nekrID) == 3592 || is_numeric($nekrID) == 3610 ||
-       is_numeric($nekrID) == 3617 || is_numeric($nekrID) == 3619 || is_numeric($nekrID) == 3629 || is_numeric($nekrID) == 3647 || is_numeric($nekrID) == 3648 ||
-       is_numeric($nekrID) == 3670 || is_numeric($nekrID) == 3683 || is_numeric($nekrID) == 3686 || is_numeric($nekrID) == 3687 || is_numeric($nekrID) == 3714 ||
-       is_numeric($nekrID) == 3716 || is_numeric($nekrID) == 3735 || is_numeric($nekrID) == 3741 || is_numeric($nekrID) == 3743 || is_numeric($nekrID) == 3761 ||
-       is_numeric($nekrID) == 3778 || is_numeric($nekrID) == 3781 || is_numeric($nekrID) == 3794 || is_numeric($nekrID) == 3801 || is_numeric($nekrID) == 3808 ||
-       is_numeric($nekrID) == 3836 || is_numeric($nekrID) == 3838 || is_numeric($nekrID) == 3841 || is_numeric($nekrID) == 3848 || is_numeric($nekrID) == 3852 ||
-       is_numeric($nekrID) == 3853 || is_numeric($nekrID) == 3870 || is_numeric($nekrID) == 3871 || is_numeric($nekrID) == 3875 || is_numeric($nekrID) == 3881 ||
-       is_numeric($nekrID) == 3888 || is_numeric($nekrID) == 3896 || is_numeric($nekrID) == 3909 || is_numeric($nekrID) == 3910 || is_numeric($nekrID) == 3911 ||
-       is_numeric($nekrID) == 3912 || is_numeric($nekrID) == 3915 || is_numeric($nekrID) == 3917 || is_numeric($nekrID) == 3927 || is_numeric($nekrID) == 3929 ||
-       is_numeric($nekrID) == 3931 || is_numeric($nekrID) == 3939 || is_numeric($nekrID) == 3942 || is_numeric($nekrID) == 3944 || is_numeric($nekrID) == 3949 ||
-       is_numeric($nekrID) == 3953 || is_numeric($nekrID) == 3957 || is_numeric($nekrID) == 3958 || is_numeric($nekrID) == 3962 || is_numeric($nekrID) == 3963 ||
-       is_numeric($nekrID) == 3967 || is_numeric($nekrID) == 3969 || is_numeric($nekrID) == 3977 || is_numeric($nekrID) == 3978 || is_numeric($nekrID) == 3979 ||
-       is_numeric($nekrID) == 3980 || is_numeric($nekrID) == 3983 || is_numeric($nekrID) == 3985 || is_numeric($nekrID) == 3986 || is_numeric($nekrID) == 3988 ||
-       is_numeric($nekrID) == 3990 || is_numeric($nekrID) == 3991 || is_numeric($nekrID) == 3993 || is_numeric($nekrID) == 3998 || is_numeric($nekrID) == 3999 ||
-       is_numeric($nekrID) == 4004 || is_numeric($nekrID) == 4005 || is_numeric($nekrID) == 4006 || is_numeric($nekrID) == 4007 || is_numeric($nekrID) == 4008 ||
-       is_numeric($nekrID) == 4011 || is_numeric($nekrID) == 4013 || is_numeric($nekrID) == 4014 || is_numeric($nekrID) == 4015 || is_numeric($nekrID) == 4016 ||
-       is_numeric($nekrID) == 4017 || is_numeric($nekrID) == 4018 || is_numeric($nekrID) == 4021 || is_numeric($nekrID) == 4022 || is_numeric($nekrID) == 4025  ){
-      $naslovM == 'Zagreb';
-    }
+                if($nekrenineKvart != ''){
+                    $naslovM = $nekrenineKvart;
+                }else{
+                  if($nekrenineKvart != ''){
+                   $naslovM = $nekrenineKvart;
+                 }else{
+                   $naslovM = $nekrZupanija;
+                 }
+                }
 
-    if(is_numeric($nekrID) == 2264 || is_numeric($nekrID) == 2284 || is_numeric($nekrID) == 2285 || is_numeric($nekrID) == 3280 || is_numeric($nekrID) == 3331){
-      $naslovM = 'Primorsko-goranska';
-    }
+        }
 
-    if(is_numeric($nekrID) == 2274 || is_numeric($nekrID) == 2514){
-      $naslovM = 'Istarska';
-    }
 
-    if(is_numeric($nekrID) == 2459 || is_numeric($nekrID) == 2630){
-      $naslovM = 'Splitsko-dalmatinska';
-    }
+      else{$naslovM = $nekretninaMjesto;}
 
-    if(is_numeric($nekrID) == 2492){
-      $naslovM = 'Zagrebačka';
-    }
 
-    if(is_numeric($nekrID) == 2883 || is_numeric($nekrID) == 3315 ||  is_numeric($nekrID) == 3961){
-      $naslovM = 'Ličko-senjska';
-    }
-
-    if(is_numeric($nekrID) == 3917 || is_numeric($nekrID) == 3918 || is_numeric($nekrID) == 3920 || is_numeric($nekrID) == 3921 || is_numeric($nekrID) == 3922){
-      $naslovM = 'Šibensko-kninska';
-    }
-
-    if(is_numeric($nekrID) == 3952 || is_numeric($nekrID) == 3960){
-      $naslovM = 'Zadarska';
-    }
+    // if(is_numeric($nekrID) == 2108 || is_numeric($nekrID) == 2139 || is_numeric($nekrID) == 2317 || is_numeric($nekrID) == 2339 || is_numeric($nekrID) == 2372 ||
+    //    is_numeric($nekrID) == 2470 || is_numeric($nekrID) == 2530 || is_numeric($nekrID) == 2635 || is_numeric($nekrID) == 2926 || is_numeric($nekrID) == 3210 ||
+    //    is_numeric($nekrID) == 3332 || is_numeric($nekrID) == 3356 || is_numeric($nekrID) == 3527 ||  is_numeric($nekrID) == 3539 || is_numeric($nekrID) == 3541 ||
+    //    is_numeric($nekrID) == 3541 || is_numeric($nekrID) == 3582 || is_numeric($nekrID) == 3587 || is_numeric($nekrID) == 3592 || is_numeric($nekrID) == 3610 ||
+    //    is_numeric($nekrID) == 3617 || is_numeric($nekrID) == 3619 || is_numeric($nekrID) == 3629 || is_numeric($nekrID) == 3647 || is_numeric($nekrID) == 3648 ||
+    //    is_numeric($nekrID) == 3670 || is_numeric($nekrID) == 3683 || is_numeric($nekrID) == 3686 || is_numeric($nekrID) == 3687 || is_numeric($nekrID) == 3714 ||
+    //    is_numeric($nekrID) == 3716 || is_numeric($nekrID) == 3735 || is_numeric($nekrID) == 3741 || is_numeric($nekrID) == 3743 || is_numeric($nekrID) == 3761 ||
+    //    is_numeric($nekrID) == 3778 || is_numeric($nekrID) == 3781 || is_numeric($nekrID) == 3794 || is_numeric($nekrID) == 3801 || is_numeric($nekrID) == 3808 ||
+    //    is_numeric($nekrID) == 3836 || is_numeric($nekrID) == 3838 || is_numeric($nekrID) == 3841 || is_numeric($nekrID) == 3848 || is_numeric($nekrID) == 3852 ||
+    //    is_numeric($nekrID) == 3853 || is_numeric($nekrID) == 3870 || is_numeric($nekrID) == 3871 || is_numeric($nekrID) == 3875 || is_numeric($nekrID) == 3881 ||
+    //    is_numeric($nekrID) == 3888 || is_numeric($nekrID) == 3896 || is_numeric($nekrID) == 3909 || is_numeric($nekrID) == 3910 || is_numeric($nekrID) == 3911 ||
+    //    is_numeric($nekrID) == 3912 || is_numeric($nekrID) == 3915 || is_numeric($nekrID) == 3917 || is_numeric($nekrID) == 3927 || is_numeric($nekrID) == 3929 ||
+    //    is_numeric($nekrID) == 3931 || is_numeric($nekrID) == 3939 || is_numeric($nekrID) == 3942 || is_numeric($nekrID) == 3944 || is_numeric($nekrID) == 3949 ||
+    //    is_numeric($nekrID) == 3953 || is_numeric($nekrID) == 3957 || is_numeric($nekrID) == 3958 || is_numeric($nekrID) == 3962 || is_numeric($nekrID) == 3963 ||
+    //    is_numeric($nekrID) == 3967 || is_numeric($nekrID) == 3969 || is_numeric($nekrID) == 3977 || is_numeric($nekrID) == 3978 || is_numeric($nekrID) == 3979 ||
+    //    is_numeric($nekrID) == 3980 || is_numeric($nekrID) == 3983 || is_numeric($nekrID) == 3985 || is_numeric($nekrID) == 3986 || is_numeric($nekrID) == 3988 ||
+    //    is_numeric($nekrID) == 3990 || is_numeric($nekrID) == 3991 || is_numeric($nekrID) == 3993 || is_numeric($nekrID) == 3998 || is_numeric($nekrID) == 3999 ||
+    //    is_numeric($nekrID) == 4004 || is_numeric($nekrID) == 4005 || is_numeric($nekrID) == 4006 || is_numeric($nekrID) == 4007 || is_numeric($nekrID) == 4008 ||
+    //    is_numeric($nekrID) == 4011 || is_numeric($nekrID) == 4013 || is_numeric($nekrID) == 4014 || is_numeric($nekrID) == 4015 || is_numeric($nekrID) == 4016 ||
+    //    is_numeric($nekrID) == 4017 || is_numeric($nekrID) == 4018 || is_numeric($nekrID) == 4021 || is_numeric($nekrID) == 4022 || is_numeric($nekrID) == 4025 ||
+    //    is_numeric($nekrID) == 1279 ){
+    //   $naslovM == 'Zagreb';
+    // }
+    //
+    // if(is_numeric($nekrID) == 2264 || is_numeric($nekrID) == 2284 || is_numeric($nekrID) == 2285 || is_numeric($nekrID) == 3280 || is_numeric($nekrID) == 3331){
+    //   $naslovM = 'Primorsko-goranska';
+    // }
+    //
+    // if(is_numeric($nekrID) == 2274 || is_numeric($nekrID) == 2514){
+    //   $naslovM = 'Istarska';
+    // }
+    //
+    // if(is_numeric($nekrID) == 2459 || is_numeric($nekrID) == 2630){
+    //   $naslovM = 'Splitsko-dalmatinska';
+    // }
+    //
+    // if(is_numeric($nekrID) == 2492){
+    //   $naslovM = 'Zagrebačka';
+    // }
+    //
+    // if(is_numeric($nekrID) == 2883 || is_numeric($nekrID) == 3315 ||  is_numeric($nekrID) == 3961){
+    //   $naslovM = 'Ličko-senjska';
+    // }
+    //
+    // if(is_numeric($nekrID) == 3917 || is_numeric($nekrID) == 3918 || is_numeric($nekrID) == 3920 || is_numeric($nekrID) == 3921 || is_numeric($nekrID) == 3922){
+    //   $naslovM = 'Šibensko-kninska';
+    // }
+    //
+    // if(is_numeric($nekrID) == 3952 || is_numeric($nekrID) == 3960){
+    //   $naslovM = 'Zadarska';
+    // }
 
 
 
@@ -348,7 +368,10 @@ function createXMLfile($nekrsArray){
      $naslov  = $dom->createElement('naslov', $naslovM . " - ".$nekrID . ", ".$nekrVrsta);
      $nekretnina->appendChild($naslov);
 
-    // $naslovM = ''; //prazni varijablu
+
+
+
+     $naslovM = ''; //prazni varijablu
      // echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
      //
      //  echo'<br/> <iframe
