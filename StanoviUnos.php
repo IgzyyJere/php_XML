@@ -249,7 +249,7 @@ function createXMLfile($nekrsArray){
 
 
       //slike
-      $nekretnine_slk1 =  $nekrsArray[$i]['slk1'];
+      $nekretnine_slk1 = $nekrsArray[$i]['slk1'];
       $nekretnine_slk2 = $nekrsArray[$i]['slk2'];
       $nekretnine_slk3 = $nekrsArray[$i]['slk3'];
       $nekretnine_slk4 = $nekrsArray[$i]['slk4'];
