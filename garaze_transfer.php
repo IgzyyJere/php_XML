@@ -26,23 +26,49 @@ function encode_to_utf8_if_needed($string)
 
 function mapa($ulicaNaziva_, $broj_, $grad_)
 {
-  $mapa = "https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=";
-  $ulica_naziv = $ulicaNaziva_;
-  if($broj_ == ""){
-    $brojulica='';
-  }else{
-    $brojulica = $broj_;
-  }
+        $mapa = "https://maps.google.com/maps?width=100%&amp;height=600&amp;hl=en&amp;q=";
+        $ulica_naziv = $ulicaNaziva_;
+        if($broj_ == ""){
+          $brojulica='';
+        }else{
+          $brojulica = $broj_;
+        }
 
-  $grad =  $grad_;
-  $drzava = "Croatia";
-  $part = "()&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
-  $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
+        $grad =  $grad_;
+        $drzava = "Croatia";
+        $part = "()&amp;ie=UTF8&amp;t=&amp;z=12&amp;iwloc=B&amp;output=embed";
+        $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
 
-  echo $mapa_emb;
-  return $mapa_emb;
+        if(isset($ulicaNaziva_) && trim($ulicaNaziva_) != ''){
+            return $mapa_emb;
+              }elseif(!isset($broj_) || trim($broj_) == '' || is_null($broj_) && is_null($grad_) || trim($grad_) == '' || !isset($grad_)){
+                  return '';
+                }elseif (!isset($ulicaNaziva_) || trim($ulicaNaziva_) === '') {
+                  return '';
+                }else{
+              return $mapa_emb;
+              }
+}
 
 
+
+function mapaLtd($lat_, $lon_)
+{
+
+        $mapa = "https://maps.google.com/maps?q=";
+        $lat = $lat_;
+        $lon = $lon_;
+        $part = "&hl=es;z=1&amp;output=embed";
+        $mapa_emb = $mapa.$lat.",".$lon.$part;
+        if(!isset($lat) || is_null($lat) || trim($lat) == '' && !isset($lon)  || is_null($lon) || trim($lat) == ''){
+          return ''; //ako je prazno
+      }
+        elseif ($lat < 1 && $lon < 1){
+        return ''; //ako je prazno
+     }
+      else{
+        return $mapa_emb; //ako je puno
+      }
 }
 
 
@@ -85,8 +111,22 @@ if ($result = $mysqli->query($query)) {
     $result->free();
 }
 
+
+
+
+
+/*counter*/
+$counquery = "SELECT vivoostalo.id from vivoostalo";
+$num_rows = $mysqli->query($counquery);
+$num_rows = count($nekrsArray);
+
+$str1= $num_rows;
+$str2="Broj koji je prebaćen ";
+echo "<h4>".$str1 . " " . $str2."</h4>";
+
 /* close connection */
 $mysqli->close();
+
 
 function createXMLfile($nekrsArray){
 
@@ -170,7 +210,36 @@ function createXMLfile($nekrsArray){
       $nekretnina = $dom->createElement('post');
 
 
-  
+
+      if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto)){
+
+
+               //ako je prioritet da bude županija
+                // if($nekrZupanija != '' || is_null($nekrZupanija)){
+                //   $naslovM = $nekrZupanija;
+                // }
+                //
+                // else{
+                //   $naslovM = $nekrenineKvart;
+                // }
+
+                if($nekrenineKvart != ''){
+                    $naslovM = $nekrenineKvart;
+                }else{
+                  if($nekrenineKvart != ''){
+                   $naslovM = $nekrenineKvart;
+                 }else{
+                   $naslovM = $nekrZupanija;
+                 }
+                }
+
+        }
+
+
+      else{$naslovM = $nekretninaMjesto;}
+
+
+
 
     // $nekretnina->setAttribute('id', "garag".$nekrID);
      $IDNk = $dom-> createElement('id', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
@@ -179,6 +248,14 @@ function createXMLfile($nekrsArray){
 
      $naslov  = $dom->createElement('naslov', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
      $nekretnina->appendChild($naslov);
+
+
+
+
+
+
+
+
 
      $name  = $dom->createElement('vrsta', $nekrVrsta);
      $nekretnina->appendChild($name);
@@ -227,6 +304,8 @@ function createXMLfile($nekrsArray){
 
      // $slike = $dom->createElement('slike', $nekretninaSlike);
      // $nekretnina->appendChild($slike);
+
+     $GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon);
 
 
 
@@ -310,6 +389,9 @@ function createXMLfile($nekrsArray){
 
      $karta = $dom ->createElement('karta', $GoogleKarta); //$GoogleKarta
      $nekretnina -> appendChild($karta);
+
+     $kartaKordina = $dom ->createElement('kartaKord', htmlEntities($GoogleKorKarta)); //$GoogleKarta
+     $nekretnina -> appendChild($kartaKordina);
 
 
 
