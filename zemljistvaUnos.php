@@ -82,7 +82,8 @@ LEFT JOIN zupanije ON vivozemljista.zupanija = zupanije.id
 LEFT JOIN kvartovi ON kvartovi.id = vivozemljista.kvart
 LEFT JOIN teksttransferzemlja ON vivozemljista.id = teksttransferzemlja.spojenoNa
 LEFT JOIN slikezemljista ON slikezemljista.ID_nekrenina = vivozemljista.id
-where vivozemljista.aktivno = 1 AND vivozemljista.id > 220 AND vivozemljista.id < 320;";
+where vivozemljista.aktivno = 1
+order by vivozemljista.id asc";
 
 //where vivozemljista.aktivno = 1 AND vivozemljista.id < 207;";
 //where vivozemljista.aktivno = 1 AND vivozemljista.id > 205 AND vivozemljista.id < 220;";
@@ -116,15 +117,26 @@ if ($result = $mysqli->query($query)) {
     $result->free();
 }
 
+
+
+/*counter*/
+$counquery = "SELECT vivozemljista.id from vivozemljista";
+$num_rows = $mysqli->query($counquery);
+$num_rows = count($nekrsArray);
+
+$str1= $num_rows;
+$str2="Broj koji je prebaćen ";
+echo "<h4>".$str1 . " " . $str2."</h4>";
+
+
 /* close connection */
 $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'nekretnine_zemlja_3.xml';
+   $filePath = 'zemljiste.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
-//  $dom = new DOMDocument('1.0', 'ISO-8859-1');
 
    $root  = $dom->createElement('nekretnina');
 
