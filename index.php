@@ -122,48 +122,36 @@ $mysqli->close();
       <li class="nav-item active">
         <a class="nav-link" href="#">Naslovna <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="apartmanUnos.php">T-tomislav turizam</a>
-      </li>
-
-       <li class="nav-item">
-            <a class="nav-link" href="garaze_transfer.php">T-tomislav Garaže</a>
-      </li>
-
-         <li class="nav-item">
-            <a class="nav-link" href="googleMapGen.php" target="_blank">Google map generator</a>
-      </li>
-
+  
       <li class="nav-item">
             <a class="nav-link" href="IEList.php">Lista iz <T></a>
       </li>
 
 
-       <li class="nav-item">
-            <a class="nav-link" href="PoslovniUnos.php">T-tomislav Poslovni</a>
-      </li>
-
-     <li class="nav-item">
-            <a class="nav-link" href="StanoviUnos.php">T-tomislav stanovi</a>
+         <li class="nav-item">
+            <a class="nav-link" href="portal.php">Tool portal</a>
       </li>
 
 
-       <li class="nav-item">
-            <a class="nav-link" href="zemljistvaUnos.php">T-tomislav zemljišta</a>
-      </li>
+
+
 
       
-      <!-- <li class="nav-item dropdown">
+      <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown
+          T-Tomislav
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="zemljistvaUnos.php">Zemljišta</a>
+          <a class="dropdown-item" href="StanoviUnos.php">Stanovi</a>
+          <a class="dropdown-item" href="PoslovniUnos.php">Poslovni prostori</a>
+           <a class="dropdown-item" href="googleMapGen.php" target="_blank">google Map gen</a>
+                 <a class="dropdown-item" href="garaze_transfer.php">Garaže</a>
+                      <a class="dropdown-item" href="apartmanUnos.php">Turizam</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+          <!-- <a class="dropdown-item" href="#">Something else here</a> -->
         </div>
-      </li> -->
+      </li>
      
     </ul>
 
