@@ -24,9 +24,7 @@ if ($result = $mysqli->query($query)) {
     }
 
     if(count($booksArray)){
-
-         createXMLfile($booksArray);
-
+       //  createXMLfile($booksArray);
      }
 
     /* free result set */
@@ -36,61 +34,61 @@ if ($result = $mysqli->query($query)) {
 /* close connection */
 $mysqli->close();
 
-function createXMLfile($booksArray){
+// function createXMLfile($booksArray){
 
-   $filePath = 'book.xml';
+//    $filePath = 'book.xml';
 
-   $dom     = new DOMDocument('1.0', 'utf-8');
+//    $dom     = new DOMDocument('1.0', 'utf-8');
 
-   $root      = $dom->createElement('books');
+//    $root      = $dom->createElement('books');
 
-   for($i=0; $i<count($booksArray); $i++){
+//    for($i=0; $i<count($booksArray); $i++){
 
-     $bookId        =  $booksArray[$i]['id'];
+//      $bookId        =  $booksArray[$i]['id'];
 
-     $bookName      =  $booksArray[$i]['name'];
+//      $bookName      =  $booksArray[$i]['name'];
 
-     $bookAuthor    =  $booksArray[$i]['author_name'];
+//      $bookAuthor    =  $booksArray[$i]['author_name'];
 
-     $bookPrice     =  $booksArray[$i]['price'];
+//      $bookPrice     =  $booksArray[$i]['price'];
 
-     $bookISBN      =  $booksArray[$i]['ISBN'];
+//      $bookISBN      =  $booksArray[$i]['ISBN'];
 
-     $bookCategory  =  $booksArray[$i]['category'];
+//      $bookCategory  =  $booksArray[$i]['category'];
 
-     $book = $dom->createElement('book');
+//      $book = $dom->createElement('book');
 
-     $book->setAttribute('id', $bookId);
+//      $book->setAttribute('id', $bookId);
 
-     $name     = $dom->createElement('name', $bookName);
+//      $name     = $dom->createElement('name', $bookName);
 
-     $book->appendChild($name);
+//      $book->appendChild($name);
 
-     $author   = $dom->createElement('author', $bookAuthor);
+//      $author   = $dom->createElement('author', $bookAuthor);
 
-     $book->appendChild($author);
+//      $book->appendChild($author);
 
-     $price    = $dom->createElement('price', $bookPrice);
+//      $price    = $dom->createElement('price', $bookPrice);
 
-     $book->appendChild($price);
+//      $book->appendChild($price);
 
-     $isbn     = $dom->createElement('ISBN', $bookISBN);
+//      $isbn     = $dom->createElement('ISBN', $bookISBN);
 
-     $book->appendChild($isbn);
+//      $book->appendChild($isbn);
 
-     $category = $dom->createElement('category', $bookCategory);
+//      $category = $dom->createElement('category', $bookCategory);
 
-     $book->appendChild($category);
+//      $book->appendChild($category);
 
-     $root->appendChild($book);
+//      $root->appendChild($book);
 
-   }
+//    }
 
-   $dom->appendChild($root);
+//    $dom->appendChild($root);
 
-   $dom->save($filePath);
+//    $dom->save($filePath);
 
- }
+//  }
 
 
 
@@ -99,68 +97,112 @@ function createXMLfile($booksArray){
  <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>PHP XML app</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <style>
-    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
-    .row.content {height: 1500px}
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
 
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-    }
-
-    /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
-      .sidenav {
-        height: auto;
-        padding: 15px;
-      }
-      .row.content {height: auto;}
-    }
-  </style>
 </head>
 <body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
 
-<div class="container-fluid">
-  <div class="row content">
-    <div class="col-sm-3 sidenav">
-      <h4>John's Blog</h4>
-      <ul class="nav nav-pills nav-stacked">
-        <li class="active"><a href="#section1">Home</a></li>
-        <li><a href="apartmanUnos.php">turizam</a></li>
-        <li><a href="#section3">Family</a></li>
-        <li><a href="#section3">Photos</a></li>
-      </ul><br>
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search Blog..">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="button">
-            <span class="glyphicon glyphicon-search"></span>
-          </button>
-        </span>
-      </div>
-    </div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Naslovna <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="apartmanUnos.php">T-tomislav turizam</a>
+      </li>
+
+       <li class="nav-item">
+            <a class="nav-link" href="garaze_transfer.php">T-tomislav Garaže</a>
+      </li>
+
+         <li class="nav-item">
+            <a class="nav-link" href="googleMapGen.php" target="_blank">Google map generator</a>
+      </li>
+
+      <li class="nav-item">
+            <a class="nav-link" href="IEList.php">Lista iz <T></a>
+      </li>
+
+
+       <li class="nav-item">
+            <a class="nav-link" href="PoslovniUnos.php">T-tomislav Poslovni</a>
+      </li>
+
+     <li class="nav-item">
+            <a class="nav-link" href="StanoviUnos.php">T-tomislav stanovi</a>
+      </li>
+
+
+       <li class="nav-item">
+            <a class="nav-link" href="zemljistvaUnos.php">T-tomislav zemljišta</a>
+      </li>
+
+      
+      <!-- <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li> -->
+     
+    </ul>
+
+  </div>
+</nav>
+
+<div class="container">
+
+
+<div class="card text-center">
+  <div class="card-header">
+    Aplikacija za transfer podataka iz mysql u XML
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Upute</h5>
+    <p class="card-text">Klikni i rješio si, ako si napravio pritom kod ;)</p>
+  
+<p>Za T-tomislav dio, svaka aplikacija ima genereriranje google map koda
 
 
   </div>
+  <div class="card-footer text-muted">
+    
+  </div>
 </div>
 
-<footer class="container-fluid">
-  <p>Footer Text</p>
-</footer>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
 
 </body>
 </html>
