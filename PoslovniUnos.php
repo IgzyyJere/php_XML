@@ -135,7 +135,7 @@ $num_rows = count($nekrsArray);
 
 $str1= $num_rows;
 $str2="Broj koji je prebaćen ";
-echo "<h4>".$str1 . " " . $str2."</h4>";
+//echo "<h4>".$str1 . " " . $str2."</h4>";
 
 
 
@@ -145,7 +145,7 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'nekretnine_poslovni.xml';
+   $filePath = 'prerade/nekretnine_poslovni.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
 //  $dom = new DOMDocument('1.0', 'ISO-8859-1');
@@ -307,54 +307,90 @@ function createXMLfile($nekrsArray){
 
      $nekretnina = $dom->createElement('post');
 
-     if($nekretnineNaslovOglasa == '' & $nekretnineNaslovOglasa === 0 || is_numeric($nekretnineNaslovOglasa) || is_numeric($nekretnineNaslovOglasa) || is_null($nekretnineNaslovOglasa))
-       {
+     // if($nekretnineNaslovOglasa == '' & $nekretnineNaslovOglasa === 0 || is_numeric($nekretnineNaslovOglasa) || is_numeric($nekretnineNaslovOglasa) || is_null($nekretnineNaslovOglasa))
+     //   {
+     //
+     //     if($nekretninaMjesto == '' || $nekretninaMjesto == 0  || is_numeric($nekretninaMjesto) || is_null($nekretninaMjesto) & $nekrMikrolokacija !== 0 ||
+     //        $nekrMikrolokacija !== '' &  $nekrMikrolokacija !== '0' & is_numeric($nekrMikrolokacija)){
+     //
+     //            if($nekrZupanija != '' || is_null($nekrMikrolokacija) || is_numeric($nekrMikrolokacija)){
+     //                $naslovM = $nekrZupanija; //zupanija
+     //            }else{
+     //                $naslovM = $nekrMikrolokacija; //kvart
+     //             }
+     //
+     //     }
+     //
+     //           else{
+     //             $naslovM = $nekretninaMjesto; //grad
+     //           }
+     //   }
+     //
+     // else{
+     //   $naslovM = $nekretnineNaslovOglasa;
+     // }
+     //
+     // if($nekrID == 103){
+     //   $naslovM = "Šibensko-kninska";
+     // }
+     //
+     // if($nekrID == 108){
+     //   $naslovM = "Zagrebačka";
+     // }
+     //
+     // if($nekrID == 118 || $nekrID == 123 || $nekrID == 129 || $nekrID == 131 || $nekrID == 136 ){
+     //   $naslovM = "Grad Zagreb";
+     // }
+     //
+     // if($nekrID == 109){
+     //   $naslovM = "Dubrovačko-neretvanska";
+     // }
+     //
+     //
+     // if($nekrID == 114 || $nekrID == 115 || $nekrID == 138){
+     //   $naslovM = "Zadarska";
+     // }
+     //
+     //
+     // if($nekrID == 120 || $nekrID == 135){
+     //   $naslovM = "Primorsko-goranska";
+     // }
 
-         if($nekretninaMjesto == '' || $nekretninaMjesto == 0  || is_numeric($nekretninaMjesto) || is_null($nekretninaMjesto) & $nekrMikrolokacija !== 0 ||
-            $nekrMikrolokacija !== '' &  $nekrMikrolokacija !== '0' & is_numeric($nekrMikrolokacija)){
 
-                if($nekrZupanija != '' || is_null($nekrMikrolokacija) || is_numeric($nekrMikrolokacija)){
-                    $naslovM = $nekrZupanija; //zupanija
+//stalo je
+
+     if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto)){
+
+
+              //ako je prioritet da bude županija
+               // if($nekrZupanija != '' || is_null($nekrZupanija)){
+               //   $naslovM = $nekrZupanija;
+               // }
+               //
+               // else{
+               //   $naslovM = $nekrenineKvart;
+               // }
+
+               if($nekrenineKvart != ''){
+                   $naslovM = $nekrenineKvart;
+               }else{
+                 if($nekrenineKvart != ''){
+                  $naslovM = $nekrenineKvart;
                 }else{
-                    $naslovM = $nekrMikrolokacija; //kvart
-                 }
-
-         }
-
-               else{
-                 $naslovM = $nekretninaMjesto; //grad
+                  $naslovM = $nekrZupanija;
+                }
                }
+
        }
 
-     else{
-       $naslovM = $nekretnineNaslovOglasa;
-     }
 
-     if($nekrID == 103){
-       $naslovM = "Šibensko-kninska";
-     }
-
-     if($nekrID == 108){
-       $naslovM = "Zagrebačka";
-     }
-
-     if($nekrID == 118 || $nekrID == 123 || $nekrID == 129 || $nekrID == 131 || $nekrID == 136 ){
-       $naslovM = "Grad Zagreb";
-     }
-
-     if($nekrID == 109){
-       $naslovM = "Dubrovačko-neretvanska";
-     }
+     else{$naslovM = $nekretninaMjesto;}
 
 
-     if($nekrID == 114 || $nekrID == 115 || $nekrID == 138){
-       $naslovM = "Zadarska";
-     }
 
 
-     if($nekrID == 120 || $nekrID == 135){
-       $naslovM = "Primorsko-goranska";
-     }
+
+
 
      $IDNk = $dom-> createElement('id', $naslovM . " - ".$nekrID .", ". $nekrVrsta);
      $nekretnina->appendChild($IDNk);
@@ -707,7 +743,7 @@ function createXMLfile($nekrsArray){
       if($nekretninaSupa == '0'){
             $nekretninaSupa = '';
       }else{
-           $nekretninaSupa = 'Šupa dostupna';
+           $nekretninaSupa = 'Šupa u vlasništvu';
       }
        $supa = $dom -> createElement('Supa', $nekretninaSupa);
        $nekretnina -> appendChild($supa);
@@ -797,7 +833,7 @@ function createXMLfile($nekrsArray){
     // //
     // //   //slike
       if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-       $nekretnine_slk1 = '';
+       $nekretnine_slk1 = 'http://www.nekretnine-tomislav.hr/t/t_tomislav.jpg';
       }else{
         $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
       }
@@ -944,7 +980,82 @@ function createXMLfile($nekrsArray){
    $dom->appendChild($root);
 
    $dom->save($filePath);
-   echo'<h1>Uspjeh , rješeni poslovni</h1>';
+   //echo'<h1>Uspjeh , rješeni poslovni</h1>';
 
  }
  ?>
+ <!DOCTYPE html>
+<html lang="hr">
+<head>
+  <title>PHP XML app</title>
+  <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="">Poslvoni prostori <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="index.php">Naslovna</a>
+      </li>
+
+      
+      <!-- <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li> -->
+     
+    </ul>
+
+  </div>
+</nav>
+
+
+
+<div class="container">
+
+<div class="jumbotron">
+  <h1 class="display-4">Poslovni prostori</h1>
+  <p class="lead">Uspjeh , rješeni poslovni prostori</p>
+  <hr class="my-4">
+  <?php print '<h1>'.$str1. " " .$str2.'</h1>'; ?>
+ 
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -122,7 +122,7 @@ $num_rows = count($nekrsArray);
 
 $str1= $num_rows;
 $str2="Broj koji je prebaćen ";
-echo "<h4>".$str1 . " " . $str2."</h4>";
+//echo "<h4>".$str1 . " " . $str2."</h4>";
 
 /* close connection */
 $mysqli->close();
@@ -130,7 +130,7 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'garaze.xml';
+   $filePath = 'prerade/garaze.xml';
 
    $dom  = new DOMDocument('1.0', 'utf-8');
 //  $dom = new DOMDocument('1.0', 'ISO-8859-1');
@@ -252,6 +252,23 @@ function createXMLfile($nekrsArray){
 
 
 
+     // echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
+     //
+     //  echo'<br/> <iframe
+     //  src="'.$GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon).'"
+     //  width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
+     //  </iframe> <br/>';
+     //  echo $nekretninaLat ."----, ---". $nekretninaLon;
+     //
+     //
+     // echo'<br/> --- <h3>po adresi</h3> ';
+     //  echo'<br/> <iframe
+     //  src="'.$GoogleKarta = mapa($nekretninaAdresa, "",   $nekretninaAdresa).'"
+     //  width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
+     //  </iframe> <br/>';
+     // echo   $nekretninaAdresa;
+     // echo '<hr/>';
+
 
 
 
@@ -310,7 +327,7 @@ function createXMLfile($nekrsArray){
 
 
            if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-            $nekretnine_slk1 = '';
+            $nekretnine_slk1 = 'http://www.nekretnine-tomislav.hr/t/t_tomislav.jpg';
            }else{
              $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
            }
@@ -427,7 +444,7 @@ function createXMLfile($nekrsArray){
    $dom->appendChild($root);
 
    $dom->save($filePath);
-   echo'<h1>Uspjeh</h1>';
+   //echo'<h1>Uspjeh</h1>';
 
  }
 
@@ -436,3 +453,82 @@ function createXMLfile($nekrsArray){
  ?>
 
   <!--?print $karta?-->
+
+
+  
+
+ <!DOCTYPE html>
+<html lang="hr">
+<head>
+  <title>PHP XML app</title>
+  <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="">Garaže <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="index.php">Naslovna</a>
+      </li>
+
+      
+      <!-- <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li> -->
+     
+    </ul>
+
+  </div>
+</nav>
+
+
+
+<div class="container">
+
+<div class="jumbotron">
+  <h1 class="display-4">Garaže</h1>
+  <p class="lead">Uspjeh , rješene garaže</p>
+  <hr class="my-4">
+  <?php print '<h1>'.$str1. " " .$str2.'</h1>'; ?>
+ 
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</body>
+</html>

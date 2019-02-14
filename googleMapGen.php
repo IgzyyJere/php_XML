@@ -44,7 +44,7 @@ function mapa($ulicaNaziva_, $broj_, $grad_)
 
         $grad =  $grad_;
         $drzava = "Croatia";
-        $part = "()&amp;ie=UTF8&amp;t=&amp;z=14&amp;iwloc=B&amp;output=embed";
+        $part = "()&amp;ie=UTF8&amp;t=&amp;z=24&amp;iwloc=B&amp;output=embed";
         $mapa_emb = $mapa.$ulica_naziv."%20".$brojulica."%20".$grad."%2C%20".$drzava.$part;
 
 if(isset($ulicaNaziva_) && trim($ulicaNaziva_) != ''){
@@ -93,10 +93,10 @@ function mapaLtd($lat_, $lon_)
  ?>
 
 
-<div style="width: 100%"><iframe width="100%" height="600" src="<?php print mapa('Vinogradi 36, Zagreb', '', '')?>" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.maps.ie/create-google-map/">Embed Google Map</a></iframe></div><br />
+<div style="width: 100%"><iframe width="100%" height="600" src="<?php print mapa('Istra', '', '')?>" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"><a href="https://www.maps.ie/create-google-map/">Embed Google Map</a></iframe></div><br />
 <!-- <?php print $mapa?> -->
 
-<?php print 'embaded :'. mapa('Horvacanska', '122', 'Zagreb') ?>
+<?php print 'embaded :'. mapa('', '', 'Istra') ?>
 
 
 <h1>generirani s kordinatama</h1>
