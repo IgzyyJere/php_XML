@@ -148,6 +148,7 @@ $mysqli->close();
            <a class="dropdown-item" href="googleMapGen.php" target="_blank">google Map gen</a>
                  <a class="dropdown-item" href="garaze_transfer.php">Garaže</a>
                       <a class="dropdown-item" href="apartmanUnos.php">Turizam</a>
+                       <a class="dropdown-item" href="njuskalo/index.php">Njuškalo</a>
           <div class="dropdown-divider"></div>
           <!-- <a class="dropdown-item" href="#">Something else here</a> -->
         </div>
