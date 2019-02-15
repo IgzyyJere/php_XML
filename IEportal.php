@@ -42,17 +42,9 @@ die();
 }
 
 
-
-$path = "file.txt";
- 
+$path = "report/portal.txt";
 $file = fopen($path,"w");
- 
-echo fwrite($file,"ccccc");
- 
 
-//zatvori me ako sma gotov
-fclose($file);
- 
 ?>
 
 <!doctype html>
@@ -105,29 +97,23 @@ fclose($file);
 
 <h3>Postovi</h3>
 
-<!-- 
-  <div class="row justify-content-start">
-    <div class="col-4">
-      One of two columns
-    </div>
-    <div class="col-4">
-      One of two columns
-    </div>
-  </div>
-
-
-  <div class="row justify-content-center">
-    <div class="col-4">
-      One of two columns
-    </div>
-    <div class="col-4">
-      One of two columns
-    </div>
-  </div> -->
 <div class="row">
   <div class="col-12">
 <?php
 try {
+
+
+  //naslov
+if($rezContainer = mysqli_query($mysqli, $stringQ)){
+  $zapis = mysqli_fetch_assoc($rezContainer);
+  $naslov = $zapis["name"];
+  //echo $naslov;
+  fwrite($file,"Naslov kategorije : ".$naslov."\r\n\r");
+}
+
+
+$count = 0;
+
 
 echo '<table class="table">
 <thead">
@@ -141,10 +127,10 @@ echo '<table class="table">
 <th>ime kategorije</th>
 
 </tr></thead><tbody>';
-
 $resulTitle = $mysqli ->query($stringQ);
 if($resulTitle ->num_rows > 0){
   while($row = $resulTitle -> fetch_assoc()){
+    $count++;
 echo'
 <tr>
 <td scope="row">'.$row["post_title"].'</td>
@@ -155,9 +141,17 @@ echo'
 <td> '.$row["term_id"].'</td>
 <td> '.$row["name"].'</td>
 </tr>';
+$empty = "\n   ";
+$titl = $row["post_title"];
+$linkU = $row["guid"];
+$date = $row["post_date"];
+
+fwrite($file,"\r\n\r"."\r\n\r".$titl.$empty."link : ".$linkU.$empty."Datum objave :".$date);
+
+//fwrite($file,"\r\n\r".$row["name"]);
 
   }
-  
+  fwrite($file,"\r\n\r"."\r\n\r"."broj postova u kategroji : ".$count);
 }
 
 
@@ -172,6 +166,10 @@ echo'
     
 
 
+ 
+
+//zatvori me ako sma gotov
+fclose($file);
 
 ?>
 </div>

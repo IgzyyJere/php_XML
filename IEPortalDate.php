@@ -18,6 +18,8 @@ function encode_to_utf8_if_needed($string)
     return $string;
 }
 
+$path = "report/portal_byDate.txt";
+$file = fopen($path,"w");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["d1"] !='') {
     $datumOd = $_POST["d1"];
@@ -56,13 +58,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["d1"] !='') {
 }
 
 
-
-$path = "file.txt";
-$file = fopen($path,"w");
- fwrite($file,"ccccc");
-//zatvori me ako sma gotov
-fclose($file);
- 
 ?>
 
 <!doctype html>
@@ -119,6 +114,17 @@ fclose($file);
 <div class="row">
   <div class="col-12">
 <?php
+$count = 0;
+  //naslov
+if($rezContainer = mysqli_query($mysqli, $stringQ)){
+  $zapis = mysqli_fetch_assoc($rezContainer);
+  $naslov = $zapis["name"];
+  //echo $naslov;
+  fwrite($file,"Naslov kategorije : ".$naslov."\r\n\r");
+}
+
+
+
 
               echo '<table class="table">
               <thead">
@@ -136,6 +142,7 @@ fclose($file);
                                                       $resulTitle = $mysqli ->query($stringQ);
                                                       if($resulTitle ->num_rows > 0){
                                                         while($row = $resulTitle -> fetch_assoc()){
+                                                            $count++;
                                                       echo'
                                                       <tr>
                                                       <td scope="row">'.$row["post_title"].'</td>
@@ -147,8 +154,17 @@ fclose($file);
                                                       <td> '.$row["name"].'</td>
                                                       </tr>';
 
+                                                      $empty = "\n   ";
+                                                      $titl = $row["post_title"];
+                                                      $linkU = $row["guid"];
+                                                      $date = $row["post_date"];
+
+                                                      fwrite($file,"\r\n\r"."\r\n\r".$titl.$empty."link : ".$linkU.$empty."Datum objave :".$date);
+
+                                                      //fwrite($file,"\r\n\r".$row["name"]);
+
                                                         }
-                                                        
+                                                         fwrite($file,"\r\n\r"."\r\n\r"."broj postova u kategroji : ".$count);
                                                       }
 
                                                           mysqli_free_result($resulTitle);
@@ -156,6 +172,8 @@ fclose($file);
         </tbody>
         </table>';
    
+
+
 ?>
 
 

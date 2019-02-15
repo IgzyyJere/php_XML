@@ -22,34 +22,17 @@ function encode_to_utf8_if_needed($string)
 
 
 
-// if($_GET["id"]){
-   
-
-// $stringQ = "select wp_posts.post_title, wp_posts.post_status ,wp_posts.guid ,wp_posts.post_type, wp_posts.post_date, wp_term_taxonomy.term_id, 
-// wp_term_taxonomy.taxonomy, wp_term_taxonomy.description, wp_terms.name
-// from wp_posts
-// LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-// LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-// LEFT JOIN wp_terms ON (wp_term_relationships.term_taxonomy_id = wp_terms.term_id)
-// WHERE wp_posts.post_type = 'post'
-// AND wp_term_taxonomy.taxonomy = 'category'
-// AND wp_term_taxonomy.term_id = ".$_GET["id"]."
-// AND wp_posts.post_status = 'publish'
-// ORDER BY post_date DESC";
-
-// }
 
 
-
-$path = "file.txt";
+// $path = "file.txt";
  
-$file = fopen($path,"w");
+// $file = fopen($path,"w");
  
-echo fwrite($file,"ccccc");
+// echo fwrite($file,"ccccc");
  
 
-//zatvori me ako sma gotov
-fclose($file);
+// //zatvori me ako sma gotov
+// fclose($file);
  
 ?>
 
