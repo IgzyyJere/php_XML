@@ -95,20 +95,17 @@ $nekrsArray = array();
 
 if ($result = $mysqli->query($query)) {
 
-    /* fetch associative array */
-    while ($row = $result->fetch_assoc()) {
+            /* fetch associative array */
+            while ($row = $result->fetch_assoc()) {
+              array_push($nekrsArray, $row);
+            }
 
-       array_push($nekrsArray, $row);
-    }
+          if(count($nekrsArray)){
+              createXMLfile($nekrsArray);
+          }
 
-    if(count($nekrsArray)){
-
-         createXMLfile($nekrsArray);
-
-     }
-
-    /* free result set */
-    $result->free();
+          /* free result set */
+          $result->free();
 }
 
 
@@ -130,321 +127,319 @@ $mysqli->close();
 
 function createXMLfile($nekrsArray){
 
-   $filePath = 'prerade/garaze.xml';
+                  $filePath = 'prerade/garaze.xml';
 
-   $dom  = new DOMDocument('1.0', 'utf-8');
-//  $dom = new DOMDocument('1.0', 'ISO-8859-1');
+                  $dom  = new DOMDocument('1.0', 'utf-8');
+                //  $dom = new DOMDocument('1.0', 'ISO-8859-1');
 
-   $root  = $dom->createElement('nekretnina');
+                  $root  = $dom->createElement('nekretnina');
 
-   for($i=0; $i<count($nekrsArray); $i++){
+                  for($i=0; $i<count($nekrsArray); $i++){
 
-     $nekrID  =  $nekrsArray[$i]['id'];
+                    $nekrID  =  $nekrsArray[$i]['id'];
 
-    // $nekretninaNaslov = $nekrsArray[$i]['naslovoglasa'];
-    $nekretninaNaslov =$nekrsArray[$i]['naslov'];
+                    // $nekretninaNaslov = $nekrsArray[$i]['naslovoglasa'];
+                    $nekretninaNaslov =$nekrsArray[$i]['naslov'];
 
-     $nekrVrsta  =  $nekrsArray[$i]['vrsta'];
+                    $nekrVrsta  =  $nekrsArray[$i]['vrsta'];
 
-     $nekrStatus  =  $nekrsArray[$i]['status'];
+                    $nekrStatus  =  $nekrsArray[$i]['status'];
 
-     $nekrZupanija =  $nekrsArray[$i]['nazivZupanije'];
+                    $nekrZupanija =  $nekrsArray[$i]['nazivZupanije'];
 
-     $nekrMikrolokacija =  $nekrsArray[$i]['mikrolokacija'];
+                    $nekrMikrolokacija =  $nekrsArray[$i]['mikrolokacija'];
 
-     $nekretninaPovrsina  =  $nekrsArray[$i]['povrsina'];
+                    $nekretninaPovrsina  =  $nekrsArray[$i]['povrsina'];
 
-      $nekretninaCijena  =  $nekrsArray[$i]['cijena'];
+                    $nekretninaCijena  =  $nekrsArray[$i]['cijena'];
 
-      $nekretninaMjesto =   $nekrsArray[$i]['mjesto'];
+                    $nekretninaMjesto =   $nekrsArray[$i]['mjesto'];
 
-      $nekretninaAdresa =  $nekrsArray[$i]['adresa'];
+                    $nekretninaAdresa =  $nekrsArray[$i]['adresa'];
+                      ///karta info
+                    $GoogleKarta = mapa($nekrMikrolokacija, "", $nekretninaMjesto);
+                     //  mapa("zagreb","", "zagreb");
 
 
-      ///karta info
-      $GoogleKarta = mapa($nekrMikrolokacija, "", $nekretninaMjesto);
-  //  mapa("zagreb","", "zagreb");
+                     $nekretninaAgent  =  $nekrsArray[$i]['imeIPrezime'];
 
+                     $nekretninaMobitel  =  $nekrsArray[$i]['mobitel'];
 
-      $nekretninaAgent  =  $nekrsArray[$i]['imeIPrezime'];
+                     $nekretninaMinCijena  =  $nekrsArray[$i]['minCijena'];
 
-     $nekretninaMobitel  =  $nekrsArray[$i]['mobitel'];
+                     $nekretninaMaxCijena  =  $nekrsArray[$i]['maxCijena'];
 
-      $nekretninaMinCijena  =  $nekrsArray[$i]['minCijena'];
+                     $nekretninaEmail  =  $nekrsArray[$i]['email'];
 
-      $nekretninaMaxCijena  =  $nekrsArray[$i]['maxCijena'];
+                     $nekretninaNap  =  $nekrsArray[$i]['napomena'];
 
-      $nekretninaEmail  =  $nekrsArray[$i]['email'];
 
-      $nekretninaNap  =  $nekrsArray[$i]['napomena'];
+                      $nekretnine_slk1 =  $nekrsArray[$i]['slk1'];
+                        $nekretnine_slk2 = $nekrsArray[$i]['slk2'];
+                          $nekretnine_slk3 = $nekrsArray[$i]['slk3'];
+                            $nekretnine_slk4 = $nekrsArray[$i]['slk4'];
+                              $nekretnine_slk5 = $nekrsArray[$i]['slk5'];
+                                $nekretnine_slk6 = $nekrsArray[$i]['slk6'];
+                                  $nekretnine_slk7 = $nekrsArray[$i]['slk7'];
 
+                      $nekretninaVrstPonude  =  $nekrsArray[$i]['vrstaPonude'];
 
-      $nekretnine_slk1 =  $nekrsArray[$i]['slk1'];
-        $nekretnine_slk2 = $nekrsArray[$i]['slk2'];
-          $nekretnine_slk3 = $nekrsArray[$i]['slk3'];
-            $nekretnine_slk4 = $nekrsArray[$i]['slk4'];
-              $nekretnine_slk5 = $nekrsArray[$i]['slk5'];
-                $nekretnine_slk6 = $nekrsArray[$i]['slk6'];
-                  $nekretnine_slk7 = $nekrsArray[$i]['slk7'];
+                      $nekretninaLat  =  $nekrsArray[$i]['lat'];
 
-      $nekretninaVrstPonude  =  $nekrsArray[$i]['vrstaPonude'];
+                      $nekretninaLon  =  $nekrsArray[$i]['lon'];
 
-      $nekretninaLat  =  $nekrsArray[$i]['lat'];
+                      $nekretninaLon  =  $nekrsArray[$i]['lon'];
 
-      $nekretninaLon  =  $nekrsArray[$i]['lon'];
+                      $nekretninaAgent_1  =  $nekrsArray[$i]['agent'];
 
-      $nekretninaLon  =  $nekrsArray[$i]['lon'];
+                      // $nekretninanjuskaloID  =  $nekrsArray[$i]['njuskalo_id'];
 
-      $nekretninaAgent_1  =  $nekrsArray[$i]['agent'];
+                      $nekretninaPdf  =  $nekrsArray[$i]['tlocrtPDF'];
 
-      // $nekretninanjuskaloID  =  $nekrsArray[$i]['njuskalo_id'];
+                      $nekretninaMoreUdaljenost = $nekrsArray[$i]['moreUdaljenost'];
 
-      $nekretninaPdf  =  $nekrsArray[$i]['tlocrtPDF'];
+                      $nekretninaMorePogled = $nekrsArray[$i]['morePogled'];
 
-      $nekretninaMoreUdaljenost = $nekrsArray[$i]['moreUdaljenost'];
+                      $nekretninaTekst = $nekrsArray[$i]['tekst'];
 
-      $nekretninaMorePogled = $nekrsArray[$i]['morePogled'];
+                      $nekretnina = $dom->createElement('post');
 
-      $nekretninaTekst = $nekrsArray[$i]['tekst'];
 
-      $nekretnina = $dom->createElement('post');
 
+                      if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto)){
 
 
-      if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto)){
+                              //ako je prioritet da bude županija
+                                // if($nekrZupanija != '' || is_null($nekrZupanija)){
+                                //   $naslovM = $nekrZupanija;
+                                // }
+                                //
+                                // else{
+                                //   $naslovM = $nekrenineKvart;
+                                // }
 
+                                if($nekrenineKvart != ''){
+                                    $naslovM = $nekrenineKvart;
+                                }else{
+                                  if($nekrenineKvart != ''){
+                                  $naslovM = $nekrenineKvart;
+                                }else{
+                                  $naslovM = $nekrZupanija;
+                                }
+                                }
 
-               //ako je prioritet da bude županija
-                // if($nekrZupanija != '' || is_null($nekrZupanija)){
-                //   $naslovM = $nekrZupanija;
-                // }
-                //
-                // else{
-                //   $naslovM = $nekrenineKvart;
-                // }
+                        }
 
-                if($nekrenineKvart != ''){
-                    $naslovM = $nekrenineKvart;
-                }else{
-                  if($nekrenineKvart != ''){
-                   $naslovM = $nekrenineKvart;
-                 }else{
-                   $naslovM = $nekrZupanija;
-                 }
-                }
 
-        }
+                      else{$naslovM = $nekretninaMjesto;}
 
 
-      else{$naslovM = $nekretninaMjesto;}
 
 
+                    // $nekretnina->setAttribute('id', "garag".$nekrID);
+                    $IDNk = $dom-> createElement('id', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
+                    $nekretnina->appendChild($IDNk);
 
 
-    // $nekretnina->setAttribute('id', "garag".$nekrID);
-     $IDNk = $dom-> createElement('id', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
-     $nekretnina->appendChild($IDNk);
+                    $naslov  = $dom->createElement('naslov', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
+                    $nekretnina->appendChild($naslov);
 
 
-     $naslov  = $dom->createElement('naslov', $nekretninaNaslov . " - ".$nekrID . ", " .$nekrVrsta);
-     $nekretnina->appendChild($naslov);
 
 
+                    // echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
+                    //
+                    //  echo'<br/> <iframe
+                    //  src="'.$GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon).'"
+                    //  width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
+                    //  </iframe> <br/>';
+                    //  echo $nekretninaLat ."----, ---". $nekretninaLon;
+                    //
+                    //
+                    // echo'<br/> --- <h3>po adresi</h3> ';
+                    //  echo'<br/> <iframe
+                    //  src="'.$GoogleKarta = mapa($nekretninaAdresa, "",   $nekretninaAdresa).'"
+                    //  width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
+                    //  </iframe> <br/>';
+                    // echo   $nekretninaAdresa;
+                    // echo '<hr/>';
 
 
-     // echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
-     //
-     //  echo'<br/> <iframe
-     //  src="'.$GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon).'"
-     //  width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
-     //  </iframe> <br/>';
-     //  echo $nekretninaLat ."----, ---". $nekretninaLon;
-     //
-     //
-     // echo'<br/> --- <h3>po adresi</h3> ';
-     //  echo'<br/> <iframe
-     //  src="'.$GoogleKarta = mapa($nekretninaAdresa, "",   $nekretninaAdresa).'"
-     //  width="600" height="450" frameborder="0" style="border:0" allowfullscreen>
-     //  </iframe> <br/>';
-     // echo   $nekretninaAdresa;
-     // echo '<hr/>';
 
 
 
 
+                    $name  = $dom->createElement('vrsta', $nekrVrsta);
+                    $nekretnina->appendChild($name);
 
+                    $status  = $dom->createElement('status',  $nekrStatus);
+                    $nekretnina->appendChild($status);
 
-     $name  = $dom->createElement('vrsta', $nekrVrsta);
-     $nekretnina->appendChild($name);
+                    $zupanija = $dom->createElement('nazivZupanije', $nekrZupanija);
+                    $nekretnina->appendChild($zupanija);
 
-     $status  = $dom->createElement('status',  $nekrStatus);
-     $nekretnina->appendChild($status);
+                    $mikrolokacija = $dom->createElement('mikrolokacija', $nekrMikrolokacija);
+                    $nekretnina->appendChild($mikrolokacija);
 
-     $zupanija = $dom->createElement('nazivZupanije', $nekrZupanija);
-     $nekretnina->appendChild($zupanija);
+                    $povrsina  = $dom->createElement('povrsina', $nekretninaPovrsina);
+                    $nekretnina->appendChild($povrsina);
 
-     $mikrolokacija = $dom->createElement('mikrolokacija', $nekrMikrolokacija);
-     $nekretnina->appendChild($mikrolokacija);
 
-     $povrsina  = $dom->createElement('povrsina', $nekretninaPovrsina);
-     $nekretnina->appendChild($povrsina);
+                    $cijena  = $dom->createElement('cijena', $nekretninaCijena );
+                    $nekretnina ->appendChild($cijena);
 
+                    $mjesto  = $dom->createElement('mjesto', $nekretninaMjesto);
+                    $nekretnina ->appendChild($mjesto);
 
-     $cijena  = $dom->createElement('cijena', $nekretninaCijena );
-     $nekretnina ->appendChild($cijena);
+                    $adresa = $dom->createElement('adresa', $nekretninaAdresa);
+                    $nekretnina->appendChild($adresa);
 
-     $mjesto  = $dom->createElement('mjesto', $nekretninaMjesto);
-     $nekretnina ->appendChild($mjesto);
+                    $agent = $dom->createElement('imeIPrezime', $nekretninaAgent);
+                    $nekretnina->appendChild($agent);
 
-     $adresa = $dom->createElement('adresa', $nekretninaAdresa);
-     $nekretnina->appendChild($adresa);
 
-     $agent = $dom->createElement('imeIPrezime', $nekretninaAgent);
-     $nekretnina->appendChild($agent);
+                    $mobitel = $dom->createElement('mobitel', $nekretninaMobitel);
+                    $nekretnina->appendChild($mobitel);
 
 
-     $mobitel = $dom->createElement('mobitel', $nekretninaMobitel);
-     $nekretnina->appendChild($mobitel);
+                    $minCijena = $dom->createElement('minCijena', $nekretninaMinCijena);
+                    $nekretnina->appendChild($minCijena);
 
+                    $maxCijena = $dom->createElement('maxCijena', $nekretninaMaxCijena);
+                    $nekretnina->appendChild($maxCijena);
 
-     $minCijena = $dom->createElement('minCijena', $nekretninaMinCijena);
-     $nekretnina->appendChild($minCijena);
+                    $mail = $dom->createElement('email', $nekretninaEmail);
+                    $nekretnina->appendChild($mail);
 
-     $maxCijena = $dom->createElement('maxCijena', $nekretninaMaxCijena);
-     $nekretnina->appendChild($maxCijena);
+                    $napomena = $dom->createElement('napomena', $nekretninaNap);
+                    $nekretnina->appendChild($napomena);
 
-     $mail = $dom->createElement('email', $nekretninaEmail);
-     $nekretnina->appendChild($mail);
+                    // $slike = $dom->createElement('slike', $nekretninaSlike);
+                    // $nekretnina->appendChild($slike);
 
-     $napomena = $dom->createElement('napomena', $nekretninaNap);
-     $nekretnina->appendChild($napomena);
+                    $GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon);
 
-     // $slike = $dom->createElement('slike', $nekretninaSlike);
-     // $nekretnina->appendChild($slike);
 
-     $GoogleKorKarta = mapaLtd($nekretninaLat, $nekretninaLon);
 
+                          if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                            $nekretnine_slk1 = 'http://www.nekretnine-tomislav.hr/t/t_tomislav.jpg';
+                          }else{
+                            $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
+                          }
+                            $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
+                          $nekretnina-> appendChild($slike1);
 
 
-           if($nekretnine_slk1 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-            $nekretnine_slk1 = 'http://www.nekretnine-tomislav.hr/t/t_tomislav.jpg';
-           }else{
-             $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
-           }
-             $slike1 = $dom-> createElement('slk1', $nekretnine_slk1);
-           $nekretnina-> appendChild($slike1);
+                          if($nekretnine_slk2 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                            $nekretnine_slk2 = '';
+                          }else{
+                              $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
+                            }
+                            $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
+                          $nekretnina -> appendChild($slike2);
 
 
-           if($nekretnine_slk2 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-             $nekretnine_slk2 = '';
-           }else{
-               $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
-             }
-             $slike2 = $dom-> createElement('slk2', $nekretnine_slk2);
-           $nekretnina -> appendChild($slike2);
+                          if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                            $nekretnine_slk3 = '';
+                          }else{
+                            $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
+                            }
+                          $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
+                          $nekretnina -> appendChild($slike3);
 
 
-           if($nekretnine_slk3 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-             $nekretnine_slk3 = '';
-           }else{
-             $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
-             }
-           $slike3 = $dom-> createElement('slk3', $nekretnine_slk3);
-           $nekretnina -> appendChild($slike3);
+                            if($nekretnine_slk4 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                                $nekretnine_slk4 = '';
+                            }else{
+                                $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
+                            }
+                          $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
+                          $nekretnina -> appendChild($slike4);
 
 
-             if($nekretnine_slk4 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-                 $nekretnine_slk4 = '';
-             }else{
-                 $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
-             }
-           $slike4 = $dom -> createElement('slk4', $nekretnine_slk4);
-           $nekretnina -> appendChild($slike4);
 
+                          if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                            $nekretnine_slk5 = '';
+                          }else{
+                            $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
+                          }
+                          $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
+                          $nekretnina -> appendChild($slike5);
 
 
-           if($nekretnine_slk5 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-             $nekretnine_slk5 = '';
-           }else{
-             $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
-           }
-           $slike5 = $dom -> createElement('slk5', $nekretnine_slk5);
-           $nekretnina -> appendChild($slike5);
+                          if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                            $nekretnine_slk6 = '';
+                          }else{
+                              $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
+                          }
+                          $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
+                          $nekretnina -> appendChild($slike6);
 
 
-           if($nekretnine_slk6 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-             $nekretnine_slk6 = '';
-           }else{
-               $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
-           }
-           $slike6 = $dom -> createElement('slk6',  $nekretnine_slk6);
-           $nekretnina -> appendChild($slike6);
+                          if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
+                            $nekretnine_slk7 = '';
+                          }else{
+                            $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
+                          }
+                          $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
+                          $nekretnina -> appendChild($slike7);
 
 
-           if($nekretnine_slk7 == 'http://nekretnine-tomislav.hr/elementi/pageBack.png'){
-             $nekretnine_slk7 = '';
-           }else{
-             $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
-           }
-           $slike7 = $dom -> createElement('slk7',  $nekretnine_slk7);
-           $nekretnina -> appendChild($slike7);
 
 
 
 
+                    $vrstPonude = $dom->createElement('vrstaPonude', $nekretninaVrstPonude);
+                    $nekretnina->appendChild($vrstPonude);
 
+                    $Lat = $dom->createElement('lat', $nekretninaLat);
+                    $nekretnina->appendChild($Lat);
 
-     $vrstPonude = $dom->createElement('vrstaPonude', $nekretninaVrstPonude);
-     $nekretnina->appendChild($vrstPonude);
+                    $Lon = $dom->createElement('lon', $nekretninaLon);
+                    $nekretnina->appendChild($Lon);
 
-     $Lat = $dom->createElement('lat', $nekretninaLat);
-     $nekretnina->appendChild($Lat);
 
-     $Lon = $dom->createElement('lon', $nekretninaLon);
-     $nekretnina->appendChild($Lon);
+                    $karta = $dom ->createElement('karta', $GoogleKarta); //$GoogleKarta
+                    $nekretnina -> appendChild($karta);
 
+                    $kartaKordina = $dom ->createElement('kartaKord', htmlEntities($GoogleKorKarta)); //$GoogleKarta
+                    $nekretnina -> appendChild($kartaKordina);
 
-     $karta = $dom ->createElement('karta', $GoogleKarta); //$GoogleKarta
-     $nekretnina -> appendChild($karta);
 
-     $kartaKordina = $dom ->createElement('kartaKord', htmlEntities($GoogleKorKarta)); //$GoogleKarta
-     $nekretnina -> appendChild($kartaKordina);
 
 
+                    //$GoogleKarta = mapa($nekrMikrolokacija, "", $nekretninaMjesto);
 
 
-     //$GoogleKarta = mapa($nekrMikrolokacija, "", $nekretninaMjesto);
+                    $agent_1 = $dom->createElement('agent', $nekretninaAgent_1);
+                    $nekretnina->appendChild($agent_1);
 
+                    // $njuskalo = $dom->createElement('njuskalo_id', $nekretninanjuskaloID);
+                    // $nekretnina->appendChild($njuskalo);
 
-     $agent_1 = $dom->createElement('agent', $nekretninaAgent_1);
-     $nekretnina->appendChild($agent_1);
+                    $pdf_ = $dom->createElement('tlocrtPDF', $nekretninaPdf);
+                    $nekretnina->appendChild($pdf_);
 
-     // $njuskalo = $dom->createElement('njuskalo_id', $nekretninanjuskaloID);
-     // $nekretnina->appendChild($njuskalo);
+                    $moreUda = $dom->createElement('moreUdaljenost', $nekretninaMoreUdaljenost);
+                    $nekretnina->appendChild($moreUda);
 
-     $pdf_ = $dom->createElement('tlocrtPDF', $nekretninaPdf);
-     $nekretnina->appendChild($pdf_);
+                    $morePogled = $dom->createElement('morePogled', $nekretninaMorePogled);
+                    $nekretnina->appendChild($morePogled);
 
-     $moreUda = $dom->createElement('moreUdaljenost', $nekretninaMoreUdaljenost);
-     $nekretnina->appendChild($moreUda);
+                    $tekst = $dom->createElement('tekst', $nekretninaTekst);
+                    $nekretnina->appendChild($tekst);
 
-     $morePogled = $dom->createElement('morePogled', $nekretninaMorePogled);
-     $nekretnina->appendChild($morePogled);
 
-     $tekst = $dom->createElement('tekst', $nekretninaTekst);
-     $nekretnina->appendChild($tekst);
 
 
+                    $root->appendChild($nekretnina);
 
+                  }
 
-     $root->appendChild($nekretnina);
+                  $dom->appendChild($root);
 
-   }
-
-   $dom->appendChild($root);
-
-   $dom->save($filePath);
-   //echo'<h1>Uspjeh</h1>';
+                  $dom->save($filePath);
+                  //echo'<h1>Uspjeh</h1>';
 
  }
 

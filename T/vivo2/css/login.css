@@ -1,0 +1,83 @@
+body {
+
+    margin: 0px;
+    font: 12px/1.5 Arial, Verdana, sans-serif;
+    text-align: center;
+    background-color: #7d7d7d;
+
+}
+
+#login-cont {
+
+    margin: 100px auto 0;
+    padding: 50px;
+    width: 300px;
+    height: 220px;
+    background-image: url('../elementi/loginBack.png');
+    color: #f00;
+    font-weight: bold;
+
+}
+
+#login {
+
+    color: #fff;
+    text-align: left;
+
+}
+
+#login form {
+
+    margin: 0 0 10px 0;
+
+}
+
+
+#login-user, #login-pass {
+
+    width: 280px;
+    height: 40px;
+    clear: both;
+    float: left;
+
+}
+
+.loginTekst {
+
+    width: 100px;
+    float: left;
+
+}
+
+
+#login-user input, #login-pass input {
+
+    margin: 0;
+    padding: 0;
+    border: 1px #000 solid;
+    width: 150px;
+    float: right;
+
+}
+
+#login-user input:focus, #login-pass input:focus {
+
+    border: 1px #FF4500 solid;
+
+}
+
+
+#login-logo {
+
+    margin: 0 0 30px 0;
+    width: 300px;
+    text-align: left;
+
+}
+
+#login-button {
+
+    text-align: center;
+
+}
+

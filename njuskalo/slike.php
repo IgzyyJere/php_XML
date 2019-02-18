@@ -98,9 +98,9 @@ select DISTINCT wp_posts.ID, wp_posts.post_title, wp_posts.guid,wp_posts.post_pa
         $PIC = $rowPic["guid"];
                   echo'
                   <tr>
-                  <td scope="row">'.$row["ID"].'</td>
-                  <td scope="row">'.$row["post_title"].'</td>
-                  <td><img src="'.$PIC.'"></td>
+                  <td scope="row">'.$ID.'</td>
+                  <td scope="row">'.$rowPic["post_title"].'</td>
+                  <td><img src="'.$PIC.'" width="180" height="150"></td>
                   </tr>';
 
                     }
@@ -119,10 +119,10 @@ echo'
 
 
 
-  } catch (Exception $e) {
+      } catch (Exception $e) {
   echo 'Poruka '. $e -> getMessage();
   }
-    mysqli_free_result($resulTitle);
+    mysqli_free_result($slika);
 ?>
 </div>
 </div>

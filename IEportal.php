@@ -33,8 +33,7 @@ if($_GET["id"]){
             AND wp_posts.post_status = 'publish'
             ORDER BY post_date DESC";
             $postId = $_GET["id"];
-            
-
+          
 }
 
 else{

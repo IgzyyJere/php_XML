@@ -1,0 +1,160 @@
+.formTitle, .formPrivate, .formDescription {
+    width: 100%;
+    float: left;
+    background-color: #ccc;
+    text-align: center;
+    padding: 3px 0;
+    font-weight: bold;
+    border-bottom: 1px solid #B22222;
+    border-top: 1px solid #B22222;
+}
+
+.inputField {
+    width: 49%;
+    float: left;
+    margin: 0 0 0 10px;
+    border-bottom: 1px solid #aaa;
+    padding: 5px 0;
+}
+
+.inputText {
+    width: 130px;
+    float: left;
+}
+
+.inputArea {
+    width: 300px;
+    float: left;
+}
+.inputArea input[type="text"] {
+    width: 290px;
+}
+
+.inputArea select {
+    width: 290px;
+}
+
+
+hr.ruler {
+    width: 100%;
+    float: left;
+    clear: left;
+    margin: 10px 0;
+}
+.miniContainer {
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+
+.buttonsDown {
+    padding: 20px 0;
+    text-align: center;
+    width: 100%;
+}
+
+.buttonsDown button {
+    margin: 0 20px;
+    padding: 1px 4px;
+    font-weight: bold;
+}
+.textTitle {
+    width: 100%;
+    text-align: center;
+}
+
+.textField {
+  float: left;
+  clear: both;
+}
+
+
+.textareaUpdate, .textareaInsert {
+    text-align: left;
+}
+
+
+#unosTlocrtaNekaj, #unosGalerijeDiv {
+    width: 770px;
+    padding: 0 10px;
+}
+.formPicture {
+    width: 110px;
+    float: left;
+    margin: 10px;
+}
+#changePass {
+    width: 690px;
+    height: 70px;
+    padding: 20px 0 0 100px;
+}
+#main textarea.dodajEditor {
+    width: 900px;
+    height: 200px;
+}
+
+#opisTekst button {
+    margin: 10px 0;
+}
+#opisTekstArea textarea.dodajEditor {
+    width: 900px;
+    height: 300px;
+}
+#opisContainer, #upDatPopis {
+  width: 100%;
+  padding: 20px 0;
+  float: left;
+  overflow: hidden;
+}
+#opisPopisJezika {
+    width: 900px;
+    float: left;
+}
+a.opisAktivniJezik {
+    display: block;
+    background-color: #ddd;
+    padding: 2px 0 2px 10px;
+    color: #000;
+    text-decoration: none;
+    margin: 4px 0 0 0;
+    width: 200px;
+    float: left;
+    margin: 2px 5px;
+}
+a.opisAktivniJezik:hover {
+    background-color: #bbb;
+}
+#opisObradaTeksta {
+    float: left;
+    width: 900px;
+    display: inline;
+    margin: 0 0 0 20px;
+}
+
+#formSlanjePonude label {
+  width: 120px;
+  float: left;
+  clear: left;
+  margin: 5px 10px;
+}
+
+#formSlanjePonude button {
+  margin: 20px 0 20px 100px;
+}
+
+#formSlanjePonude div {
+    width: 600px;
+    clear: left;  
+}
+
+
+
+
+
+
+
+
+
+
+
+

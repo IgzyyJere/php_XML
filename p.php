@@ -9,9 +9,20 @@
 <body>  
 
 <?php
+
+require_once 'potKlasa.php';
+
+
 // define variables and set to empty values
 $nameErr = $emailErr = $genderErr = $websiteErr = "";
 $name = $email = $gender = $comment = $website = "";
+
+
+
+
+
+
+
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($_POST["name"])) {
@@ -21,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // check if name only contains letters and whitespace
     if (!preg_match("/^[a-zA-Z ]*$/",$name)) {
       $nameErr = "Only letters and white space allowed"; 
+    
     }
   }
   
@@ -48,12 +60,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comment = "";
   } else {
     $comment = test_input($_POST["comment"]);
+   
   }
 
   if (empty($_POST["gender"])) {
     $genderErr = "Gender is required";
   } else {
     $gender = test_input($_POST["gender"]);
+    
   }
 }
 
@@ -87,7 +101,8 @@ function test_input($data) {
   <br><br>
   <input type="submit" name="submit" value="Submit">  
 </form>
-
+<!-- $vars = get_object_vars($klasa);
+echo $vars; -->
 <?php
 echo "<h2>Your Input:</h2>";
 echo $name;
@@ -100,6 +115,6 @@ echo $comment;
 echo "<br>";
 echo $gender;
 ?>
-
+<!-- //https://phpenthusiast.com/object-oriented-php-tutorials/create-classes-and-objects -->
 </body>
 </html>
