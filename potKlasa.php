@@ -1,36 +1,59 @@
 <?php
-namespace php_XML;
 
-class Potatoe {
-    public $skin;
-    protected $meat;
-    private $roots;
-
-// function __construct ( $s, $m, $r ) {
-//         $this->skin = $s;
-//         $this->meat = $m;
-//         $this->roots = $r;
-//     }
-
- public function __construct(){}
-
-
-    //   function PrintAll () {
-    //     echo "skin = ".$this->skin."\n";
-    //     echo "meat = ".$this->meat."\n";
-    //     echo "roots = ".$this->roots."\n";
-    // }
+// base class with member properties and methods
+class Vegetable {
 
 
 
-}
+
+   var $edible;
+   var $color;
+
+   function __construct($edible, $color="green")
+   {
+       $this->edible = $edible;
+       $this->color = $color;
+   }
+
+   function is_edible()
+   {
+       return $this->edible;
+   }
+
+   function what_color()
+   {
+       return $this->color;
+   }
+
+} // end of class Vegetable
+
+// extends the base class
+class Spinach extends Vegetable {
+
+   var $cooked = false;
+
+   function __construct()
+   {
+       parent::__construct(true, "green");
+   }
+
+   function cook_it()
+   {
+       $this->cooked = true;
+   }
+
+   function is_cooked()
+   {
+       return $this->cooked;
+   }
+
+} // end of class Spinach
 
 
 
-class ClassA {
-  public function getName() {
-    echo "Rawkode";
-  }
+class mojaKlasa
+{
+ var $miki = "jeboteeee";
 }
 
 
