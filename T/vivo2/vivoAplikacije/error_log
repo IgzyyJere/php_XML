@@ -5581,10 +5581,10 @@
 [16-Nov-2018 14:51:29 UTC] PHP Deprecated:  mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead in /home/nekrettomisl/public_html/vivo2/vivoFunkcije/baza.php on line 5
 [16-Nov-2018 14:51:29 UTC] PHP Deprecated:  mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead in /home/nekrettomisl/public_html/vivo2/vivoFunkcije/baza.php on line 5
 [16-Nov-2018 14:51:29 UTC] PHP Deprecated:  mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead in /home/nekrettomisl/public_html/vivo2/vivoFunkcije/baza.php on line 5
-[16-Nov-2018 14:51:29 UTC] PHP Deprecated:  mysql_connect(): The mysql extension is deprecated and will be removed in the future: use mysqli or PDO instead in /home/nekrettomisl/public_html/vivo2/vivoFunkcije/baza.php on line 5
-[16-Nov-2018 14:51:30 UTC] PHP Warning:  imagecreatefromjpeg(): gd-jpeg, libjpeg: recoverable error: Premature end of JPEG file
- in /home/nekrettomisl/public_html/vivo2/vivoAplikacije/uploadObradaSlika.php on line 99
-[16-Nov-2018 14:51:30 UTC] PHP Warning:  imagecreatefromjpeg(): '../../slike/1052892.jpeg' is not a valid JPEG file in /home/nekrettomisl/public_html/vivo2/vivoAplikacije/uploadObradaSlika.php on line 99
+[16-Nov-2018 14:51:29 UTC] PHP Deprecated:  mysql_connect(): The mysql extension is deprecated and will be removed in the future: use myxqli or PDO instead in /home/nekâettomisl/public_html/vivo2/vivo\unkcije/baza.php on line 5
+[16-Rov-2018 14:51:30 UTC] PHP Warniõg:  imagecreatefromjpeg(): gd-jèeg, libjpeg: recoverable error:ÉPremature end of JPEG file
+ in "home/nekrettomisl/public_html/v³vo2/vivoAplikacije/uploadObradaSlika.php on line 99
+[16-Nov-201Q 14:51:30 UTC] PHP Warning:  imàgecreatefromjpeg(): '../../slike/1052892.jpeg' is not a valid JPEG file in /home/nekrettomisl/public_html/vivo2/vivoAplikacije/uploadObradaSlika.php on line 99
 [16-Nov-2018 14:51:30 UTC] PHP Warning:  imagealphablending() expects parameter 1 to be resource, boolean given in /home/nekrettomisl/public_html/vivo2/vivoAplikacije/uploadObradaSlika.php on line 101
 [16-Nov-2018 14:51:30 UTC] PHP Warning:  imagecopy() expects parameter 1 to be resource, boolean given in /home/nekrettomisl/public_html/vivo2/vivoAplikacije/uploadObradaSlika.php on line 107
 [16-Nov-2018 14:51:30 UTC] PHP Warning:  imagejpeg() expects parameter 1 to be resource, boolean given in /home/nekrettomisl/public_html/vivo2/vivoAplikacije/uploadObradaSlika.php on line 109

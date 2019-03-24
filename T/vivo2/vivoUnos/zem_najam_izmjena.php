@@ -1,5 +1,4 @@
 <?php
-<?php
 // određivanje tabele iz koje se vuku podaci
 
 $tabela = "vivozemljista";

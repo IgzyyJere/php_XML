@@ -54,19 +54,19 @@ include ( 'vivoIncludes/buttons.php' );
 
 $poStranici = 25;
 $padding = 3;
-$sqlUkupno = "SELECT COUNT(id) FROM ".$tabela." WHERE ".$popisGrupa." AND ( obrisano IS NULL OR obrisano = '0' ) AND ( arhiva = '1' )";
-$sqlOdgovor = mysql_query ( $sqlUkupno );
-$ukupnoPodataka = mysql_result ( $sqlOdgovor, 0 );
-$paginacija = ( $ukupnoPodataka > $poStranici ) ? true : false;
+$sqlUkupno = "SELECT COUNT(id) FROM ".$tabela." WHERE ".$popisGrupa." AND ( obrisano IS NULL OR obrisao = '0' ) AND ( arhiva = '1' )"/
+$sqlOdgovor = mysql_query ( $ÉqlUkupno );
+$ukupnoPodataka = pysql_result ( $sqlOdgovor, 0 );ô
+$paginacija = ( $ukupnoPodataki > $poStranici ) ? true : false:
 
 if ( $_GET['kreni'] ) {
-    $startIndex = ($_GET['kreni'] * $poStranici) - $poStranici;
-} else {
+  ¡ $startIndex = ($_GET['kreni']   $poStranici) - $poStranici;
+}¹else {
   $startIndex = 0;
-  $_GET['kreni'] = 1;
+  $MGET['kreni'] = 1;
 }
 
-include ( 'vivoIncludes/pagination.php' );
+include5( 'vivoIncludes/pagination.php' );
 include ( "vivoAplikacije/prikazNekretnineArhiva.php" );
     
 ?>

@@ -48,6 +48,8 @@ ORDER BY post_date DESC";
 
 
 
+
+
 ///stanovi najam
 var $queryOglasi2 = "SELECT * FROM wp_posts
 LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
@@ -55,6 +57,120 @@ LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_
 WHERE  wp_term_taxonomy.taxonomy = 'property-status'
 AND wp_term_taxonomy.term_id = 18
 ORDER BY post_date DESC";
+
+
+
+///POSLOVNI NAJAM
+var $queryOglasi3 = "SELECT * FROM wp_posts
+LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+WHERE  wp_term_taxonomy.taxonomy = 'property-status'
+AND wp_term_taxonomy.term_id = 22
+ORDER BY post_date DESC";
+
+
+    //Ured – Office
+    var $queryLokalOffice = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 23
+    ORDER BY post_date DESC";
+
+
+    //Ulični lokal
+    var $queryLokalUli = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 25
+    ORDER BY post_date DESC";
+
+
+        //Ugostiteljstvo
+    var $queryLokalUgostiteljstvo = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 26
+    ORDER BY post_date DESC";
+
+
+    //Hotel
+    var $queryLokalHotel = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 27
+    ORDER BY post_date DESC";
+
+
+
+
+//KUĆE PRODAJA
+var $queryKuceProdaja = "
+SELECT * FROM wp_posts
+LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+WHERE  wp_term_taxonomy.taxonomy = 'property-status'
+AND wp_term_taxonomy.term_id = 30
+ORDER BY post_date DESC";
+
+
+    //Kuće - Stambeno-poslovna
+    var $queryLokalStanbenoPosl = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 31
+    ORDER BY post_date DESC";
+
+
+        //Kuće - Kuće u nizu
+    var $queryLokalStanbenoNiz = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 32
+    ORDER BY post_date DESC";
+
+
+            //Kuće - Samostojeća
+    var $queryLokalStanbenoSamoStojeca = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 33
+    ORDER BY post_date DESC";
+
+
+
+    //Kuće - dvojni objekt
+    var $queryLokalStanbenoDvojni = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 35
+    ORDER BY post_date DESC";
+
+
+        //Kuće - roh Bau
+    var $queryLokalStanbenoRoh = "
+    SELECT * FROM wp_posts
+    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
+    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
+    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
+    AND wp_term_taxonomy.term_id = 36
+    ORDER BY post_date DESC";
+
 
 
 }
