@@ -72,10 +72,10 @@ function mapaLtd($lat_, $lon_)
 
 
 $query = "
-SELECT vivokuce.id, grupe.naziv AS 'vrsta', grupe.vrsta AS 'status', vivokuce.regija, regije.naziv as 'zemlja',zupanije.nazivZupanije, vivokuce.okucnica, vivokuce.povrsina,
+SELECT vivokuce.id, grupe.naziv AS 'vrsta' ,grupe.vrsta AS 'status', vivokuce.regija, regije.naziv as 'zemlja',zupanije.nazivZupanije, vivokuce.okucnica, vivokuce.povrsina,
 vivokuce.cijena, vivokuce.mjesto as 'grad', vivokuce.mikrolokacija as 'kvart', vivokuce.telefon, vivokuce.klima, vivokuce.satelit, vivokuce.internet, vivokuce.mikrolokacija,
 vivokuce.adresa, vivokuce.godinaIzgradnjeValue as 'godina_izgradnje', vivokuce.napomena, vivokuce.morePogled, vivokuce.moreUdaljenost, teksttransferkuce.tekst,
-vivokuce.lat, vivokuce.lon, vivokuce.vlasnickiList, vivokuce.brojEtazaKuca, vivokuce.grijanje, vivokuce.kupaone, vivokuce.tipObjekt as 'vrsta', vivokuce.balkonOption,
+vivokuce.lat, vivokuce.lon, vivokuce.vlasnickiList, vivokuce.brojEtazaKuca, vivokuce.grijanje, vivokuce.kupaone, vivokuce.balkonOption,
 vivokuce.loggiaOption, vivokuce.loggiaValue, vivokuce.vrtOption, vivokuce.vrtValue, vivokuce.terasaOption, vivokuce.terasaValue, vivokuce.lift, vivokuce.stolarija,
 vivokuce.alarm, vivokuce.protupozar, vivokuce.protuprovala, vivokuce.parket, vivokuce.laminat, vivokuce.kabel, vivokuce.rostilj, vivokuce.bazen, vivokuce.supa, 
 vivokuce.parking,
@@ -178,7 +178,7 @@ function createXMLfile($nekrsArray){
 
       $nekreninaKupaona =  $nekrsArray[$i]['kupaone'];
 
-    //  $nekrVrsta  =  $nekrsArray[$i]['vrsta'];
+      $nekrVrsta  =  $nekrsArray[$i]['vrsta'];
 
       $nekretninaBalkon =  $nekrsArray[$i]['balkonOption'];
 
@@ -217,7 +217,6 @@ function createXMLfile($nekrsArray){
       $nekretninaSupa = $nekrsArray[$i]['supa'];
 
       $nekretninaParking = $nekrsArray[$i]['parking'];
-
 
       $nekrMikrolokacija  = $nekrsArray[$i]['mikrolokacija'];
 
@@ -320,51 +319,33 @@ function createXMLfile($nekrsArray){
 
 
 
-    if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto)){
+    if(empty($nekretninaMjesto) || $nekretninaMjesto == '' || is_null($nekretninaMjesto) || $nekretninaMjesto < 1 ){
 
 
              //ako je prioritet da bude županija
-              // if($nekrZupanija != '' || is_null($nekrZupanija)){
-              //   $naslovM = $nekrZupanija;
-              // }
-              //
-              // else{
-              //   $naslovM = $nekrenineKvart;
-              // }
-
-              if($nekrenineKvart != ''){
+                if($nekrZupanija != '' || is_null($nekrZupanija)){
+                  $naslovM = $nekrZupanija;
+                }
+            
+                else{
                   $naslovM = $nekrenineKvart;
-              }else{
-                if($nekrenineKvart != ''){
-                 $naslovM = $nekrenineKvart;
-               }else{
-                 $naslovM = $nekrZupanija;
-               }
-              }
+                }
+              // if($nekrenineKvart != ''){
+              //     $naslovM = $nekrenineKvart;
+              // }
+              
+              
+              // else{
+              //    $naslovM = $nekrZupanija;
+              // }
 
       }
 
 
-    else{$naslovM = $nekretninaMjesto;}
+    else{$naslovM = $nekrZupanija;}
 
 
 
-      if($nekrVrsta == '0'){
-          $nekrVrsta = '';}
-          elseif($nekrVrsta == '1'){
-            $nekrVrsta = 'Stambeno-poslovna';
-          }elseif($nekrVrsta == '2'){
-            $nekrVrsta = "Samostojeća";}
-            elseif($nekrVrsta == '3'){
-              $nekrVrsta = "Kuća u nizu";
-            }elseif($nekrVrsta == '4'){
-              $nekrVrsta = "Dvojni objekt";
-            }elseif($nekrVrsta == '5'){
-              $nekrVrsta = 'Roh-bau';
-            }elseif($nekrVrsta == '6'){
-              $nekrVrsta = "Vikendica";
-            }
-  
 
 
 
@@ -374,8 +355,10 @@ function createXMLfile($nekrsArray){
     $naslov  = $dom->createElement('naslov', $naslovM . " - ".$nekrID . ", ".$nekrVrsta);
     $nekretnina->appendChild($naslov);
 
-    $naslovM = ''; //prazni varijablu
+    //echo $naslovM;
 
+    $naslovM = ''; //prazni varijablu
+   
 
     // echo'<br/> karta ID :'.$naslovM . " - ".$nekrID .", ". $nekrVrsta;
     //
@@ -405,10 +388,6 @@ function createXMLfile($nekrsArray){
 
      $status  = $dom->createElement('status',  $nekrStatus);
      $nekretnina->appendChild($status);
-
-     
-    $Vrsta = $dom->createElement('Vrsta', $nekrVrsta);
-    $nekretnina->appendChild($Vrsta);
 
      $zupanija = $dom->createElement('nazivZupanije', $nekrZupanija);
      $nekretnina->appendChild($zupanija);
@@ -508,7 +487,6 @@ function createXMLfile($nekrsArray){
       }
       $moreUda = $dom->createElement('UdaljenostMore', $nekretninaMoreUdaljenost);
       $nekretnina->appendChild($moreUda);
-
 
 
 
@@ -767,9 +745,9 @@ function createXMLfile($nekrsArray){
             if($nekreninaGaraga == '0'){
                    $nekreninaGaraga = '';
             }else{
-                $nekreninaGaraga= 'Garaža';
+                $nekreninaGaraga= 'Ima Garažu';
             }
-             $garage = $dom -> createElement('Garaža',  $nekreninaGaraga);
+             $garage = $dom -> createElement('Garaza',  $nekreninaGaraga);
              $nekretnina -> appendChild($garage);
 
 
@@ -779,7 +757,7 @@ function createXMLfile($nekrsArray){
 
 
         //polog  $pologValue
-      if( $pologValue == '0'){
+      if($pologValue == '0'){
                $pologValue = '';
         }
 
@@ -849,19 +827,21 @@ function createXMLfile($nekrsArray){
               if($nekretninaBrSoba == '0'){
                      $nekretninaBrSoba = 'Broj soba - 1';
                      $brojSoba = 1;
+                     $numSobe = $brojSoba ;
               }else{
                   $brojSoba = $nekretninaBrSoba;
                   $nekretninaBrSoba = 'Broj soba - '.$nekretninaBrSoba;
+                    $numSobe = $brojSoba;
 
               }
-           
-              $sobe = $dom -> createElement('Broj_soba',  $brojSoba);
+              $sobe = $dom -> createElement('Broj_soba',  $nekretninaBrSoba);
               $nekretnina -> appendChild($sobe);
 
 
-              $sobeNum = $dom -> createElement('Broj_sobaNum',  $nekretninaBrSoba);
-              $nekretnina -> appendChild($sobeNum);
-         
+
+
+              $sobaNum = $dom -> createElement('Broj_sobaNum',  $numSobe);
+              $nekretnina -> appendChild($sobaNum);
 
 
 
