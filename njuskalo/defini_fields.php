@@ -190,7 +190,7 @@ var $queryKuceNajam = "SELECT * FROM uudqv_posts
 LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
 LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
 WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
-AND uudqv_term_taxonomy.term_id = 39
+AND uudqv_term_taxonomy.term_id = 917
 ORDER BY post_date DESC";
 
 
