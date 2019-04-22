@@ -1,6 +1,9 @@
 UPDATE uudqv_posts SET guid = REPLACE(guid, 'http://localhost/t-tomislav', 'https://www.nekretnine-tomislav.hr')
 
 
+UPDATE uudqv_terms SET uudqv_terms.name = REPLACE(uudqv_terms.name, 'Zagreb - Medveščak', 'Zagreb')
+
+
 
 
                $QTbl_Lokacija1 = "SELECT * from zupanije
