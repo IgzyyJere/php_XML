@@ -57,16 +57,20 @@ $slikeRow = mysqli_fetch_assoc($slika);
 //   $gallRow = mysqli_fetch_assoc($gall);
 //   $picCount = $gallRow["count(uudqv_posts.guid)"];
 
+$iframe='<iframe style="border: 0;" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2780.3923760217453!2d15.977854915868244!3d45.82342617910676!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4765d70564567d8f%3A0x590a4443e8f65193!2zTWVkdmXFocSNYWsgdWwuLCAxMDAwMCwgWmFncmVi!5e0!3m2!1shr!2shr!4v1554149357723!5m2!1shr!2shr" width="600" height="450" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
+$patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
-  //lokacija WP
-  $QlokacijaZupanija = "SELECT wp_terms.name
-                from wp_terms
-                RIGHT JOIN wp_term_taxonomy on wp_terms.term_id = wp_term_taxonomy.term_id
-                LEFT JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id
-                JOIN uudqv_posts on uudqv_posts.ID = wp_term_relationships.object_id
+
+
+  //lokacija uudqv
+  $QlokacijaZupanija = "SELECT uudqv_terms.name
+                from uudqv_terms
+                RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+                LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+                JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
                 WHERE uudqv_posts.ID = ".$row['ID'].
-                " AND wp_term_taxonomy.taxonomy = 'property-city'
-                GROUP BY wp_term_taxonomy.parent";
+                " AND uudqv_term_taxonomy.taxonomy = 'property-city'
+                GROUP BY uudqv_term_taxonomy.parent";
                 $zupanija = mysqli_query($link, $QlokacijaZupanija);
                 $zupanijaRow = mysqli_fetch_assoc($zupanija);
 
@@ -77,7 +81,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
 
 
 
-    $QTbl_Lokacija1 = "SELECT * from zupanije
+  $QTbl_Lokacija1 = "SELECT * from zupanije
                       where zupanije.nazivZupanije = '".$zupanijaRow["name"]."'";        
                       $zupanija_njuskaloId = mysqli_query($link, $QTbl_Lokacija1);
                       $njuskaloZupRow = mysqli_fetch_assoc($zupanija_njuskaloId);
@@ -88,7 +92,9 @@ $slikeRow = mysqli_fetch_assoc($slika);
                                     $grad_njuskaloId = mysqli_query($link, $QTbl_Lokacija2);
                                     $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
                               }else{
-                                $nuskaloGradRow = null;
+                               $Njuskalo_Lokacija_LostID = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow["name"]."%"; 
+                                  $grad_njuskaloId_Lost = mysqli_query($link, $Njuskalo_Lokacija_LostID);
+                                  $nuskaloGradRow_Lost = mysqli_fetch_assoc($grad_njuskaloId_Lost);
                               }
 
 
@@ -120,7 +126,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
                     // $rest2 = substr($gMapRow["meta_value"], 8, 8);
                     // echo $rest;
                     //  echo $rest2;
-                      ///https://github.com/WPPlugins/realhomes-xml-csv-property-listings-import/blob/master/realhomes-add-on.php
+                      ///https://github.com/uudqvPlugins/realhomes-xml-csv-property-listings-import/blob/master/realhomes-add-on.php
 
                       if(!is_null($gMapRow["meta_value"]) || $gMapRow["meta_value"] != ''){
                           $rest = explode(",", $gMapRow["meta_value"]);
@@ -136,7 +142,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
 
 
 
-                    //orignal kaže WP
+                    //orignal kaže uudqv
                     // $property_location = get_post_meta( get_the_ID(), 'REAL_HOMES_property_location', true );
                     // if ( ! empty( $property_location ) ) {
                     // 	$lat_lng = explode( ',', $property_location );
@@ -157,28 +163,28 @@ $slikeRow = mysqli_fetch_assoc($slika);
 
 
 
-                      $QFeaturesT1 = "SELECT  wp_terms.name
-                                      from wp_term_relationships
-                                      LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                      LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                      LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                      WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                      $QFeaturesT1 = "SELECT  uudqv_terms.name
+                                      from uudqv_term_relationships
+                                      LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                      LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                      LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                      WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                       AND post_status='publish'
                                       AND uudqv_posts.ID = ".$row["ID"].
-                                      " AND wp_terms.name = 'Teretni Lift'";
+                                      " AND uudqv_terms.name = 'Teretni Lift'";
                                       $liftT = mysqli_query($link, $QFeaturesT1);
                                       $liftRow = mysqli_fetch_assoc($liftT);
 
 
-                      $QFeaturesT1_ = "SELECT  wp_terms.name
-                                      from wp_term_relationships
-                                      LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                      LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                      LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                      WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                      $QFeaturesT1_ = "SELECT  uudqv_terms.name
+                                      from uudqv_term_relationships
+                                      LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                      LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                      LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                      WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                       AND post_status='publish'
                                       AND uudqv_posts.ID = ".$row["ID"].
-                                      " AND wp_terms.name = 'Lift'";
+                                      " AND uudqv_terms.name = 'Lift'";
                                       $liftT_ = mysqli_query($link, $QFeaturesT1_);
                                       $liftRow_ = mysqli_fetch_assoc($liftT_);
 
@@ -208,147 +214,147 @@ $slikeRow = mysqli_fetch_assoc($slika);
                       $year = mysqli_fetch_assoc($yearB);
 
 
-                      $Grijanje = "SELECT  wp_terms.name
-                                  from wp_term_relationships
-                                  LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                  LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                  WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                      $Grijanje = "SELECT  uudqv_terms.name
+                                  from uudqv_term_relationships
+                                  LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                  LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                  LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                  WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
                                   AND uudqv_posts.ID = ".$row["ID"]."
-                                    AND wp_terms.name = 'Plinsko etažno'
-                                  OR wp_terms.name = 'Radijatori na struju'
-                                  OR wp_terms.name = 'Toplana'";
+                                    AND uudqv_terms.name = 'Plinsko etažno'
+                                  OR uudqv_terms.name = 'Radijatori na struju'
+                                  OR uudqv_terms.name = 'Toplana'";
                           $grijanjeTip = mysqli_query($link, $Grijanje);
                           $GrijanjeRow = mysqli_fetch_assoc($grijanjeTip);        
 
 
                                 
 
-                      $QParking = "SELECT wp_terms.name from wp_term_relationships 
-                      LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID 
-                      LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id 
-                      LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id 
-                      WHERE wp_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row["ID"]. 
-                      " AND wp_terms.name = 'Parking' ";
+                      $QParking = "SELECT uudqv_terms.name from uudqv_term_relationships 
+                      LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID 
+                      LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id 
+                      LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id 
+                      WHERE uudqv_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row["ID"]. 
+                      " AND uudqv_terms.name = 'Parking' ";
                       $parking = mysqli_query($link, $QParking);
                       $ParkingRow = mysqli_fetch_assoc($parking);
 
 
 
-                                  $QKlima = "SELECT  wp_terms.name
-                                            from wp_term_relationships
-                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                  $QKlima = "SELECT  uudqv_terms.name
+                                            from uudqv_term_relationships
+                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
                                             AND uudqv_posts.ID = ".$row["ID"]. 
-                                              " AND wp_terms.name = 'Klima uređaj' ";
+                                              " AND uudqv_terms.name = 'Klima uređaj' ";
                       $klima = mysqli_query($link, $QKlima);
                       $KlimaRow = mysqli_fetch_assoc($klima);
 
 
 
                       
-                                  $QVlList = "SELECT  wp_terms.name
-                                            from wp_term_relationships
-                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                  $QVlList = "SELECT  uudqv_terms.name
+                                            from uudqv_term_relationships
+                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
                                             AND uudqv_posts.ID = ".$row["ID"]. 
-                                              " AND wp_terms.name = 'Vlasnički list u posjedu'";
+                                              " AND uudqv_terms.name = 'Vlasnički list u posjedu'";
                       $Vlist = mysqli_query($link, $QVlList);
                       $VlistRow = mysqli_fetch_assoc($Vlist);
 
 
 
-                      $QBazen = "SELECT  wp_terms.name
-                                  from wp_term_relationships
-                                  LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                  LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                  WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                      $QBazen = "SELECT  uudqv_terms.name
+                                  from uudqv_term_relationships
+                                  LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                  LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                  LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                  WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
                                   AND uudqv_posts.ID = ".$row["ID"]. 
-                                    " AND wp_terms.name = 'Bazen'";
+                                    " AND uudqv_terms.name = 'Bazen'";
                                     $Bazen = mysqli_query($link, $QBazen);
                                     $BazenRow = mysqli_fetch_assoc($Bazen);
 
 
 
-                                    $QKablovska = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                    $QKablovska = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row["ID"]. 
-                                                    " AND wp_terms.name = 'Kablovska'";
+                                                    " AND uudqv_terms.name = 'Kablovska'";
                                                     $Kablovska = mysqli_query($link, $QKablovska);
                                                     $KablovskaRow = mysqli_fetch_assoc($Kablovska);
 
 
                                                     
-                                    $QSatelit = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                    $QSatelit = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row["ID"]. 
-                                                    " AND wp_terms.name = 'Satelitska'";
+                                                    " AND uudqv_terms.name = 'Satelitska'";
                                                     $satelit = mysqli_query($link, $QSatelit);
                                                     $SatelitRow = mysqli_fetch_assoc($satelit);
 
 
-                                          $QAlarm = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                          $QAlarm = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row["ID"]. 
-                                                    " AND wp_terms.name = 'Alarm'";
+                                                    " AND uudqv_terms.name = 'Alarm'";
                                                     $alarm = mysqli_query($link, $QAlarm);
                                                     $AlarmRow = mysqli_fetch_assoc($alarm);
 
 
-                                                    $QTelefon = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                    $QTelefon = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row["ID"].
-                                                    " AND wp_terms.name = 'Telefon (upotreba)'";
+                                                    " AND uudqv_terms.name = 'Telefon (upotreba)'";
                                                     $telefon_ = mysqli_query($link, $QTelefon);
                                                     $TelefonRow_ = mysqli_fetch_assoc($telefon_);
                                                     
 
 
-                                                  $QTelefon_L = "SELECT  wp_terms.name
-                                                  from wp_term_relationships
-                                                  LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                  LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                  LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                  WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                  $QTelefon_L = "SELECT  uudqv_terms.name
+                                                  from uudqv_term_relationships
+                                                  LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                  LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                  LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                  WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                   AND post_status='publish'
                                                   AND uudqv_posts.ID = ".$row["ID"].
-                                                  " AND wp_terms.name = 'Telefon'";
+                                                  " AND uudqv_terms.name = 'Telefon'";
                                                   $telefon_L = mysqli_query($link, $QTelefon_L);
                                                   $TelefonRow_L = mysqli_fetch_assoc($telefon_L);
 
  
 
 echo '<ad_item class="ad_flats">
-    <user_id>444900</user_id>
+    <user_id>56</user_id>
         <original_id>s-'.$row["ID"].'</original_id>';
         echo '<category_id>9580</category_id>',"\n";
        
@@ -367,7 +373,7 @@ echo '<ad_item class="ad_flats">
 
                   //slike                  
                   echo '<image_list>',"\n";
-                                  echo '<image>glavna slika : '. $slikeRow["guid"].'</image>',"\n";
+                                  echo '<image>'. $slikeRow["guid"].'</image>',"\n";
                                       //galerija slika
                                       $Qgalerija = "select DISTINCT uudqv_posts.guid
                                       from uudqv_posts
@@ -501,12 +507,16 @@ echo '<ad_item class="ad_flats">
 
                                       //kvart -- koji ima samo za ZG a druge ne
                                     //  echo '<level_2_location_id>'.$o.'</level_2_location_id>',"\n";
-                                    if($nuskaloKvartRow["njuskaloId"] == 0 || is_null($nuskaloKvartRow["njuskaloId"])){
-                                      $nuskaloKvartRow["njuskaloId"] = 111;
+                                               if($nuskaloKvartRow["njuskaloId"] == 0 || is_null($nuskaloKvartRow["njuskaloId"])){
+                                      $nuskaloKvartRow["njuskaloId"] = $nuskaloGradRow_Lost["njuskaloId"];
+                                     
                                       echo '<level_2_location_id>'.$nuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                     }else{
                                     echo '<level_2_location_id>'.$nuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                   }
+
+
+                           
 
 
                                       //ulica (mikrolokacija po JAKO starom)
@@ -840,15 +850,15 @@ $slikeRow2 = mysqli_fetch_assoc($slika2);
 
 
 
-//lokacija WP
-$QlokacijaZupanija2 = "SELECT wp_terms.name
-from wp_terms
-RIGHT JOIN wp_term_taxonomy on wp_terms.term_id = wp_term_taxonomy.term_id
-LEFT JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id
-JOIN uudqv_posts on uudqv_posts.ID = wp_term_relationships.object_id
+//lokacija uudqv
+$QlokacijaZupanija2 = "SELECT uudqv_terms.name
+from uudqv_terms
+RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
 WHERE uudqv_posts.ID = ".$row2["ID"].
-" AND wp_term_taxonomy.taxonomy = 'property-city'
-GROUP BY wp_term_taxonomy.parent";
+" AND uudqv_term_taxonomy.taxonomy = 'property-city'
+GROUP BY uudqv_term_taxonomy.parent";
 $zupanija2 = mysqli_query($link, $QlokacijaZupanija2);
 $zupanijaRow2 = mysqli_fetch_assoc($zupanija2);
 
@@ -865,9 +875,11 @@ $QTbl_Lokacija2 = "SELECT * from zupanije
           {
                 $QTbl_Lokacija2_ = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow2["id"];    
                 $grad_njuskaloId2 = mysqli_query($link, $QTbl_Lokacija2_);
-                $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId2);
+                $nuskaloGradRow2 = mysqli_fetch_assoc($grad_njuskaloId2);
           }else{
-            $nuskaloGradRow2 = null;
+             $Njuskalo_Lokacija_LostID2 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow2["name"]."%"; 
+                                  $grad_njuskaloId_Lost2 = mysqli_query($link, $Njuskalo_Lokacija_LostID2);
+                                  $nuskaloGradRow_Lost2 = mysqli_fetch_assoc($grad_njuskaloId_Lost2);
           }
 
 
@@ -935,137 +947,137 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
 
 
 
-    $Grijanje2 = "SELECT  wp_terms.name
-              from wp_term_relationships
-              LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-              LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-              LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-              WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+    $Grijanje2 = "SELECT  uudqv_terms.name
+              from uudqv_term_relationships
+              LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+              LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+              LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+              WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
               AND post_status='publish'
               AND uudqv_posts.ID = ".$row2["ID"]."
-                AND wp_terms.name = 'Plinsko etažno'
-              OR wp_terms.name = 'Radijatori na struju'
-              OR wp_terms.name = 'Toplana'";
+                AND uudqv_terms.name = 'Plinsko etažno'
+              OR uudqv_terms.name = 'Radijatori na struju'
+              OR uudqv_terms.name = 'Toplana'";
       $grijanjeTip2 = mysqli_query($link, $Grijanje2);
       $GrijanjeRow2 = mysqli_fetch_assoc($grijanjeTip2); 
 
 
-            $QParking2 = "SELECT wp_terms.name from wp_term_relationships 
-  LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID 
-  LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id 
-  LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id 
-  WHERE wp_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row2["ID"]. 
-  " AND wp_terms.name = 'Parking' ";
+            $QParking2 = "SELECT uudqv_terms.name from uudqv_term_relationships 
+  LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID 
+  LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id 
+  LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id 
+  WHERE uudqv_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row2["ID"]. 
+  " AND uudqv_terms.name = 'Parking' ";
   $parking2 = mysqli_query($link, $QParking2);
   $ParkingRow2 = mysqli_fetch_assoc($parking2);
 
 
 
-              $QKlima2 = "SELECT  wp_terms.name
-                        from wp_term_relationships
-                        LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                        LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                        LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                        WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+              $QKlima2 = "SELECT  uudqv_terms.name
+                        from uudqv_term_relationships
+                        LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                        LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                        LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                        WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                         AND post_status='publish'
                         AND uudqv_posts.ID = ".$row2["ID"]. 
-                          " AND wp_terms.name = 'Klima uređaj' ";
+                          " AND uudqv_terms.name = 'Klima uređaj' ";
   $klima2 = mysqli_query($link, $QKlima2);
   $KlimaRow2 = mysqli_fetch_assoc($klima2);
 
 
 
-                  $QVlList2 = "SELECT  wp_terms.name
-                        from wp_term_relationships
-                        LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                        LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                        LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                        WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                  $QVlList2 = "SELECT  uudqv_terms.name
+                        from uudqv_term_relationships
+                        LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                        LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                        LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                        WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                         AND post_status='publish'
                         AND uudqv_posts.ID = ".$row2["ID"]. 
-                          " AND wp_terms.name = 'Vlasnički list u posjedu'";
+                          " AND uudqv_terms.name = 'Vlasnički list u posjedu'";
   $Vlist2 = mysqli_query($link, $QVlList2);
   $VlistRow2 = mysqli_fetch_assoc($Vlist2);
 
 
 
-  $QBazen2 = "SELECT  wp_terms.name
-              from wp_term_relationships
-              LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-              LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-              LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-              WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+  $QBazen2 = "SELECT  uudqv_terms.name
+              from uudqv_term_relationships
+              LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+              LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+              LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+              WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
               AND post_status='publish'
               AND uudqv_posts.ID = ".$row2["ID"]. 
-                " AND wp_terms.name = 'Bazen'";
+                " AND uudqv_terms.name = 'Bazen'";
                 $Bazen2 = mysqli_query($link, $QBazen2);
                 $BazenRow2 = mysqli_fetch_assoc($Bazen2);
 
 
 
-                $QKablovska2 = "SELECT  wp_terms.name
-                                from wp_term_relationships
-                                LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                $QKablovska2 = "SELECT  uudqv_terms.name
+                                from uudqv_term_relationships
+                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                 AND post_status='publish'
                                 AND uudqv_posts.ID = ".$row2["ID"]. 
-                                " AND wp_terms.name = 'Kablovska'";
+                                " AND uudqv_terms.name = 'Kablovska'";
                                 $Kablovska2 = mysqli_query($link, $QKablovska2);
                                 $KablovskaRow2 = mysqli_fetch_assoc($Kablovska2);
 
 
                                 
-                $QSatelit2 = "SELECT  wp_terms.name
-                                from wp_term_relationships
-                                LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                $QSatelit2 = "SELECT  uudqv_terms.name
+                                from uudqv_term_relationships
+                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                 AND post_status='publish'
                                 AND uudqv_posts.ID = ".$row2["ID"]. 
-                                " AND wp_terms.name = 'Satelitska'";
+                                " AND uudqv_terms.name = 'Satelitska'";
                                 $satelit2 = mysqli_query($link, $QSatelit2);
                                 $SatelitRow2 = mysqli_fetch_assoc($satelit2);
 
 
-                      $QAlarm2 = "SELECT  wp_terms.name
-                                from wp_term_relationships
-                                LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                      $QAlarm2 = "SELECT  uudqv_terms.name
+                                from uudqv_term_relationships
+                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                 AND post_status='publish'
                                 AND uudqv_posts.ID = ".$row2["ID"]. 
-                                " AND wp_terms.name = 'Alarm'";
+                                " AND uudqv_terms.name = 'Alarm'";
                                 $alarm2 = mysqli_query($link, $QAlarm2);
                                 $AlarmRow2 = mysqli_fetch_assoc($alarm2);
 
 
 
-                    $QTelefon2 = "SELECT  wp_terms.name
-                    from wp_term_relationships
-                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                    $QTelefon2 = "SELECT  uudqv_terms.name
+                    from uudqv_term_relationships
+                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                     AND post_status='publish'
                     AND uudqv_posts.ID = ".$row2["ID"].
-                    " AND wp_terms.name = 'Telefon (upotreba)'";
+                    " AND uudqv_terms.name = 'Telefon (upotreba)'";
                     $telefon_2 = mysqli_query($link, $QTelefon2);
                     $TelefonRow_2 = mysqli_fetch_assoc($telefon_2);
 
 
-                    $QTelefon_L2 = "SELECT  wp_terms.name
-                    from wp_term_relationships
-                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                    $QTelefon_L2 = "SELECT  uudqv_terms.name
+                    from uudqv_term_relationships
+                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                     AND post_status='publish'
                     AND uudqv_posts.ID = ".$row2["ID"].
-                    " AND wp_terms.name = 'Telefon'";
+                    " AND uudqv_terms.name = 'Telefon'";
                     $telefon_L2 = mysqli_query($link, $QTelefon_L2);
                     $TelefonRow_L2 = mysqli_fetch_assoc($telefon_L2);
                     
@@ -1078,7 +1090,7 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
 
 
                     echo '<ad_item class="ad_flats_lease">
-                    <user_id>444900</user_id>
+                    <user_id>56</user_id>
                         <original_id>s-'.$row2["ID"].'</original_id>';
                         echo  '<category_id>10920</category_id>',"\n";
                 
@@ -1088,8 +1100,11 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                             //link na stranicu
                                 echo '<external_url>'.$row2["guid"].'</external_url>', "\n";
                                     //tekst oglasa
+                                    
+                                    $html = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst2);
                                       echo '<description_raw>'; 
-                                          echo '<![CDATA[',$tekst2,']]>';
+                                         
+                                          echo '<![CDATA[kiki',$html,']]>';
                                       echo '</description_raw>',"\n";
                 
                                           echo '<price>',$cijenaRow2['meta_value'],'</price>
@@ -1098,7 +1113,7 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                     
                                             //slike                  
                                             echo '<image_list>',"\n";
-                                                            echo '<image>glavna slika : '. $slikeRow2["guid"].'</image>',"\n";
+                                                            echo '<image>'. $slikeRow2["guid"].'</image>',"\n";
                                                                 //galerija slika
                                                                 $Qgalerija2 = "select DISTINCT uudqv_posts.guid
                                                                 from uudqv_posts
@@ -1129,11 +1144,15 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                                                 //kvart
                                                               //  echo '<level_2_location_id></level_2_location_id>',"\n";
                                                               if($nuskaloKvartRow2["njuskaloId"] == 0 || is_null($nuskaloKvartRow2["njuskaloId"])) {
-                                                                $nuskaloKvartRow2["njuskaloId"] = 111;
+                                                                   $nuskaloKvartRow2["njuskaloId"] = $nuskaloGradRow_Lost2["njuskaloId"];
                                                                 echo '<level_2_location_id>'.$nuskaloKvartRow2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                                               }else{
                                                                 echo '<level_2_location_id>'.$nuskaloKvartRow2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                                               }
+
+
+
+                           
 
                                                               
                 
@@ -1244,13 +1263,13 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                                                           }
                 
                                                                           //vrt površina
-                                                                            echo '<garden_area>0</garden_area>',"\n";
+                                                                            echo '<garden_area></garden_area>',"\n";
                 
                                                                             //balkon površina
-                                                                          echo '<balcony_area>0</balcony_area>',"\n";
+                                                                          echo '<balcony_area></balcony_area>',"\n";
                 
                                                                           //terasa površina
-                                                                          echo '<terace_area>0</terace_area>',"\n";
+                                                                          echo '<terace_area></terace_area>',"\n";
                 
                 
                                                                               
@@ -1437,15 +1456,15 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 
-  //lokacija WP
-  $QlokacijaZupanija3 = "SELECT wp_terms.name
-                from wp_terms
-                RIGHT JOIN wp_term_taxonomy on wp_terms.term_id = wp_term_taxonomy.term_id
-                LEFT JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id
-                JOIN uudqv_posts on uudqv_posts.ID = wp_term_relationships.object_id
+  //lokacija uudqv
+  $QlokacijaZupanija3 = "SELECT uudqv_terms.name
+                from uudqv_terms
+                RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+                LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+                JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
                 WHERE uudqv_posts.ID = ".$row3["ID"].
-                " AND wp_term_taxonomy.taxonomy = 'property-city'
-                GROUP BY wp_term_taxonomy.parent";
+                " AND uudqv_term_taxonomy.taxonomy = 'property-city'
+                GROUP BY uudqv_term_taxonomy.parent";
                 $zupanija3 = mysqli_query($link, $QlokacijaZupanija3);
                 $zupanijaRow3 = mysqli_fetch_assoc($zupanija3);
 
@@ -1464,12 +1483,14 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
                                     $grad_njuskaloId3 = mysqli_query($link, $QTbl_Lokacija3_);
                                     $nuskaloGradRow3 = mysqli_fetch_assoc($grad_njuskaloId3);
                               }else{
-                                $nuskaloGradRow3 = null;
+                                  $Njuskalo_Lokacija_LostID3 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow3["name"]."%"; 
+                                  $grad_njuskaloId_Lost3 = mysqli_query($link, $Njuskalo_Lokacija_LostID3);
+                                  $nuskaloGradRow_Lost3 = mysqli_fetch_assoc($grad_njuskaloId_Lost3);
                               }
 
-                              $Njuskalo_Lokacija4 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow3["id"];    
-                              $kvart_njuskaloId4 = mysqli_query($link,  $Njuskalo_Lokacija4);
-                              $nuskaloKvartRow4 = mysqli_fetch_assoc($kvart_njuskaloId4);
+                              $Njuskalo_Lokacija3 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow3["id"];    
+                              $kvart_njuskaloId3 = mysqli_query($link,  $Njuskalo_Lokacija3);
+                              $nuskaloKvartRow3 = mysqli_fetch_assoc($kvart_njuskaloId3);
 
 
 
@@ -1528,150 +1549,150 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 
-                        $Grijanje3 = "SELECT  wp_terms.name
-                                  from wp_term_relationships
-                                  LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                  LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                  WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                        $Grijanje3 = "SELECT  uudqv_terms.name
+                                  from uudqv_term_relationships
+                                  LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                  LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                  LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                  WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
                                   AND uudqv_posts.ID = ".$row3["ID"]."
-                                    AND wp_terms.name = 'Plinsko etažno'
-                                  OR wp_terms.name = 'Radijatori na struju'
-                                  OR wp_terms.name = 'Toplana'";
+                                    AND uudqv_terms.name = 'Plinsko etažno'
+                                  OR uudqv_terms.name = 'Radijatori na struju'
+                                  OR uudqv_terms.name = 'Toplana'";
                           $grijanjeTip3 = mysqli_query($link, $Grijanje3);
                           $GrijanjeRow3 = mysqli_fetch_assoc($grijanjeTip3); 
 
 
-                                $QParking3 = "SELECT wp_terms.name from wp_term_relationships 
-                      LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID 
-                      LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id 
-                      LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id 
-                      WHERE wp_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row3["ID"]. 
-                      " AND wp_terms.name = 'Parking' ";
+                                $QParking3 = "SELECT uudqv_terms.name from uudqv_term_relationships 
+                      LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID 
+                      LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id 
+                      LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id 
+                      WHERE uudqv_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row3["ID"]. 
+                      " AND uudqv_terms.name = 'Parking' ";
                       $parking3 = mysqli_query($link, $QParking3);
                       $ParkingRow3 = mysqli_fetch_assoc($parking3);
 
 
 
-                                  $QKlima3 = "SELECT  wp_terms.name
-                                            from wp_term_relationships
-                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                  $QKlima3 = "SELECT  uudqv_terms.name
+                                            from uudqv_term_relationships
+                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
                                             AND uudqv_posts.ID = ".$row3["ID"]. 
-                                              " AND wp_terms.name = 'Klima uređaj' ";
+                                              " AND uudqv_terms.name = 'Klima uređaj' ";
                       $klima3 = mysqli_query($link, $QKlima3);
                       $KlimaRow3 = mysqli_fetch_assoc($klima3);
 
 
 
-                                      $QVlList3 = "SELECT  wp_terms.name
-                                            from wp_term_relationships
-                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                      $QVlList3 = "SELECT  uudqv_terms.name
+                                            from uudqv_term_relationships
+                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
                                             AND uudqv_posts.ID = ".$row3["ID"]. 
-                                              " AND wp_terms.name = 'Vlasnički list u posjedu'";
+                                              " AND uudqv_terms.name = 'Vlasnički list u posjedu'";
                       $Vlist3 = mysqli_query($link, $QVlList3);
                       $VlistRow3 = mysqli_fetch_assoc($Vlist3);
 
 
 
-                      $QBazen3 = "SELECT  wp_terms.name
-                                  from wp_term_relationships
-                                  LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                  LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                  WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                      $QBazen3 = "SELECT  uudqv_terms.name
+                                  from uudqv_term_relationships
+                                  LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                  LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                  LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                  WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
                                   AND uudqv_posts.ID = ".$row3["ID"]. 
-                                    " AND wp_terms.name = 'Bazen'";
+                                    " AND uudqv_terms.name = 'Bazen'";
                                     $Bazen3 = mysqli_query($link, $QBazen3);
                                     $BazenRow3 = mysqli_fetch_assoc($Bazen3);
 
 
 
-                                    $QKablovska3 = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                    $QKablovska3 = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row3["ID"]. 
-                                                    " AND wp_terms.name = 'Kablovska'";
+                                                    " AND uudqv_terms.name = 'Kablovska'";
                                                     $Kablovska3 = mysqli_query($link, $QKablovska3);
                                                     $KablovskaRow3 = mysqli_fetch_assoc($Kablovska3);
 
 
                                                     
-                                    $QSatelit3 = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                    $QSatelit3 = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row3["ID"]. 
-                                                    " AND wp_terms.name = 'Satelitska'";
+                                                    " AND uudqv_terms.name = 'Satelitska'";
                                                     $satelit3 = mysqli_query($link, $QSatelit3);
                                                     $SatelitRow3 = mysqli_fetch_assoc($satelit3);
 
 
-                                          $QAlarm3 = "SELECT  wp_terms.name
-                                                    from wp_term_relationships
-                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                          $QAlarm3 = "SELECT  uudqv_terms.name
+                                                    from uudqv_term_relationships
+                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
                                                     AND uudqv_posts.ID = ".$row3["ID"]. 
-                                                    " AND wp_terms.name = 'Alarm'";
+                                                    " AND uudqv_terms.name = 'Alarm'";
                                                     $alarm3 = mysqli_query($link, $QAlarm3);
                                                     $AlarmRow3 = mysqli_fetch_assoc($alarm3);
 
 
 
-                                        $QTelefon3 = "SELECT  wp_terms.name
-                                        from wp_term_relationships
-                                        LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                        LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                        LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                        WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                        $QTelefon3 = "SELECT  uudqv_terms.name
+                                        from uudqv_term_relationships
+                                        LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                        LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                        LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                        WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                         AND post_status='publish'
                                         AND uudqv_posts.ID = ".$row3["ID"].
-                                        " AND wp_terms.name = 'Telefon (upotreba)'";
+                                        " AND uudqv_terms.name = 'Telefon (upotreba)'";
                                         $telefon_3 = mysqli_query($link, $QTelefon3);
                                         $TelefonRow_3 = mysqli_fetch_assoc($telefon_3);
 
 
-                                        $QTelefon_L3 = "SELECT  wp_terms.name
-                                        from wp_term_relationships
-                                        LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                        LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                        LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                        WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                        $QTelefon_L3 = "SELECT  uudqv_terms.name
+                                        from uudqv_term_relationships
+                                        LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                        LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                        LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                        WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                         AND post_status='publish'
                                         AND uudqv_posts.ID = ".$row3["ID"].
-                                        " AND wp_terms.name = 'Telefon'";
+                                        " AND uudqv_terms.name = 'Telefon'";
                                         $telefon_L3 = mysqli_query($link, $QTelefon_L3);
                                         $TelefonRow_L3 = mysqli_fetch_assoc($telefon_L3);
 
 
-                                        $QKuhinja = "SELECT  wp_terms.name
-                                        from wp_term_relationships
-                                        LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                        LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                        LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                        WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                        $QKuhinja = "SELECT  uudqv_terms.name
+                                        from uudqv_term_relationships
+                                        LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                        LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                        LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                        WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                         AND post_status='publish'
                                         AND uudqv_posts.ID = ".$row3["ID"].
-                                        " AND wp_terms.name = 'Čajna kuhinja'";
+                                        " AND uudqv_terms.name = 'Čajna kuhinja'";
                                         $cajna_kuhinja = mysqli_query($link, $QKuhinja);
                                         $cajnaKuhinjaRow = mysqli_fetch_assoc($cajna_kuhinja);
 
@@ -1681,7 +1702,7 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 echo '<ad_item class="ad_business_space">
-<user_id>444900</user_id>
+<user_id>56</user_id>
 <original_id>s-'.$row3["ID"].'</original_id>';
 echo  '<category_id>9585</category_id>',"\n";
 
@@ -1701,7 +1722,7 @@ echo '<price>',$cijenaRow3['meta_value'],'</price>
 
 //slike                  
 echo '<image_list>',"\n";
-            echo '<image>glavna slika : '. $slikeRow3["guid"].'</image>',"\n";
+            echo '<image>'. $slikeRow3["guid"].'</image>',"\n";
                 //galerija slika
                 $Qgalerija3 = "select DISTINCT uudqv_posts.guid
                 from uudqv_posts
@@ -1731,11 +1752,11 @@ echo '</image_list>',"\n";
 
                 //kvart
                 // echo '<level_2_location_id></level_2_location_id>',"\n";
-                if($nuskaloKvartRow4["njuskaloId"] == 0 || is_null($nuskaloKvartRow4["njuskaloId"])){
-                $nuskaloKvartRow4["njuskaloId"] = 111;
-                echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                if($nuskaloKvartRow3["njuskaloId"] == 0 || is_null($nuskaloKvartRow3["njuskaloId"])){
+                $nuskaloKvartRow3["njuskaloId"] =  $nuskaloKvartRow3_Lost["njuskaloId"];
+                echo '<level_2_location_id>'.$nuskaloKvartRow3["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                 }else{
-                echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                echo '<level_2_location_id>'.$nuskaloKvartRow3["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                 }
               
 
@@ -2114,15 +2135,15 @@ $slikeRow4 = mysqli_fetch_assoc($slika4);
 
 
 
-//lokacija WP
-$QlokacijaZupanija4 = "SELECT wp_terms.name
-from wp_terms
-RIGHT JOIN wp_term_taxonomy on wp_terms.term_id = wp_term_taxonomy.term_id
-LEFT JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id
-JOIN uudqv_posts on uudqv_posts.ID = wp_term_relationships.object_id
+//lokacija uudqv
+$QlokacijaZupanija4 = "SELECT uudqv_terms.name
+from uudqv_terms
+RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
 WHERE uudqv_posts.ID = ".$row4["ID"].
-" AND wp_term_taxonomy.taxonomy = 'property-city'
-GROUP BY wp_term_taxonomy.parent";
+" AND uudqv_term_taxonomy.taxonomy = 'property-city'
+GROUP BY uudqv_term_taxonomy.parent";
 $zupanija4 = mysqli_query($link, $QlokacijaZupanija4);
 $zupanijaRow4 = mysqli_fetch_assoc($zupanija4);
 
@@ -2141,18 +2162,20 @@ $QTbl_Lokacija4_ = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZu
 $grad_njuskaloId4 = mysqli_query($link, $QTbl_Lokacija4_);
 $nuskaloGradRow4 = mysqli_fetch_assoc($grad_njuskaloId4);
 }else{
-$nuskaloGradRow4 = null;
+    $Njuskalo_Lokacija_LostID4 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow4["name"]."%"; 
+    $grad_njuskaloId_Lost4 = mysqli_query($link, $Njuskalo_Lokacija_LostID4);
+    $nuskaloGradRow_Lost4 = mysqli_fetch_assoc($grad_njuskaloId_Lost4);
 }
 
 
-$Njuskalo_Lokacija5 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow4["id"];    
-$kvart_njuskaloId_5 = mysqli_query($link,  $Njuskalo_Lokacija5);
-$nuskaloKvartRow5 = mysqli_fetch_assoc($kvart_njuskaloId_5);
+$Njuskalo_Lokacija4 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow4["id"];    
+$kvart_njuskaloId_4 = mysqli_query($link,  $Njuskalo_Lokacija5);
+$nuskaloKvartRow4 = mysqli_fetch_assoc($kvart_njuskaloId_4);
 
 
 // $nuskaloGradRow4
 
-$QTbl_Lokacija4 = "SELECT * FROM kvartovi WHERE id = ".$nuskaloGradRow["id"];
+$QTbl_Lokacija4 = "SELECT * FROM kvartovi WHERE id = ".$nuskaloGradRow4["id"];
 
 ///karta i google zapisi
 $QMap4 = "SELECT * FROM uudqv_postmeta where uudqv_postmeta.post_id = ".$row4["ID"].
@@ -2215,55 +2238,55 @@ $year4 = mysqli_fetch_assoc($yearB4);
 
 
 
-$Grijanje4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$Grijanje4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]."
-AND wp_terms.name = 'Plinsko etažno'
-OR wp_terms.name = 'Radijatori na struju'
-OR wp_terms.name = 'Toplana'";
+AND uudqv_terms.name = 'Plinsko etažno'
+OR uudqv_terms.name = 'Radijatori na struju'
+OR uudqv_terms.name = 'Toplana'";
 $grijanjeTip4 = mysqli_query($link, $Grijanje4);
 $GrijanjeRow4 = mysqli_fetch_assoc($grijanjeTip4); 
 
 
-$QParking4 = "SELECT wp_terms.name from wp_term_relationships 
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID 
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id 
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id 
-WHERE wp_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Parking' ";
+$QParking4 = "SELECT uudqv_terms.name from uudqv_term_relationships 
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID 
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id 
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id 
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row4["ID"]. 
+" AND uudqv_terms.name = 'Parking' ";
 $parking4 = mysqli_query($link, $QParking4);
 $ParkingRow4 = mysqli_fetch_assoc($parking4);
 
 
 
-$QKlima4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QKlima4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Klima uređaj' ";
+" AND uudqv_terms.name = 'Klima uređaj' ";
 $klima4 = mysqli_query($link, $QKlima4);
 $KlimaRow4 = mysqli_fetch_assoc($klima4);
 
 
 
-$QVlList4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QVlList4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Vlasnički list u posjedu'";
+" AND uudqv_terms.name = 'Vlasnički list u posjedu'";
 $Vlist4 = mysqli_query($link, $QVlList4);
 $VlistRow4 = mysqli_fetch_assoc($Vlist4);
 
@@ -2279,83 +2302,83 @@ $garaga4 = mysqli_fetch_assoc($garagaB4);
 
 
 
-$QBazen4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QBazen4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Bazen'";
+" AND uudqv_terms.name = 'Bazen'";
 $Bazen4 = mysqli_query($link, $QBazen4);
 $BazenRow4 = mysqli_fetch_assoc($Bazen4);
 
 
 
-$QKablovska4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QKablovska4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Kablovska'";
+" AND uudqv_terms.name = 'Kablovska'";
 $Kablovska4 = mysqli_query($link, $QKablovska4);
 $KablovskaRow4 = mysqli_fetch_assoc($Kablovska4);
 
 
 
-$QSatelit4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QSatelit4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Satelitska'";
+" AND uudqv_terms.name = 'Satelitska'";
 $satelit4 = mysqli_query($link, $QSatelit4);
 $SatelitRow4 = mysqli_fetch_assoc($satelit4);
 
 
-$QAlarm4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QAlarm4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"]. 
-" AND wp_terms.name = 'Alarm'";
+" AND uudqv_terms.name = 'Alarm'";
 $alarm4 = mysqli_query($link, $QAlarm4);
 $AlarmRow4 = mysqli_fetch_assoc($alarm4);
 
 
 
-$QTelefon4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QTelefon4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"].
-" AND wp_terms.name = 'Telefon (upotreba)'";
+" AND uudqv_terms.name = 'Telefon (upotreba)'";
 $telefon_4 = mysqli_query($link, $QTelefon4);
 $TelefonRow_4 = mysqli_fetch_assoc($telefon_4);
 
 
-$QTelefon_L4 = "SELECT  wp_terms.name
-from wp_term_relationships
-LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+$QTelefon_L4 = "SELECT  uudqv_terms.name
+from uudqv_term_relationships
+LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
 AND uudqv_posts.ID = ".$row4["ID"].
-" AND wp_terms.name = 'Telefon'";
+" AND uudqv_terms.name = 'Telefon'";
 $telefon_L4 = mysqli_query($link, $QTelefon_L4);
 $TelefonRow_L4 = mysqli_fetch_assoc($telefon_L4);
 
@@ -2368,7 +2391,7 @@ $TelefonRow_L4 = mysqli_fetch_assoc($telefon_L4);
 
 
 echo '<ad_item class="ad_house">
-<user_id>444900</user_id>
+<user_id>56</user_id>
 <original_id>s-'.$row4["ID"].'</original_id>';
 echo  '<category_id>9579</category_id>',"\n";
 
@@ -2388,7 +2411,7 @@ echo  '<category_id>9579</category_id>',"\n";
 
 //                             //slike                  
                     echo '<image_list>',"\n";
-                                    echo '<image>glavna slika : '. $slikeRow4["guid"].'</image>',"\n";
+                                    echo '<image>'. $slikeRow4["guid"].'</image>',"\n";
                                         //galerija slika
                                         $Qgalerija4 = "select DISTINCT uudqv_posts.guid
                                         from uudqv_posts
@@ -2418,11 +2441,11 @@ echo  '<category_id>9579</category_id>',"\n";
 
 //                                                     //kvart
                                              // echo '<level_2_location_id></level_2_location_id>',"\n";
-                                             if($nuskaloKvartRow5["njuskaloId"] == 0 || is_null($nuskaloKvartRow5["njuskaloId"])){
-                                              $nuskaloKvartRow5["njuskaloId"] = 111;
-                                              echo '<level_2_location_id>'.$nuskaloKvartRow5["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                             if($nuskaloKvartRow4["njuskaloId"] == 0 || is_null($nuskaloKvartRow4["njuskaloId"])){
+                                              $nuskaloKvartRow4["njuskaloId"] = $nuskaloKvartRow4_Lost["njuskaloId"] ;
+                                              echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                              }else{
-                                              echo '<level_2_location_id>'.$nuskaloKvartRow5["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                              echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                              }
 
 
@@ -2758,15 +2781,15 @@ $tekst5 = $row5["post_content"];
         
 
 
-                          //lokacija WP
-                        $QlokacijaZupanija5 = "SELECT wp_terms.name
-                                        from wp_terms
-                                        RIGHT JOIN wp_term_taxonomy on wp_terms.term_id = wp_term_taxonomy.term_id
-                                        LEFT JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id
-                                        JOIN uudqv_posts on uudqv_posts.ID = wp_term_relationships.object_id
+                          //lokacija uudqv
+                        $QlokacijaZupanija5 = "SELECT uudqv_terms.name
+                                        from uudqv_terms
+                                        RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+                                        LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+                                        JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
                                         WHERE uudqv_posts.ID = ".$row5["ID"].
-                                        " AND wp_term_taxonomy.taxonomy = 'property-city'
-                                        GROUP BY wp_term_taxonomy.parent";
+                                        " AND uudqv_term_taxonomy.taxonomy = 'property-city'
+                                        GROUP BY uudqv_term_taxonomy.parent";
                                         $zupanija5 = mysqli_query($link, $QlokacijaZupanija5);
                                         $zupanijaRow5 = mysqli_fetch_assoc($zupanija5);
 
@@ -2785,7 +2808,9 @@ $tekst5 = $row5["post_content"];
                                                             $grad_njuskaloId5 = mysqli_query($link, $QTbl_Lokacija5_);
                                                             $nuskaloGradRow5 = mysqli_fetch_assoc($grad_njuskaloId5);
                                                       }else{
-                                                        $nuskaloGradRow5 = null;
+                                      $Njuskalo_Lokacija_LostID5 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow5["name"]."%"; 
+                                  $grad_njuskaloId_Lost5 = mysqli_query($link, $Njuskalo_Lokacija_LostID5);
+                                  $nuskaloGradRow_Lost5 = mysqli_fetch_assoc($grad_njuskaloId_Lost5);
                                                       }
                         
                       
@@ -2854,55 +2879,55 @@ $tekst5 = $row5["post_content"];
 
 
 
-                                                $Grijanje4 = "SELECT  wp_terms.name
-                                                          from wp_term_relationships
-                                                          LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                          LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                          LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                          WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                $Grijanje4 = "SELECT  uudqv_terms.name
+                                                          from uudqv_term_relationships
+                                                          LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                          LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                          LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                          WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                           AND post_status='publish'
                                                           AND uudqv_posts.ID = ".$row4["ID"]."
-                                                            AND wp_terms.name = 'Plinsko etažno'
-                                                            OR wp_terms.name = 'Radijatori na struju'
-                                                            OR wp_terms.name = 'Toplana'";
+                                                            AND uudqv_terms.name = 'Plinsko etažno'
+                                                            OR uudqv_terms.name = 'Radijatori na struju'
+                                                            OR uudqv_terms.name = 'Toplana'";
                                                   $grijanjeTip4 = mysqli_query($link, $Grijanje4);
                                                   $GrijanjeRow4 = mysqli_fetch_assoc($grijanjeTip4); 
 
 
-                                                        $QParking4 = "SELECT wp_terms.name from wp_term_relationships 
-                                              LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID 
-                                              LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id 
-                                              LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id 
-                                              WHERE wp_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row4["ID"]. 
-                                              " AND wp_terms.name = 'Parking' ";
+                                                        $QParking4 = "SELECT uudqv_terms.name from uudqv_term_relationships 
+                                              LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID 
+                                              LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id 
+                                              LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id 
+                                              WHERE uudqv_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row4["ID"]. 
+                                              " AND uudqv_terms.name = 'Parking' ";
                                               $parking4 = mysqli_query($link, $QParking4);
                                               $ParkingRow4 = mysqli_fetch_assoc($parking4);
 
 
 
-                                                          $QKlima4 = "SELECT  wp_terms.name
-                                                                    from wp_term_relationships
-                                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                          $QKlima4 = "SELECT  uudqv_terms.name
+                                                                    from uudqv_term_relationships
+                                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                     AND post_status='publish'
                                                                     AND uudqv_posts.ID = ".$row4["ID"]. 
-                                                                      " AND wp_terms.name = 'Klima uređaj' ";
+                                                                      " AND uudqv_terms.name = 'Klima uređaj' ";
                                               $klima4 = mysqli_query($link, $QKlima4);
                                               $KlimaRow4 = mysqli_fetch_assoc($klima4);
 
 
 
-                                                              $QVlList4 = "SELECT  wp_terms.name
-                                                                    from wp_term_relationships
-                                                                    LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                    LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                    LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                    WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                              $QVlList4 = "SELECT  uudqv_terms.name
+                                                                    from uudqv_term_relationships
+                                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                     AND post_status='publish'
                                                                     AND uudqv_posts.ID = ".$row4["ID"]. 
-                                                                      " AND wp_terms.name = 'Vlasnički list u posjedu'";
+                                                                      " AND uudqv_terms.name = 'Vlasnički list u posjedu'";
                                               $Vlist4 = mysqli_query($link, $QVlList4);
                                               $VlistRow4 = mysqli_fetch_assoc($Vlist4);
 
@@ -2918,83 +2943,83 @@ $tekst5 = $row5["post_content"];
 
 
 
-                                              $QBazen4 = "SELECT  wp_terms.name
-                                                          from wp_term_relationships
-                                                          LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                          LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                          LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                          WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                              $QBazen4 = "SELECT  uudqv_terms.name
+                                                          from uudqv_term_relationships
+                                                          LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                          LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                          LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                          WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                           AND post_status='publish'
                                                           AND uudqv_posts.ID = ".$row4["ID"]. 
-                                                            " AND wp_terms.name = 'Bazen'";
+                                                            " AND uudqv_terms.name = 'Bazen'";
                                                             $Bazen4 = mysqli_query($link, $QBazen4);
                                                             $BazenRow4 = mysqli_fetch_assoc($Bazen4);
 
 
 
-                                                            $QKablovska4 = "SELECT  wp_terms.name
-                                                                            from wp_term_relationships
-                                                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                            $QKablovska4 = "SELECT  uudqv_terms.name
+                                                                            from uudqv_term_relationships
+                                                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                             AND post_status='publish'
                                                                             AND uudqv_posts.ID = ".$row4["ID"]. 
-                                                                            " AND wp_terms.name = 'Kablovska'";
+                                                                            " AND uudqv_terms.name = 'Kablovska'";
                                                                             $Kablovska4 = mysqli_query($link, $QKablovska4);
                                                                             $KablovskaRow4 = mysqli_fetch_assoc($Kablovska4);
 
 
                                                                             
-                                                            $QSatelit4 = "SELECT  wp_terms.name
-                                                                            from wp_term_relationships
-                                                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                            $QSatelit4 = "SELECT  uudqv_terms.name
+                                                                            from uudqv_term_relationships
+                                                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                             AND post_status='publish'
                                                                             AND uudqv_posts.ID = ".$row4["ID"]. 
-                                                                            " AND wp_terms.name = 'Satelitska'";
+                                                                            " AND uudqv_terms.name = 'Satelitska'";
                                                                             $satelit4 = mysqli_query($link, $QSatelit4);
                                                                             $SatelitRow4 = mysqli_fetch_assoc($satelit4);
 
 
-                                                                  $QAlarm4 = "SELECT  wp_terms.name
-                                                                            from wp_term_relationships
-                                                                            LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                            LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                            LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                            WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                                  $QAlarm4 = "SELECT  uudqv_terms.name
+                                                                            from uudqv_term_relationships
+                                                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                             AND post_status='publish'
                                                                             AND uudqv_posts.ID = ".$row4["ID"]. 
-                                                                            " AND wp_terms.name = 'Alarm'";
+                                                                            " AND uudqv_terms.name = 'Alarm'";
                                                                             $alarm4 = mysqli_query($link, $QAlarm4);
                                                                             $AlarmRow4 = mysqli_fetch_assoc($alarm4);
 
 
 
-                                                                $QTelefon4 = "SELECT  wp_terms.name
-                                                                from wp_term_relationships
-                                                                LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                                $QTelefon4 = "SELECT  uudqv_terms.name
+                                                                from uudqv_term_relationships
+                                                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                 AND post_status='publish'
                                                                 AND uudqv_posts.ID = ".$row4["ID"].
-                                                                " AND wp_terms.name = 'Telefon (upotreba)'";
+                                                                " AND uudqv_terms.name = 'Telefon (upotreba)'";
                                                                 $telefon_4 = mysqli_query($link, $QTelefon4);
                                                                 $TelefonRow_4 = mysqli_fetch_assoc($telefon_4);
 
 
-                                                                $QTelefon_L4 = "SELECT  wp_terms.name
-                                                                from wp_term_relationships
-                                                                LEFT JOIN uudqv_posts ON wp_term_relationships.object_id = uudqv_posts.ID
-                                                                LEFT JOIN wp_terms ON wp_terms.term_id = wp_term_relationships.term_taxonomy_id
-                                                                LEFT JOIN wp_term_taxonomy ON wp_term_taxonomy.term_taxonomy_id = wp_term_relationships.term_taxonomy_id
-                                                                WHERE wp_term_taxonomy.taxonomy = 'property-feature'
+                                                                $QTelefon_L4 = "SELECT  uudqv_terms.name
+                                                                from uudqv_term_relationships
+                                                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
                                                                 AND post_status='publish'
                                                                 AND uudqv_posts.ID = ".$row4["ID"].
-                                                                " AND wp_terms.name = 'Telefon'";
+                                                                " AND uudqv_terms.name = 'Telefon'";
                                                                 $telefon_L4 = mysqli_query($link, $QTelefon_L4);
                                                                 $TelefonRow_L4 = mysqli_fetch_assoc($telefon_L4);
 
@@ -3007,7 +3032,7 @@ $tekst5 = $row5["post_content"];
 
 
 echo '<ad_item class="ad_house_lease">
-<user_id>444900</user_id>
+<user_id>56</user_id>
 <original_id>k-'.$row5["ID"].'</original_id>';
 echo  '<category_id>10919</category_id>',"\n";
 
@@ -3027,7 +3052,7 @@ echo '<price>',$cijenaRow5['meta_value'],'</price>
 
 //                             //slike                  
   echo '<image_list>',"\n";
-                  echo '<image>glavna slika : '. $slikeRow5["guid"].'</image>',"\n";
+                  echo '<image>'. $slikeRow5["guid"].'</image>',"\n";
                       //galerija slika
                       $Qgalerija5 = "select DISTINCT uudqv_posts.guid
                       from uudqv_posts
