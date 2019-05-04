@@ -363,8 +363,9 @@ echo '<ad_item class="ad_flats">
   //link na stranicu
       echo '<external_url>'.$row["guid"].'</external_url>', "\n";
           //tekst oglasa
+           $html = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst);
             echo '<description_raw>'; 
-                echo '<![CDATA[',$tekst,']]>';
+                echo '<![CDATA[',$html']]>';
             echo '</description_raw>',"\n";
 
                 echo '<price>',$cijenaRow['meta_value'],'</price>
@@ -1101,10 +1102,10 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                 echo '<external_url>'.$row2["guid"].'</external_url>', "\n";
                                     //tekst oglasa
                                     
-                                    $html = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst2);
+                                    $html2 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst2);
                                       echo '<description_raw>'; 
                                          
-                                          echo '<![CDATA[kiki',$html,']]>';
+                                          echo '<![CDATA[',$html2,']]>';
                                       echo '</description_raw>',"\n";
                 
                                           echo '<price>',$cijenaRow2['meta_value'],'</price>
@@ -1712,8 +1713,9 @@ echo '<title> Poslovni prostor: ',$row3['post_title'],'</title>';
 //link na stranicu
 echo '<external_url>'.$row3["guid"].'</external_url>', "\n";
 //tekst oglasa
+    $html3 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst3);
 echo '<description_raw>'; 
-echo '<![CDATA[',$tekst3,']]>';
+echo '<![CDATA[',$html3,']]>';
 echo '</description_raw>',"\n";
 
 echo '<price>',$cijenaRow3['meta_value'],'</price>
@@ -2401,8 +2403,9 @@ echo  '<category_id>9579</category_id>',"\n";
     //link na stranicu
         echo '<external_url>'.$row4["guid"].'</external_url>', "\n";
             //tekst oglasa
+                $html4 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst4);
               echo '<description_raw>'; 
-                  echo '<![CDATA[',$tekst4,']]>';
+                  echo '<![CDATA[',$html4,']]>';
               echo '</description_raw>',"\n";
 
                   echo '<price>',$cijenaRow4['meta_value'],'</price>
@@ -3042,8 +3045,9 @@ echo '<title> Kuća: '.$row5['post_title'],'</title>';
 //link na stranicu
 echo '<external_url>'.$row5["guid"].'</external_url>', "\n";
 //tekst oglasa
+    $html5 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst5);
 echo '<description_raw>'; 
-echo '<![CDATA[',$tekst5,']]>';
+echo '<![CDATA[',$html5,']]>';
 echo '</description_raw>',"\n";
 
 echo '<price>',$cijenaRow5['meta_value'],'</price>
