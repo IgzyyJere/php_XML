@@ -65,7 +65,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
     $njuskaZupanija = mysqli_fetch_assoc($zupanija);
 
 
-    $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '%".$WPLOKACIJARow["name"]."'"; 
+    $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '".$WPLOKACIJARow["name"]."%'"; 
     $kvartNjuskao_lost = mysqli_query($link, $QNjuskaloKvart_Lost);
     $njuskaloKvartRow_Lost = mysqli_fetch_assoc($kvartNjuskao_lost);
 
@@ -365,9 +365,11 @@ echo '<ad_item class="ad_flats">
   echo '<title>',$row['post_title'],'</title>';
   //link na stranicu
       echo '<external_url>'.$row["guid"].'</external_url>', "\n";
-          //tekst oglasa
+           //tekst oglasa
+           $html = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst);
+          // $html = $tekst;
             echo '<description_raw>'; 
-                echo '<![CDATA[',$tekst,']]>';
+                echo '<![CDATA[',$html,']]>';
             echo '</description_raw>',"\n";
 
                 echo '<price>',$cijenaRow['meta_value'],'</price>
@@ -516,17 +518,23 @@ echo '<ad_item class="ad_flats">
 
                                       // }                                
 
+                                              //ovaj uvjet jebe dobijam 1
+                                             if($njuskaloKvartRow_Lost["njuskaloId"] = 0 || is_null($njuskaloKvartRow_Lost["njuskaloId"])){
+                                                 $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
+                                                 echo '<level_2_location_id>'.$njuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                               }
 
-
-                                      //kvart -- koji ima samo za ZG a druge ne
-                                    //  echo '<level_2_location_id>'.$o.'</level_2_location_id>',"\n";
-                                    if($njuskaloKvartRow_Lost["njuskaloId"] == 0 || is_null($njuskaloKvartRow_Lost["njuskaloId"])){
-                                          $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
-                                          echo '<level_2_location_id>'.$njuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                    }else{
-                                          echo '<level_2_location_id>'.$njuskaloKvartRow_Lost["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                    }
-
+                                              //  else{
+                                              //       if($WPLOKACIJARow["name"] = "Grad Zagreb")
+                                              //       {echo '<level_2_location_id>2656</level_2_location_id>',"\n";}
+                                              //         else{echo '<level_2_location_id>'.$njuskaloKvartRow_Lost["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski 
+                                              //     }
+                                              //  }
+                                                 
+                                               
+                                           
+                                              
+                                  
 
                                       //ulica (mikrolokacija po JAKO starom)
                                       echo '<street_name>0</street_name>',"\n";
