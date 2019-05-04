@@ -62,8 +62,8 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
 
-  //lokacija uudqv
-  $QlokacijaZupanija = "SELECT uudqv_terms.name
+  //lokacija uudqv // //lokacija uudqv iz WP baze
+  $CityWP= "SELECT uudqv_terms.name
                 from uudqv_terms
                 RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
                 LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
@@ -71,50 +71,38 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
                 WHERE uudqv_posts.ID = ".$row['ID'].
                 " AND uudqv_term_taxonomy.taxonomy = 'property-city'
                 GROUP BY uudqv_term_taxonomy.parent";
-                $zupanija = mysqli_query($link, $QlokacijaZupanija);
-                $zupanijaRow = mysqli_fetch_assoc($zupanija);
-
-                
-                
-              //  $zupanijaRow["name"]; //ime zupanije iz baze
+                $WPLokacija = mysqli_query($link, $CityWP);
+                $WPLOKACIJARow= mysqli_fetch_assoc($WPLokacija);
 
 
+  $QZupanije1 = "SELECT * from zupanije where zupanije.nazivZupanije like '".$WPLOKACIJARow["name"]."'"; //source iz baze wp-a kroz city, upit na zupanije  
+  $zupanija = mysqli_query($link, $QZupanije1);
+  $njuskaZupanija = mysqli_fetch_assoc($zupanija);
 
 
-  $QTbl_Lokacija1 = "SELECT * from zupanije
-                      where zupanije.nazivZupanije = '".$zupanijaRow["name"]."'";        
-                      $zupanija_njuskaloId = mysqli_query($link, $QTbl_Lokacija1);
-                      $njuskaloZupRow = mysqli_fetch_assoc($zupanija_njuskaloId);
-
-                              if($njuskaloZupRow["id"] > 0)
-                              {
-                                    $QTbl_Lokacija2 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow["id"];    
-                                    $grad_njuskaloId = mysqli_query($link, $QTbl_Lokacija2);
-                                    $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
-                              }else{
-                               $Njuskalo_Lokacija_LostID = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow["name"]."%"; 
-                                  $grad_njuskaloId_Lost = mysqli_query($link, $Njuskalo_Lokacija_LostID);
-                                  $nuskaloGradRow_Lost = mysqli_fetch_assoc($grad_njuskaloId_Lost);
-                              }
+  $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '%".$WPLOKACIJARow["name"]."'"; 
+  $kvartNjuskao_lost = mysqli_query($link, $QNjuskaloKvart_Lost);
+  $njuskaloKvartRow_Lost = mysqli_fetch_assoc($kvartNjuskao_lost);
 
 
+  
+  if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+  {
+        $QGradovi1 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija["id"];
+        $grad_njuskaloId = mysqli_query($link, $QGradovi1);
+        $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
 
-                            
-                              
-                                    $Njuskalo_Lokacija2 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow["id"];    
-                                    $kvart_njuskaloId = mysqli_query($link,  $Njuskalo_Lokacija2);
-                                    $nuskaloKvartRow = mysqli_fetch_assoc($kvart_njuskaloId);
-                            
-                            
-                              
+        //ako ima grad tada idemo tražit i kvart
+        $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow["id"]; 
+        $kvart_njuskaloId = mysqli_query($link,  $QNjuskalo_Kvart);
+        $njuskaloKvartRow = mysqli_fetch_assoc($kvart_njuskaloId);  
 
+        if($njuskaloKvartRow["njuskaloId"] < 1){
+            $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
+            $njuskaloKvartRow["naziv"] = $njuskaloKvartRow_Lost["naziv"];
+        }
+  }
 
-
-
-
-
-
-    //$QTbl_Lokacija3 = "SELECT * FROM kvartovi WHERE id = ".$nuskaloGradRow["id"];
 
             ///karta i google zapisi
                     $QMap = "SELECT * FROM uudqv_postmeta where uudqv_postmeta.post_id = ".$row["ID"].
@@ -363,9 +351,11 @@ echo '<ad_item class="ad_flats">
   //link na stranicu
       echo '<external_url>'.$row["guid"].'</external_url>', "\n";
           //tekst oglasa
-           $html = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst);
+           //$html = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst);
+           $html = $tekst;
+
             echo '<description_raw>'; 
-                echo '<![CDATA[',$html']]>';
+                echo '<![CDATA[',$html,']]>';
             echo '</description_raw>',"\n";
 
                 echo '<price>',$cijenaRow['meta_value'],'</price>
@@ -393,132 +383,21 @@ echo '<ad_item class="ad_flats">
 
                                       //broj telefona vezan uz nekretninu (može se izvuć broj agenta)
                                       echo '<additional_contact></additional_contact>',"\n";
-
-
+                                      
                                       //određivanje lokacija
                                       echo '<level_0_location_id>';
                                       //zupanija
-                                      echo $njuskaloZupRow["njuskaloId"].'</level_0_location_id>',"\n";
+                                      echo $njuskaZupanija["njuskaloId"].'</level_0_location_id>',"\n";
                                       
                                       //grad
                                       echo '<level_1_location_id>'.$nuskaloGradRow["njuskaloId"].'</level_1_location_id>',"\n";
-                                                            //gradovi zupanija          
-                                    //  switch($nuskaloKvartRow["grad"]){     //nađi u tablici od njušakala exceliic samo id grad, ako je grad id taj da možemo 
-                                        //ovo je grad ID, u tablici kvart selektiraj neki kvart u gradu kao centar
-                                        //switchat id kvarta
-                                        // case 5:
-                                        //     $o = 2678;
-                                        //     break;
 
-                                            // case 1:
-                                            // $o = 2619;
-                                            // break;
-
-                                            // case 138:
-                                            // $o = 10;
-                                            // break;
-
-                                            // case 6:
-                                            // $o = 14;
-                                            // break;
-
-                                            // case 142:
-                                            // $o = 21;
-                                            // break;
-
-                                            // case 3:
-                                            // $o = 26;
-                                            // break;
-
-                                            // case 141:
-                                            // $o = 31;
-                                            // break;
-
-                                            // case 4:
-                                            // $o = 50;
-                                            // break;
-
-                                            // case 8:
-                                            // $o = 61;
-                                            // break;
-
-                                            // case 9:
-                                            // $o = 76;
-                                            // break;
-
-                                            // case 5:
-                                            // $o = 82;
-                                            // break;
-
-                                            // case 137:
-                                            // $o = 91;
-                                            // break;
-
-                                            // case 7:
-                                            // $o = 102;
-                                            // break;
-                                            // ///po njuškalo id
-                                            // case 140:
-                                            // $o = 2732;
-                                            // break;
-
-                                            // case 138:
-                                            // $o = 2597;
-                                            // break;
-
-                                            // case 2:
-                                            // $o = 2613;
-                                            // break;
-
-                                            // case 139:
-                                            // $o = 2623;
-                                            // break;
-
-
-                                            // case 144:
-                                            // $o = 2771;
-                                            // break;
-
-                                            // case 9:
-                                            // $o = 2771;
-                                            // break;
-
-                                            // case 84:
-                                            // $o = 8758;
-                                            // break;
-
-                                            // case 78:
-                                            // $o = 2247;
-                                            // break;
-
-                                            // case 373:
-                                            // $o = 5772;
-                                            // break;
-
-                                            // case 217:
-                                            // $o = 2823;
-                                            // break;
-
-                                            // default:
-                                            // $o = 1111;
-
-                                      // }                                
-
-
-
-                                      //kvart -- koji ima samo za ZG a druge ne
-                                    //  echo '<level_2_location_id>'.$o.'</level_2_location_id>',"\n";
-                                               if($nuskaloKvartRow["njuskaloId"] == 0 || is_null($nuskaloKvartRow["njuskaloId"])){
-                                      $nuskaloKvartRow["njuskaloId"] = $nuskaloGradRow_Lost["njuskaloId"];
-                                     
-                                      echo '<level_2_location_id>'.$nuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                    }else{
-                                    echo '<level_2_location_id>'.$nuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                  }
-
-
-                           
-
+                                           if($njuskaloKvartRow_Lost["njuskaloId"] == 0 || is_null($njuskaloKvartRow_Lost["njuskaloId"])){
+                                          $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
+                                          echo '<level_2_location_id>'.$njuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                          }else{
+                                                echo '<level_2_location_id>'.$njuskaloKvartRow_Lost["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                          }
 
                                       //ulica (mikrolokacija po JAKO starom)
                                       echo '<street_name>0</street_name>',"\n";
@@ -529,8 +408,8 @@ echo '<ad_item class="ad_flats">
                                             echo '<location_x>'.$Lon.'</location_x>',"\n";
                                             echo '<location_y>'.$Lat.'</location_y>',"\n";
                                         }else{
-                                              echo '<location_x>0</location_x>',"\n";
-                                              echo '<location_y>0</location_y>',"\n";
+                                             echo '<location_x>'.$njuskaloKvartRow_Lost["lng"].'</location_x>',"\n";
+                                            echo '<location_y>'.$njuskaloKvartRow_Lost["lat"].'</location_y>',"\n";
                                         }
 
 
@@ -794,9 +673,9 @@ echo '<ad_item class="ad_flats">
                                            // mysqli_free_result($row);
                                             // mysqli_free_result($slikeRow);
                                             // mysqli_free_result($gallRow);
-                                            // mysqli_free_result($zupanijaRow);
+                                            // mysqli_free_result($WPLokacijaRow);
                                            //  mysqli_free_result($cijenaRow);
-                                            // mysqli_free_result($njuskaloZupRow);
+                                            // mysqli_free_result($njuskaZupanija);
                                             // mysqli_free_result($gMapRow);
                                             // mysqli_free_result($brSoba);
                                             // mysqli_free_result($liftT);
@@ -852,7 +731,7 @@ $slikeRow2 = mysqli_fetch_assoc($slika2);
 
 
 //lokacija uudqv
-$QlokacijaZupanija2 = "SELECT uudqv_terms.name
+$CityWP2 = "SELECT uudqv_terms.name
 from uudqv_terms
 RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
 LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
@@ -860,34 +739,36 @@ JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
 WHERE uudqv_posts.ID = ".$row2["ID"].
 " AND uudqv_term_taxonomy.taxonomy = 'property-city'
 GROUP BY uudqv_term_taxonomy.parent";
-$zupanija2 = mysqli_query($link, $QlokacijaZupanija2);
-$zupanijaRow2 = mysqli_fetch_assoc($zupanija2);
+$WPLokacija2 = mysqli_query($link, $CityWP2);
+$WPLokacijaRow2 = mysqli_fetch_assoc($WPLokacija2);
 
 
+   $QZupanije2 = "SELECT * from zupanije where zupanije.nazivZupanije like '".$WPLOKACIJARow2["name"]."'"; //source iz baze wp-a kroz city, upit na zupanije  
+    $zupanija2 = mysqli_query($link, $QZupanije2);
+    $njuskaZupanija2 = mysqli_fetch_assoc($zupanija2);
+
+    $QNjuskaloKvart_Lost2 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '%".$WPLOKACIJARow2["name"]."'"; 
+    $kvartNjuskao_lost2 = mysqli_query($link, $QNjuskaloKvart_Lost2);
+    $njuskaloKvartRow_Lost2 = mysqli_fetch_assoc($kvartNjuskao_lost2);
 
 
+  if($njuskaZupanija2["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+  {
+        $QGradovi2 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija2["id"];
+        $grad_njuskaloId2 = mysqli_query($link, $QGradovi2);
+        $nuskaloGradRow2 = mysqli_fetch_assoc($grad_njuskaloId2);
 
-$QTbl_Lokacija2 = "SELECT * from zupanije
-  where zupanije.nazivZupanije = '".$zupanijaRow2["name"]."'";        
-  $zupanija_njuskaloId2 = mysqli_query($link, $QTbl_Lokacija2);
-  $njuskaloZupRow2 = mysqli_fetch_assoc($zupanija_njuskaloId2);
+        //ako ima grad tada idemo tražit i kvart
+        $QNjuskalo_Kvart2 = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow2["id"]; 
+        $kvart_njuskaloId2 = mysqli_query($link,  $QNjuskalo_Kvart2);
+        $njuskaloKvartRow2 = mysqli_fetch_assoc($kvart_njuskaloId2);  
 
-          if($njuskaloZupRow2["id"] > 0)
-          {
-                $QTbl_Lokacija2_ = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow2["id"];    
-                $grad_njuskaloId2 = mysqli_query($link, $QTbl_Lokacija2_);
-                $nuskaloGradRow2 = mysqli_fetch_assoc($grad_njuskaloId2);
-          }else{
-             $Njuskalo_Lokacija_LostID2 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow2["name"]."%"; 
-                                  $grad_njuskaloId_Lost2 = mysqli_query($link, $Njuskalo_Lokacija_LostID2);
-                                  $nuskaloGradRow_Lost2 = mysqli_fetch_assoc($grad_njuskaloId_Lost2);
-          }
-
-
-          
-          $Njuskalo_Lokacija3 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow2["id"];    
-          $kvart_njuskaloId2 = mysqli_query($link,  $Njuskalo_Lokacija3);
-          $nuskaloKvartRow2 = mysqli_fetch_assoc($kvart_njuskaloId2);
+        if($njuskaloKvartRow2["njuskaloId"] < 1){
+            $njuskaloKvartRow2["njuskaloId"] = $njuskaloKvartRow_Lost2["njuskaloId"];
+            $njuskaloKvartRow2["naziv"] = $njuskaloKvartRow_Lost2["naziv"];
+        }
+  }
+     
 
     
 
@@ -1102,7 +983,7 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                 echo '<external_url>'.$row2["guid"].'</external_url>', "\n";
                                     //tekst oglasa
                                     
-                                    $html2 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst2);
+                                    $html2 = $tekst2;//preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst2);
                                       echo '<description_raw>'; 
                                          
                                           echo '<![CDATA[',$html2,']]>';
@@ -1134,22 +1015,20 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                                                 echo '<additional_contact></additional_contact>',"\n";
                 
                 
-                                                                //određivanje lokacija
-                                                                echo '<level_0_location_id>';
-                                                                //zupanija
-                                                                echo $njuskaloZupRow2["njuskaloId"].'</level_0_location_id>',"\n";
-                                                                
-                                                                //grad
-                                                                echo '<level_1_location_id>'.$nuskaloGradRow2["njuskaloId"].'</level_1_location_id>',"\n";
-                
-                                                                //kvart
-                                                              //  echo '<level_2_location_id></level_2_location_id>',"\n";
-                                                              if($nuskaloKvartRow2["njuskaloId"] == 0 || is_null($nuskaloKvartRow2["njuskaloId"])) {
-                                                                   $nuskaloKvartRow2["njuskaloId"] = $nuskaloGradRow_Lost2["njuskaloId"];
-                                                                echo '<level_2_location_id>'.$nuskaloKvartRow2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                                              }else{
-                                                                echo '<level_2_location_id>'.$nuskaloKvartRow2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                                              }
+                                                              //određivanje lokacija
+                                                              echo '<level_0_location_id>';
+                                                              //zupanija
+                                                              echo $njuskaZupanija2["njuskaloId"].'</level_0_location_id>',"\n";
+                                                              
+                                                              //grad
+                                                              echo '<level_1_location_id>'.$nuskaloGradRow2["njuskaloId"].'</level_1_location_id>',"\n";
+
+                                                                  if($njuskaloKvartRow_Lost2["njuskaloId"] == 0 || is_null($njuskaloKvartRow_Lost2["njuskaloId"])){
+                                                                  $njuskaloKvartRow2["njuskaloId"] = $njuskaloKvartRow_Lost2["njuskaloId"];
+                                                                  echo '<level_2_location_id>'.$njuskaloKvartRow2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                                                  }else{
+                                                                        echo '<level_2_location_id>'.$njuskaloKvartRow_Lost2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                                                  }
 
 
 
@@ -1167,8 +1046,8 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                                                       echo '<location_x>'.$Lon2.'</location_x>',"\n";
                                                                       echo '<location_y>'.$Lat2.'</location_y>',"\n";
                                                                   }else{
-                                                                        echo '<location_x>0</location_x>',"\n";
-                                                                        echo '<location_y>0</location_y>',"\n";
+                                                                       echo '<location_x>'.$njuskaloKvartRow_Lost["lng"].'</location_x>',"\n";
+                                                                        echo '<location_y>'.$njuskaloKvartRow_Lost["lat"].'</location_y>',"\n";
                                                                   }
                 
                 
@@ -1458,7 +1337,7 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
   //lokacija uudqv
-  $QlokacijaZupanija3 = "SELECT uudqv_terms.name
+  $CityWP3 = "SELECT uudqv_terms.name
                 from uudqv_terms
                 RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
                 LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
@@ -1466,37 +1345,42 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
                 WHERE uudqv_posts.ID = ".$row3["ID"].
                 " AND uudqv_term_taxonomy.taxonomy = 'property-city'
                 GROUP BY uudqv_term_taxonomy.parent";
-                $zupanija3 = mysqli_query($link, $QlokacijaZupanija3);
-                $zupanijaRow3 = mysqli_fetch_assoc($zupanija3);
+                $WPLokacija3 = mysqli_query($link, $CityWP3);
+                $WPLokacijaRow3 = mysqli_fetch_assoc($WPLokacija3);
+
+
+
+ $QZupanije3 = "SELECT * from zupanije where zupanije.nazivZupanije like '".$WPLOKACIJARow3["name"]."'"; //source iz baze wp-a kroz city, upit na zupanije  
+    $zupanija3 = mysqli_query($link, $QZupanije3);
+    $njuskaZupanija3 = mysqli_fetch_assoc($zupanija3);
+
+    $QNjuskaloKvart_Lost3 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '%".$WPLOKACIJARow3["name"]."'"; 
+    $kvartNjuskao_lost3 = mysqli_query($link, $QNjuskaloKvart_Lost3);
+    $njuskaloKvartRow_Lost3 = mysqli_fetch_assoc($kvartNjuskao_lost3);
+
+
+  if($njuskaZupanija3["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+  {
+        $QGradovi3 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija3["id"];
+        $grad_njuskaloId3 = mysqli_query($link, $QGradovi3);
+        $nuskaloGradRow3 = mysqli_fetch_assoc($grad_njuskaloId3);
+
+        //ako ima grad tada idemo tražit i kvart
+        $QNjuskalo_Kvart3 = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow3["id"]; 
+        $kvart_njuskaloId3 = mysqli_query($link,  $QNjuskalo_Kvart3);
+        $njuskaloKvartRow3 = mysqli_fetch_assoc($kvart_njuskaloId3);  
+
+        if($njuskaloKvartRow3["njuskaloId"] < 1){
+            $njuskaloKvartRow3["njuskaloId"] = $njuskaloKvartRow_Lost3["njuskaloId"];
+            $njuskaloKvartRow3["naziv"] = $njuskaloKvartRow_Lost3["naziv"];
+        }
+  }
+    
 
 
 
 
 
-    $QTbl_Lokacija3 = "SELECT * from zupanije
-                      where zupanije.nazivZupanije = '".$zupanijaRow3["name"]."'";        
-                      $zupanija_njuskaloId3 = mysqli_query($link, $QTbl_Lokacija3);
-                      $njuskaloZupRow3 = mysqli_fetch_assoc($zupanija_njuskaloId3);
-
-                              if($njuskaloZupRow3["id"] > 0)
-                              {
-                                    $QTbl_Lokacija3_ = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow3["id"];    
-                                    $grad_njuskaloId3 = mysqli_query($link, $QTbl_Lokacija3_);
-                                    $nuskaloGradRow3 = mysqli_fetch_assoc($grad_njuskaloId3);
-                              }else{
-                                  $Njuskalo_Lokacija_LostID3 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow3["name"]."%"; 
-                                  $grad_njuskaloId_Lost3 = mysqli_query($link, $Njuskalo_Lokacija_LostID3);
-                                  $nuskaloGradRow_Lost3 = mysqli_fetch_assoc($grad_njuskaloId_Lost3);
-                              }
-
-                              $Njuskalo_Lokacija3 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow3["id"];    
-                              $kvart_njuskaloId3 = mysqli_query($link,  $Njuskalo_Lokacija3);
-                              $nuskaloKvartRow3 = mysqli_fetch_assoc($kvart_njuskaloId3);
-
-
-
-
-    //$QTbl_Lokacija3 = "SELECT * FROM kvartovi WHERE id = ".$nuskaloGradRow["id"];
 
             ///karta i google zapisi
                     $QMap3 = "SELECT * FROM uudqv_postmeta where uudqv_postmeta.post_id = ".$row3["ID"].
@@ -1713,7 +1597,7 @@ echo '<title> Poslovni prostor: ',$row3['post_title'],'</title>';
 //link na stranicu
 echo '<external_url>'.$row3["guid"].'</external_url>', "\n";
 //tekst oglasa
-    $html3 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst3);
+    $html3 =  $tekst3; //preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst3);
 echo '<description_raw>'; 
 echo '<![CDATA[',$html3,']]>';
 echo '</description_raw>',"\n";
@@ -1744,21 +1628,19 @@ echo '</image_list>',"\n";
                 echo '<additional_contact></additional_contact>',"\n";
 
 
-                //određivanje lokacija
-                echo '<level_0_location_id>';
-                //zupanija
-                echo $njuskaloZupRow3["njuskaloId"].'</level_0_location_id>',"\n";
-                
-                //grad
-                echo '<level_1_location_id>'.$nuskaloGradRow3["njuskaloId"].'</level_1_location_id>',"\n";
+            //određivanje lokacija
+            echo '<level_0_location_id>';
+            //zupanija
+            echo $njuskaZupanija3["njuskaloId"].'</level_0_location_id>',"\n";
+            
+            //grad
+            echo '<level_1_location_id>'.$nuskaloGradRow3["njuskaloId"].'</level_1_location_id>',"\n";
 
-                //kvart
-                // echo '<level_2_location_id></level_2_location_id>',"\n";
-                if($nuskaloKvartRow3["njuskaloId"] == 0 || is_null($nuskaloKvartRow3["njuskaloId"])){
-                $nuskaloKvartRow3["njuskaloId"] =  $nuskaloKvartRow3_Lost["njuskaloId"];
-                echo '<level_2_location_id>'.$nuskaloKvartRow3["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                  if($njuskaloKvartRow_Lost3["njuskaloId"] == 0 || is_null($njuskaloKvartRow_Lost3["njuskaloId"])){
+                $njuskaloKvartRow3["njuskaloId"] = $njuskaloKvartRow_Lost3["njuskaloId"];
+                echo '<level_2_location_id>'.$njuskaloKvartRow3["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                 }else{
-                echo '<level_2_location_id>'.$nuskaloKvartRow3["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                      echo '<level_2_location_id>'.$njuskaloKvartRow_Lost3["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                 }
               
 
@@ -1772,8 +1654,8 @@ echo '</image_list>',"\n";
                       echo '<location_x>'.$Lon3.'</location_x>',"\n";
                       echo '<location_y>'.$Lat3.'</location_y>',"\n";
                   }else{
-                        echo '<location_x>0</location_x>',"\n";
-                        echo '<location_y>0</location_y>',"\n";
+                      echo '<location_x>'.$njuskaloKvartRow_Lost["lng"].'</location_x>',"\n";
+                      echo '<location_y>'.$njuskaloKvartRow_Lost["lat"].'</location_y>',"\n";
                   }
 
 
@@ -2138,7 +2020,7 @@ $slikeRow4 = mysqli_fetch_assoc($slika4);
 
 
 //lokacija uudqv
-$QlokacijaZupanija4 = "SELECT uudqv_terms.name
+$CityWP4 = "SELECT uudqv_terms.name
 from uudqv_terms
 RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
 LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
@@ -2146,38 +2028,37 @@ JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
 WHERE uudqv_posts.ID = ".$row4["ID"].
 " AND uudqv_term_taxonomy.taxonomy = 'property-city'
 GROUP BY uudqv_term_taxonomy.parent";
-$zupanija4 = mysqli_query($link, $QlokacijaZupanija4);
-$zupanijaRow4 = mysqli_fetch_assoc($zupanija4);
+$WPLokacija4 = mysqli_query($link, $CityWP4);
+$WPLokacijaRow4 = mysqli_fetch_assoc($WPLokacija4);
 
 
+   $QZupanije4 = "SELECT * from zupanije where zupanije.nazivZupanije like '".$WPLOKACIJARow4["name"]."'"; //source iz baze wp-a kroz city, upit na zupanije  
+    $zupanija4 = mysqli_query($link, $QZupanije4);
+    $njuskaZupanija4 = mysqli_fetch_assoc($zupanija4);
+
+    $QNjuskaloKvart_Lost4 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '%".$WPLOKACIJARow4["name"]."'"; 
+    $kvartNjuskao_lost4 = mysqli_query($link, $QNjuskaloKvart_Lost4);
+    $njuskaloKvartRow_Lost4 = mysqli_fetch_assoc($kvartNjuskao_lost4);
 
 
+  if($njuskaZupanija4["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+  {
+        $QGradovi4 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija4["id"];
+        $grad_njuskaloId4 = mysqli_query($link, $QGradovi4);
+        $nuskaloGradRow4 = mysqli_fetch_assoc($grad_njuskaloId4);
 
-$QTbl_Lokacija4 = "SELECT * from zupanije
-where zupanije.nazivZupanije = '".$zupanijaRow4["name"]."'";        
-$zupanija_njuskaloId4 = mysqli_query($link, $QTbl_Lokacija4);
-$njuskaloZupRow4 = mysqli_fetch_assoc($zupanija_njuskaloId4);
+        //ako ima grad tada idemo tražit i kvart
+        $QNjuskalo_Kvart4 = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow4["id"]; 
+        $kvart_njuskaloId4 = mysqli_query($link,  $QNjuskalo_Kvart4);
+        $njuskaloKvartRow4 = mysqli_fetch_assoc($kvart_njuskaloId4);  
 
-if($njuskaloZupRow4["id"] > 0)
-{
-$QTbl_Lokacija4_ = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow4["id"];    
-$grad_njuskaloId4 = mysqli_query($link, $QTbl_Lokacija4_);
-$nuskaloGradRow4 = mysqli_fetch_assoc($grad_njuskaloId4);
-}else{
-    $Njuskalo_Lokacija_LostID4 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow4["name"]."%"; 
-    $grad_njuskaloId_Lost4 = mysqli_query($link, $Njuskalo_Lokacija_LostID4);
-    $nuskaloGradRow_Lost4 = mysqli_fetch_assoc($grad_njuskaloId_Lost4);
-}
-
-
-$Njuskalo_Lokacija4 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow4["id"];    
-$kvart_njuskaloId_4 = mysqli_query($link,  $Njuskalo_Lokacija5);
-$nuskaloKvartRow4 = mysqli_fetch_assoc($kvart_njuskaloId_4);
+        if($njuskaloKvartRow4["njuskaloId"] < 1){
+            $njuskaloKvartRow4["njuskaloId"] = $njuskaloKvartRow_Lost4["njuskaloId"];
+            $njuskaloKvartRow4["naziv"] = $njuskaloKvartRow_Lost4["naziv"];
+        }
+  }
 
 
-// $nuskaloGradRow4
-
-$QTbl_Lokacija4 = "SELECT * FROM kvartovi WHERE id = ".$nuskaloGradRow4["id"];
 
 ///karta i google zapisi
 $QMap4 = "SELECT * FROM uudqv_postmeta where uudqv_postmeta.post_id = ".$row4["ID"].
@@ -2403,7 +2284,7 @@ echo  '<category_id>9579</category_id>',"\n";
     //link na stranicu
         echo '<external_url>'.$row4["guid"].'</external_url>', "\n";
             //tekst oglasa
-                $html4 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst4);
+                $html4 = $tekst4;//preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst4);
               echo '<description_raw>'; 
                   echo '<![CDATA[',$html4,']]>';
               echo '</description_raw>',"\n";
@@ -2434,22 +2315,20 @@ echo  '<category_id>9579</category_id>',"\n";
                                         echo '<additional_contact></additional_contact>',"\n";
 
 
-                                        //određivanje lokacija
-                                        echo '<level_0_location_id>';
-                                        //zupanija
-                                        echo $njuskaloZupRow4["njuskaloId"].'</level_0_location_id>',"\n";
-                                        
-//                                                 //grad
-                                        echo '<level_1_location_id>'.$nuskaloGradRow4["njuskaloId"].'</level_1_location_id>',"\n";
+      //određivanje lokacija
+      echo '<level_0_location_id>';
+      //zupanija
+      echo $njuskaZupanija4["njuskaloId"].'</level_0_location_id>',"\n";
+      
+      //grad
+      echo '<level_1_location_id>'.$nuskaloGradRow4["njuskaloId"].'</level_1_location_id>',"\n";
 
-//                                                     //kvart
-                                             // echo '<level_2_location_id></level_2_location_id>',"\n";
-                                             if($nuskaloKvartRow4["njuskaloId"] == 0 || is_null($nuskaloKvartRow4["njuskaloId"])){
-                                              $nuskaloKvartRow4["njuskaloId"] = $nuskaloKvartRow4_Lost["njuskaloId"] ;
-                                              echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                             }else{
-                                              echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
-                                             }
+            if($njuskaloKvartRow_Lost4["njuskaloId"] == 0 || is_null($njuskaloKvartRow_Lost4["njuskaloId"])){
+          $njuskaloKvartRow4["njuskaloId"] = $njuskaloKvartRow_Lost4["njuskaloId"];
+          echo '<level_2_location_id>'.$njuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+          }else{
+                echo '<level_2_location_id>'.$njuskaloKvartRow_Lost4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+          }
 
 
 //                                                 //ulica (mikrolokacija po JAKO starom)
@@ -2461,8 +2340,8 @@ echo  '<category_id>9579</category_id>',"\n";
                                               echo '<location_x>'.$Lon4.'</location_x>',"\n";
                                               echo '<location_y>'.$Lat4.'</location_y>',"\n";
                                           }else{
-                                                echo '<location_x>0</location_x>',"\n";
-                                                echo '<location_y>0</location_y>',"\n";
+                                              echo '<location_x>'.$njuskaloKvartRow_Lost["lng"].'</location_x>',"\n";
+                                              echo '<location_y>'.$njuskaloKvartRow_Lost["lat"].'</location_y>',"\n";
                                           }
 
 
@@ -2785,7 +2664,7 @@ $tekst5 = $row5["post_content"];
 
 
                           //lokacija uudqv
-                        $QlokacijaZupanija5 = "SELECT uudqv_terms.name
+                        $CityWP5 = "SELECT uudqv_terms.name
                                         from uudqv_terms
                                         RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
                                         LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
@@ -2793,33 +2672,38 @@ $tekst5 = $row5["post_content"];
                                         WHERE uudqv_posts.ID = ".$row5["ID"].
                                         " AND uudqv_term_taxonomy.taxonomy = 'property-city'
                                         GROUP BY uudqv_term_taxonomy.parent";
-                                        $zupanija5 = mysqli_query($link, $QlokacijaZupanija5);
-                                        $zupanijaRow5 = mysqli_fetch_assoc($zupanija5);
+                                        $WPLokacija5 = mysqli_query($link, $CityWP5);
+                                        $WPLokacijaRow5 = mysqli_fetch_assoc($WPLokacija5);
 
 
-                  
+                                                  $QZupanije5 = "SELECT * from zupanije where zupanije.nazivZupanije like '".$WPLOKACIJARow5["name"]."'"; //source iz baze wp-a kroz city, upit na zupanije  
+                                  $zupanija5 = mysqli_query($link, $QZupanije5);
+                                  $njuskaZupanija5 = mysqli_fetch_assoc($zupanija5);
+
+                                  $QNjuskaloKvart_Lost5 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '%".$WPLOKACIJARow5["name"]."'"; 
+                                  $kvartNjuskao_lost5 = mysqli_query($link, $QNjuskaloKvart_Lost5);
+                                  $njuskaloKvartRow_Lost5 = mysqli_fetch_assoc($kvartNjuskao_lost5);
 
 
-                          $QTbl_Lokacija5 = "SELECT * from zupanije
-                                            where zupanije.nazivZupanije = '".$zupanijaRow5["name"]."'";        
-                                            $zupanija_njuskaloId5 = mysqli_query($link, $QTbl_Lokacija5);
-                                            $njuskaloZupRow5 = mysqli_fetch_assoc($zupanija_njuskaloId5);
+                                if($njuskaZupanija5["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+                                {
+                                      $QGradovi5 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija5["id"];
+                                      $grad_njuskaloId5 = mysqli_query($link, $QGradovi5);
+                                      $nuskaloGradRow5 = mysqli_fetch_assoc($grad_njuskaloId5);
 
-                                                      if($njuskaloZupRow5["id"] > 0)
-                                                      {
-                                                            $QTbl_Lokacija5_ = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow5["id"];    
-                                                            $grad_njuskaloId5 = mysqli_query($link, $QTbl_Lokacija5_);
-                                                            $nuskaloGradRow5 = mysqli_fetch_assoc($grad_njuskaloId5);
-                                                      }else{
-                                      $Njuskalo_Lokacija_LostID5 = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like %".$zupanijaRow5["name"]."%"; 
-                                  $grad_njuskaloId_Lost5 = mysqli_query($link, $Njuskalo_Lokacija_LostID5);
-                                  $nuskaloGradRow_Lost5 = mysqli_fetch_assoc($grad_njuskaloId_Lost5);
-                                                      }
+                                      //ako ima grad tada idemo tražit i kvart
+                                      $QNjuskalo_Kvart5 = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow5["id"]; 
+                                      $kvart_njuskaloId5 = mysqli_query($link,  $QNjuskalo_Kvart5);
+                                      $njuskaloKvartRow5 = mysqli_fetch_assoc($kvart_njuskaloId5);  
+
+                                      if($njuskaloKvartRow5["njuskaloId"] < 1){
+                                          $njuskaloKvartRow5["njuskaloId"] = $njuskaloKvartRow_Lost5["njuskaloId"];
+                                          $njuskaloKvartRow5["naziv"] = $njuskaloKvartRow_Lost5["naziv"];
+                                      }
+                                }
+
+
                         
-                      
-                                                    // $nuskaloGradRow4
-
-                            $QTbl_Lokacija5 = "SELECT * FROM kvartovi WHERE id = ".$nuskaloGradRo5["id"];
 
                                     ///karta i google zapisi
                                             $QMap5 = "SELECT * FROM uudqv_postmeta where uudqv_postmeta.post_id = ".$row5["ID"].
@@ -3045,7 +2929,8 @@ echo '<title> Kuća: '.$row5['post_title'],'</title>';
 //link na stranicu
 echo '<external_url>'.$row5["guid"].'</external_url>', "\n";
 //tekst oglasa
-    $html5 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst5);
+    //$html5 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst5);
+    $html5 = $tekst5;
 echo '<description_raw>'; 
 echo '<![CDATA[',$html5,']]>';
 echo '</description_raw>',"\n";
@@ -3075,17 +2960,20 @@ echo '<price>',$cijenaRow5['meta_value'],'</price>
 //                                                 //broj telefona vezan uz nekretninu (može se izvuć broj agenta)
                       echo '<additional_contact></additional_contact>',"\n";
 
+      //određivanje lokacija
+      echo '<level_0_location_id>';
+      //zupanija
+      echo $njuskaZupanija5["njuskaloId"].'</level_0_location_id>',"\n";
+      
+      //grad
+      echo '<level_1_location_id>'.$nuskaloGradRow5["njuskaloId"].'</level_1_location_id>',"\n";
 
-                      //određivanje lokacija
-                      echo '<level_0_location_id>';
-                      //zupanija
-                      echo $njuskaloZupRow5["njuskaloId"].'</level_0_location_id>',"\n";
-                      
-//                                                 //grad
-                      echo '<level_1_location_id>'.$nuskaloGradRow5["njuskaloId"].'</level_1_location_id>',"\n";
-
-//                                                 //kvart
-                      echo '<level_2_location_id></level_2_location_id>',"\n";
+            if($njuskaloKvartRow_Lost5["njuskaloId"] == 0 || is_null($njuskaloKvartRow_Lost5["njuskaloId"])){
+          $njuskaloKvartRow5["njuskaloId"] = $njuskaloKvartRow_Lost5["njuskaloId"];
+          echo '<level_2_location_id>'.$njuskaloKvartRow5["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+          }else{
+                echo '<level_2_location_id>'.$njuskaloKvartRow_Lost5["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+          }
 
 
 //                                                 //ulica (mikrolokacija po JAKO starom)
@@ -3097,8 +2985,8 @@ echo '<price>',$cijenaRow5['meta_value'],'</price>
                             echo '<location_x>'.$Lon5.'</location_x>',"\n";
                             echo '<location_y>'.$Lat5.'</location_y>',"\n";
                         }else{
-                              echo '<location_x>0</location_x>',"\n";
-                              echo '<location_y>0</location_y>',"\n";
+                             echo '<location_x>'.$njuskaloKvartRow_Lost["lng"].'</location_x>',"\n";
+                            echo '<location_y>'.$njuskaloKvartRow_Lost["lat"].'</location_y>',"\n";
                         }
 
 

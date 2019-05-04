@@ -197,6 +197,37 @@ ORDER BY post_date DESC";
 
 
 
+// ///LOKACIJE
+// $link = new mysqli("localhost", "nekrettomisl_userP", "If!k%&C*70lN", "nekrettomisl_nekretW");
+// mysqli_set_charset($link,"utf8");
+// //lokacija uudqv iz WP baze
+// $QlokacijaWP = "SELECT uudqv_terms.name
+//         from uudqv_terms
+//         RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+//         LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+//         JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
+//         WHERE uudqv_posts.ID = ".$row['ID'].
+//         " AND uudqv_term_taxonomy.taxonomy = 'property-city'
+//         GROUP BY uudqv_term_taxonomy.parent";
+//         $zupanija = mysqli_query($link, $QlokacijaWP);
+//         $WPRow = mysqli_fetch_assoc($zupanija);
+
+
+
+// //LOKACIJA iz WP-a
+// var  $ZupanijaWP = "SELECT * from zupanije where zupanije.nazivZupanije like '%".$WPRow["name"]."'";    
+// $zupanija_wp = mysqli_query($link, $ZupanijaWP);
+// $WPZupRow = mysqli_fetch_assoc($zupanija_wp);
+// var $t;
+// //ako je ukucana zupanija tada
+// if($WPZupRow["id"]>0){
+// $t = 1;
+// }
+
+
+
+
+
 
 //Samo za test i rješavanje buga s lokacijama
 
@@ -205,7 +236,7 @@ var $queryOglasi_test = "SELECT * FROM uudqv_posts
 LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
 LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
 WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
-AND uudqv_posts.ID BETWEEN 9154 AND 11529
+AND uudqv_posts.ID BETWEEN 9154 AND 21529
 AND uudqv_term_taxonomy.term_id = 560";
 
 
