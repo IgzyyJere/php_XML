@@ -1,0 +1,87 @@
+    $zupanijaname4 = $WPLOKACIJARow4["name"];
+       $zup4;
+
+         switch($zupanijaname4){
+
+             case "Dubrava - Zagreb":
+             $zup4 = "Grad Zagreb";
+             break;
+
+                case "Dubrava":
+                $zup4 = "Grad Zagreb";
+                 break;
+
+
+             case "Dubrava – Donja Dubrava,Zagreb":
+             $zup4 = "Zagrebačka";
+             break;
+
+
+            case "Črnomerec":
+            $zup4 = "Grad Zagreb";
+             break;
+
+             case "Crikvenica":
+              $zup4 = "Dubrovačko-neretvanska";
+             break;
+
+             case "Ivanić-Grad":
+              $zup4 = "Zagrebačka";
+             break;
+
+
+                 case "Velika Gorica":
+              $zup4 = "Zagrebačka";
+             break;
+
+
+                 case "Zadar":
+              $zup4 = "Zadarska";
+             break;
+
+              case "Zagreb":
+              $zup4 = "Grad Zagreb";
+             break;
+
+             case "Zaprešić":
+            $zup4 = "Zagrebačka";
+             break;
+
+
+
+
+            default:
+            $zup4 = "Grad Zagreb";
+             break;
+
+
+        }
+
+        // if($WPLOKACIJARow["name"] = "Grad Zagreb"){
+        //    $zupanijaname = "Grad Zagreb";
+        // }
+
+      //$zupanijaname = "Grad Zagreb";
+
+
+
+    $QZupanije4 = "SELECT * FROM zupanije WHERE zupanije.nazivZupanije = '".$zup4."'";   //source iz baze wp-a kroz city name, upit na zupanije  
+    $zupanija4 = mysqli_query($link, $QZupanije4);
+    $njuskaZupanija4 = mysqli_fetch_assoc($zupanija4);
+	
+	
+	
+	
+	
+	                          //ovaj uvjet jebe dobijam 1
+                                             if($njuskaloKvartRow_Lost4["njuskaloId"] = 0 || is_null($njuskaloKvartRow_Lost4["njuskaloId"])){
+                                                // $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
+                                                 echo '<level_4_location_id>'.$njuskaloKvartRow4["njuskaloId"].'</level_4_location_id>',"\n"; //zamjenski
+                                               }
+
+                                                else{
+                                                     if($WPLOKACIJARow4["name"] = "Grad Zagreb")
+                                                     {echo '<level_4_location_id>4656</level_4_location_id>',"\n";}
+                                                       else{echo '<level_4_location_id>'.$njuskaloKvartRow_Lost4["njuskaloId"].'</level_4_location_id>',"\n"; //zamjenski 
+                                                   }
+                                                }

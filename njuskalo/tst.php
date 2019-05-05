@@ -59,13 +59,82 @@ $slikeRow = mysqli_fetch_assoc($slika);
                 $WPLokacija = mysqli_query($link, $CityWP);
                 $WPLOKACIJARow = mysqli_fetch_assoc($WPLokacija);
   
-    $zupanijaname = $WPLOKACIJARow["name"];
-    
-    $QZupanije1 = "SELECT * FROM zupanije WHERE nazivZupanije LIKE '$zupanijaname'";   //source iz baze wp-a kroz city name, upit na zupanije  
+  
+       $zupanijaname = $WPLOKACIJARow["name"];
+       $zup;
+
+         switch($zupanijaname){
+
+             case "Dubrava - Zagreb":
+             $zup = "Grad Zagreb";
+             break;
+
+                case "Dubrava":
+                $zup = "Grad Zagreb";
+                 break;
+
+
+             case "Dubrava – Donja Dubrava,Zagreb":
+             $zup = "Zagrebačka";
+             break;
+
+
+            case "Črnomerec":
+            $zup = "Grad Zagreb";
+             break;
+
+             case "Crikvenica":
+              $zup = "Dubrovačko-neretvanska";
+             break;
+
+             case "Ivanić-Grad":
+              $zup = "Zagrebačka";
+             break;
+
+
+                 case "Velika Gorica":
+              $zup = "Zagrebačka";
+             break;
+
+
+                 case "Zadar":
+              $zup = "Zadarska";
+             break;
+
+              case "Zagreb":
+              $zup = "Grad Zagreb";
+             break;
+
+             case "Zaprešić":
+            $zup = "Zagrebačka";
+             break;
+
+
+
+
+            default:
+            $zup = "Grad Zagreb";
+             break;
+
+
+        }
+
+        // if($WPLOKACIJARow["name"] = "Grad Zagreb"){
+        //    $zupanijaname = "Grad Zagreb";
+        // }
+
+      //$zupanijaname = "Grad Zagreb";
+
+
+
+    $QZupanije1 = "SELECT * FROM zupanije WHERE zupanije.nazivZupanije = '".$zup."'";   //source iz baze wp-a kroz city name, upit na zupanije  
     $zupanija = mysqli_query($link, $QZupanije1);
     $njuskaZupanija = mysqli_fetch_assoc($zupanija);
 
-    $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '".$WPLOKACIJARow["name"]."%'"; 
+ 
+
+
+    $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '".$zupanijaname."%'"; 
     $kvartNjuskao_lost = mysqli_query($link, $QNjuskaloKvart_Lost);
     $njuskaloKvartRow_Lost = mysqli_fetch_assoc($kvartNjuskao_lost);
 
@@ -76,7 +145,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
           //       $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
 
           //       //ako ima grad tada idemo tražit i kvart
-                 $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow["id"]." and naziv like = '%".$WPLOKACIJARow["name"]."%'";  
+                // $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow["id"]." and naziv like = '%".$WPLOKACIJARow["name"]."%'";  
           //       $kvart_njuskaloId = mysqli_query($link,  $QNjuskalo_Kvart);
           //       $njuskaloKvartRow = mysqli_fetch_assoc($kvart_njuskaloId);  
           // }
@@ -93,8 +162,8 @@ $slikeRow = mysqli_fetch_assoc($slika);
           // }
 
 
-          // if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
-          // {
+           if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+           {
                  $QGradovi1 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija["id"];
                  $grad_njuskaloId = mysqli_query($link, $QGradovi1);
                  $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
@@ -108,7 +177,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
                       $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
                       $njuskaloKvartRow["naziv"] = $njuskaloKvartRow_Lost["naziv"];
                   }
-           //}
+           }
      
 
 
@@ -399,6 +468,7 @@ echo '<ad_item class="ad_flats">
 
 
                   echo'<GRADWP>'.$WPLOKACIJARow["name"].'</GRADWP>'; //ovo je prvo kroz to ide, to je iz Wordpress
+                  echo'<GradVar>'.$zupanijaname.'</GradVar>';
                   echo'<U>'. $QZupanije1.'</U>'; //ovo je prvo kroz to ide, to je iz Wordpress $QZupanije1  $QGradovi1
                   echo'<U1>'. $QGradovi1.'</U1>'; //
                   echo'<U2>'.$QNjuskalo_Kvart.'</U2>';
@@ -526,12 +596,12 @@ echo '<ad_item class="ad_flats">
                                                  echo '<level_2_location_id>'.$njuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                                }
 
-                                              //  else{
-                                              //       if($WPLOKACIJARow["name"] = "Grad Zagreb")
-                                              //       {echo '<level_2_location_id>2656</level_2_location_id>',"\n";}
-                                              //         else{echo '<level_2_location_id>'.$njuskaloKvartRow_Lost["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski 
-                                              //     }
-                                              //  }
+                                                else{
+                                                     if($WPLOKACIJARow["name"] = "Grad Zagreb")
+                                                     {echo '<level_2_location_id>2656</level_2_location_id>',"\n";}
+                                                       else{echo '<level_2_location_id>'.$njuskaloKvartRow_Lost["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski 
+                                                   }
+                                                }
                                                  
                                                
                                            
