@@ -59,11 +59,11 @@ $slikeRow = mysqli_fetch_assoc($slika);
                 $WPLokacija = mysqli_query($link, $CityWP);
                 $WPLOKACIJARow = mysqli_fetch_assoc($WPLokacija);
   
-
-    $QZupanije1 = "SELECT * from zupanije where zupanije.nazivZupanije like '".$WPLOKACIJARow["name"]."'"; //source iz baze wp-a kroz city, upit na zupanije  
+    $zupanijaname = $WPLOKACIJARow["name"];
+    
+    $QZupanije1 = "SELECT * FROM zupanije WHERE nazivZupanije LIKE '$zupanijaname'";   //source iz baze wp-a kroz city name, upit na zupanije  
     $zupanija = mysqli_query($link, $QZupanije1);
     $njuskaZupanija = mysqli_fetch_assoc($zupanija);
-
 
     $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '".$WPLOKACIJARow["name"]."%'"; 
     $kvartNjuskao_lost = mysqli_query($link, $QNjuskaloKvart_Lost);
@@ -76,7 +76,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
           //       $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
 
           //       //ako ima grad tada idemo tražit i kvart
-          //       $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow["id"]." and naziv like = '%".$WPLOKACIJARow["name"]."%'";  
+                 $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow["id"]." and naziv like = '%".$WPLOKACIJARow["name"]."%'";  
           //       $kvart_njuskaloId = mysqli_query($link,  $QNjuskalo_Kvart);
           //       $njuskaloKvartRow = mysqli_fetch_assoc($kvart_njuskaloId);  
           // }
@@ -93,8 +93,8 @@ $slikeRow = mysqli_fetch_assoc($slika);
           // }
 
 
-           if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
-           {
+          // if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+          // {
                  $QGradovi1 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija["id"];
                  $grad_njuskaloId = mysqli_query($link, $QGradovi1);
                  $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
@@ -108,7 +108,7 @@ $slikeRow = mysqli_fetch_assoc($slika);
                       $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
                       $njuskaloKvartRow["naziv"] = $njuskaloKvartRow_Lost["naziv"];
                   }
-           }
+           //}
      
 
 
@@ -399,12 +399,14 @@ echo '<ad_item class="ad_flats">
 
 
                   echo'<GRADWP>'.$WPLOKACIJARow["name"].'</GRADWP>'; //ovo je prvo kroz to ide, to je iz Wordpress
-                  echo'<zupanijaID>'.$njuskaZupanija["id"].'</zupanijaID>'; //nalazi iz gradova po ID zupanije
+                  echo'<U>'. $QZupanije1.'</U>'; //ovo je prvo kroz to ide, to je iz Wordpress $QZupanije1  $QGradovi1
+                  echo'<U1>'. $QGradovi1.'</U1>'; //
+                  echo'<U2>'.$QNjuskalo_Kvart.'</U2>';
+                  echo'<zupanijaID>'.$njuskaZupanija["id"].'</zupanijaID>'; //nalazi iz gradova po ID zupanije---
                   echo'<gradID>'.$nuskaloGradRow["id"].'</gradID>'; //ovo dobije iz zupanijeRow ime zupanije iz tablice kvartovi
-                  
-                   echo'<grad>'.$nuskaloGradRow["naziv"].'</grad>'; //isto samo naziv
-                   echo'<njuskaloKvart1>'.$njuskaloKvartRow["njuskaloId"].'</njuskaloKvart1>';
-                   echo'<njuskaloKvart>'.$njuskaloKvartRow_Lost["njuskaloId"].'</njuskaloKvart>';
+                  echo'<grad>'.$nuskaloGradRow["naziv"].'</grad>'; //isto samo naziv
+                  echo'<njuskaloKvart1>'.$njuskaloKvartRow["njuskaloId"].'</njuskaloKvart1>';
+                  echo'<njuskaloKvart>'.$njuskaloKvartRow_Lost["njuskaloId"].'</njuskaloKvart>';
                   echo'<njuskaloKvartName>'.$njuskaloKvartRow_Lost["naziv"].'</njuskaloKvartName>';
 
 
@@ -520,7 +522,7 @@ echo '<ad_item class="ad_flats">
 
                                               //ovaj uvjet jebe dobijam 1
                                              if($njuskaloKvartRow_Lost["njuskaloId"] = 0 || is_null($njuskaloKvartRow_Lost["njuskaloId"])){
-                                                 $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
+                                                // $njuskaloKvartRow["njuskaloId"] = $njuskaloKvartRow_Lost["njuskaloId"];
                                                  echo '<level_2_location_id>'.$njuskaloKvartRow["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
                                                }
 
@@ -807,20 +809,20 @@ echo '<ad_item class="ad_flats">
   
 
         echo '</ad_item>',"\n"; //end nekretnine
-                                           // mysqli_free_result($row);
-                                            // mysqli_free_result($slikeRow);
-                                            // mysqli_free_result($gallRow);
+                                           //  mysqli_free_result($row);
+                                           //  mysqli_free_result($slikeRow);
+                                           //  mysqli_free_result($gallRow);
                                             // mysqli_free_result($WPLOKACIJARow);
-                                           //  mysqli_free_result($cijenaRow);
-                                            // mysqli_free_result($njuskaZupanija);
+                                            // mysqli_free_result($cijenaRow);
+                                           //  mysqli_free_result($njuskaZupanija);
                                             // mysqli_free_result($gMapRow);
                                             // mysqli_free_result($brSoba);
                                             // mysqli_free_result($liftT);
                                             // mysqli_free_result($sizeRow);
                                             // mysqli_free_result($year);
-                                            mysqli_free_result($grijanjeTip);
-                                            mysqli_free_result($parking);
-                                            mysqli_free_result($klima);
+                                           // mysqli_free_result($grijanjeTip);
+                                           // mysqli_free_result($parking);
+                                          //  mysqli_free_result($klima);
                                           //  mysql_free_result($Vlist); ne radi
                                          //  mysqli_free_result($BazenRow);
                                         // mysqli_free($Kablovska);

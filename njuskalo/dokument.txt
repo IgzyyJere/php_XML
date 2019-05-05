@@ -49,7 +49,11 @@ UPDATE uudqv_terms SET uudqv_terms.name = REPLACE(uudqv_terms.name, 'Zagreb - Me
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 OPIS ALGORITMA
 
-U WP je to city i opisano je po Grad, Kvart, Županija																													   
+U WP je to city i opisano je po Grad, Kvart, Županija	
+
+Lozinka za njuskalo 
+
+https://www.nekretnine-tomislav.hr/?cpro
 																															   
 																															   
 																															   
