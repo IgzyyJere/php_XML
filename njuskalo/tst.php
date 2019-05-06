@@ -1,13 +1,19 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 header('Content-Type: text/xml'); 
 echo '<?xml version="1.0" encoding="utf-8"?>';
 
-$link = new mysqli("localhost", "nekrettomisl_userP", "If!k%&C*70lN", "nekrettomisl_nekretW");
+include 'defini_fields.php';
+$Contextz_Q = new QueryMain_Context();
+
+$link = new mysqli("localhost", $Contextz_Q->user, $Contextz_Q->passW, $Contextz_Q->db);
 mysqli_set_charset($link,"utf8");
 
 //session_start ();
-include 'defini_fields.php';
-$Contextz_Q = new QueryMain_Context();
+
 echo '<ad_list>';
  // echo'<k>'.$Contextz_Q->f.'</k>';
 
@@ -58,85 +64,90 @@ $slikeRow = mysqli_fetch_assoc($slika);
                 GROUP BY uudqv_term_taxonomy.parent";
                 $WPLokacija = mysqli_query($link, $CityWP);
                 $WPLOKACIJARow = mysqli_fetch_assoc($WPLokacija);
-  
-  
-       $zupanijaname = $WPLOKACIJARow["name"];
-       $zup;
+                $zup= $WPLOKACIJARow["name"];
+      //  $zup;
 
-         switch($zupanijaname){
+      //    switch($zupanijaname){
 
-             case "Dubrava - Zagreb":
-             $zup = "Grad Zagreb";
-             break;
+      //        case "Dubrava - Zagreb":
+      //        $zup = "Grad Zagreb";
+      //        break;
 
-                case "Dubrava":
-                $zup = "Grad Zagreb";
-                 break;
+      //       case "Dubrava":
+      //       $zup = "Grad Zagreb";
+      //       break;
 
 
-             case "Dubrava – Donja Dubrava,Zagreb":
-             $zup = "Zagrebačka";
-             break;
+      //        case "Dubrava – Donja Dubrava,Zagreb":
+      //        $zup = "Zagrebačka";
+      //        break;
 
 
-            case "Črnomerec":
-            $zup = "Grad Zagreb";
-             break;
+      //        case "Črnomerec":
+      //        $zup = "Grad Zagreb";
+      //        break;
 
-             case "Crikvenica":
-              $zup = "Dubrovačko-neretvanska";
-             break;
+      //        case "Crikvenica":
+      //        $zup = "Dubrovačko-neretvanska";
+      //        break;
 
-             case "Ivanić-Grad":
-              $zup = "Zagrebačka";
-             break;
-
-
-                 case "Velika Gorica":
-              $zup = "Zagrebačka";
-             break;
+      //        case "Ivanić-Grad":
+      //        $zup = "Zagrebačka";
+      //        break;
 
 
-                 case "Zadar":
-              $zup = "Zadarska";
-             break;
-
-              case "Zagreb":
-              $zup = "Grad Zagreb";
-             break;
-
-             case "Zaprešić":
-            $zup = "Zagrebačka";
-             break;
+      //        case "Velika Gorica":
+      //        $zup = "Zagrebačka";
+      //        break;
 
 
+      //        case "Zadar":
+      //        $zup = "Zadarska";
+      //        break;
+
+      //        case "Zagreb":
+      //        $zup = "Grad Zagreb";
+      //        break;
+
+      //        case "Zaprešić":
+      //        $zup = "Zagrebačka";
+      //        break;
+
+      //       default:
+      //       $zup = "Grad Zagreb";
+      //        break;
+
+      //   }
 
 
-            default:
-            $zup = "Grad Zagreb";
-             break;
-
-
-        }
-
-        // if($WPLOKACIJARow["name"] = "Grad Zagreb"){
-        //    $zupanijaname = "Grad Zagreb";
-        // }
-
-      //$zupanijaname = "Grad Zagreb";
+      // //$zupanijaname = "Grad Zagreb";
+    // // //  // $zup = "Grad Zagreb";
 
 
 
-    $QZupanije1 = "SELECT * FROM zupanije WHERE zupanije.nazivZupanije = '".$zup."'";   //source iz baze wp-a kroz city name, upit na zupanije  
+   $QZupanije1 = "SELECT * FROM zupanije WHERE nazivZupanije = '" . $WPLOKACIJARow["name"] . "'";
     $zupanija = mysqli_query($link, $QZupanije1);
     $njuskaZupanija = mysqli_fetch_assoc($zupanija);
+    $zupanijaID = $njuskaZupanija["id"];
+    mysqli_free_result($zupanija);
+
+
+    //ovo koristiti
+    // if ($zupanija = mysqli_query($link, $QZupanije1)) {
+    //   while ($njuskaZupanija = mysqli_fetch_assoc($zupanija)) {
+    //     $zupanijaID = $njuskaZupanija["id"];
+    //   }
+    //   //mysqli_free_result($zupanija);
+    // }
+    
+    
 
  
-
-
     $QNjuskaloKvart_Lost = "SELECT  DISTINCT naziv, id, zupanija, grad, njuskaloId from kvartovi WHERE kvartovi.naziv like '".$zupanijaname."%'"; 
     $kvartNjuskao_lost = mysqli_query($link, $QNjuskaloKvart_Lost);
     $njuskaloKvartRow_Lost = mysqli_fetch_assoc($kvartNjuskao_lost);
+    $gradID = $njuskaloKvartRow_Lost["id"];
+   
 
           // if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
           // {
@@ -162,14 +173,14 @@ $slikeRow = mysqli_fetch_assoc($slika);
           // }
 
 
-           if($njuskaZupanija["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+           if($zupanijaID > 0) //ako smo našli županiju idemo pogledati gradove
            {
-                 $QGradovi1 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija["id"];
+                 $QGradovi1 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$zupanijaID;
                  $grad_njuskaloId = mysqli_query($link, $QGradovi1);
                  $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
 
                  //ako ima grad tada idemo tražit i kvart
-                 $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow["id"]; 
+                 $QNjuskalo_Kvart = "SELECT * from kvartovi WHERE kvartovi.grad = ".$gradID; 
                  $kvart_njuskaloId = mysqli_query($link,  $QNjuskalo_Kvart);
                  $njuskaloKvartRow = mysqli_fetch_assoc($kvart_njuskaloId);  
 
@@ -467,12 +478,12 @@ echo '<ad_item class="ad_flats">
                                       echo '<additional_contact></additional_contact>',"\n";
 
 
-                  echo'<GRADWP>'.$WPLOKACIJARow["name"].'</GRADWP>'; //ovo je prvo kroz to ide, to je iz Wordpress
-                  echo'<GradVar>'.$zupanijaname.'</GradVar>';
+                  echo'<GRADWP>'.$WPLOKACIJARow["name"].'</GRADWP>'; //WP varijabla gradovi
+                  echo'<GradVar>'.$zup.'</GradVar>'; //transfer wp-> v
                   echo'<U>'. $QZupanije1.'</U>'; //ovo je prvo kroz to ide, to je iz Wordpress $QZupanije1  $QGradovi1
                   echo'<U1>'. $QGradovi1.'</U1>'; //
                   echo'<U2>'.$QNjuskalo_Kvart.'</U2>';
-                  echo'<zupanijaID>'.$njuskaZupanija["id"].'</zupanijaID>'; //nalazi iz gradova po ID zupanije---
+                  echo'<zupanijaID>'.$zupanijaID.'</zupanijaID>'; //OVO SMO ISPISALI
                   echo'<gradID>'.$nuskaloGradRow["id"].'</gradID>'; //ovo dobije iz zupanijeRow ime zupanije iz tablice kvartovi
                   echo'<grad>'.$nuskaloGradRow["naziv"].'</grad>'; //isto samo naziv
                   echo'<njuskaloKvart1>'.$njuskaloKvartRow["njuskaloId"].'</njuskaloKvart1>';
@@ -879,23 +890,11 @@ echo '<ad_item class="ad_flats">
   
 
         echo '</ad_item>',"\n"; //end nekretnine
-                                           //  mysqli_free_result($row);
-                                           //  mysqli_free_result($slikeRow);
-                                           //  mysqli_free_result($gallRow);
-                                            // mysqli_free_result($WPLOKACIJARow);
-                                            // mysqli_free_result($cijenaRow);
-                                           //  mysqli_free_result($njuskaZupanija);
-                                            // mysqli_free_result($gMapRow);
-                                            // mysqli_free_result($brSoba);
-                                            // mysqli_free_result($liftT);
-                                            // mysqli_free_result($sizeRow);
-                                            // mysqli_free_result($year);
-                                           // mysqli_free_result($grijanjeTip);
-                                           // mysqli_free_result($parking);
-                                          //  mysqli_free_result($klima);
-                                          //  mysql_free_result($Vlist); ne radi
-                                         //  mysqli_free_result($BazenRow);
-                                        // mysqli_free($Kablovska);
+
+
+
+                                              mysqli_free_result($kvartNjuskao_lost);
+                                              mysqli_free_result($zupanija);
 
 }// KRAJ LOOPa stanova prodaja
 

@@ -1,6 +1,13 @@
 <?php
 class QueryMain_Context{
 
+ ///"If!k%&C*70lN", "nekrettomisl_nekretW"
+
+var $user = "nekrettomisl_userP";
+var $db = "nekrettomisl_nekretW";
+var $passW = "If!k%&C*70lN";
+
+
 
 //prjašnji query
 //  $queryOglasi1 ="

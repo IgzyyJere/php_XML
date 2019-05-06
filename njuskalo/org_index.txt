@@ -3136,3 +3136,494 @@ echo '</ad_list>';
 
 ?>
 
+
+
+
+
+
+
+///ovo do objave dole je s nekom greškom treba nać
+
+
+
+
+
+
+
+//
+//
+//
+//                   KUĆE NAJAM
+//
+//
+//
+
+$container5 = mysqli_query($link, $Contextz_Q->queryKuceNajam);
+while($row5 = mysqli_fetch_assoc($container5)){
+$tekst5 = $row5["post_content"];
+
+
+                          //polja - detalji
+                        $Qdetails5 = "SELECT meta_value FROM uudqv_postmeta
+                        where uudqv_postmeta.post_id = ".$row5["ID"]."
+                        and uudqv_postmeta.meta_key = 'REAL_HOMES_property_price'
+                        and uudqv_postmeta.meta_value >= 0";
+                        $cijena5 = mysqli_query($link, $Qdetails5);
+                        $cijenaRow5 = mysqli_fetch_assoc($cijena5);
+
+
+
+
+                        //naslovna slika
+                        $QslikeFe5 = "select DISTINCT  uudqv_posts.guid
+                        from uudqv_posts
+                        INNER JOIN uudqv_postmeta ON uudqv_postmeta.meta_value = uudqv_posts.ID
+                        WHERE uudqv_posts.post_type = 'attachment'
+                        AND uudqv_postmeta.meta_key = '_thumbnail_id'
+                        AND uudqv_postmeta.post_id = ".$row5["ID"];
+                        $slika5 = mysqli_query($link, $QslikeFe5);
+                        $slikeRow5 = mysqli_fetch_assoc($slika5);
+
+
+
+
+
+                          //lokacija uudqv
+                        $CityWP5 = "SELECT uudqv_terms.name
+                                        from uudqv_terms
+                                        RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+                                        LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+                                        JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
+                                        WHERE uudqv_posts.ID = ".$row5["ID"].
+                                        " AND uudqv_term_taxonomy.taxonomy = 'property-city'
+                                        GROUP BY uudqv_term_taxonomy.parent";
+                                        $WPLokacija5 = mysqli_query($link, $CityWP5);
+                                        $WPLokacijaRow5 = mysqli_fetch_assoc($WPLokacija5);
+                                   
+
+
+
+
+    $QZupanije5 = "SELECT * FROM zupanije WHERE zupanije.nazivZupanije = '".$WPLOKACIJARow5["name"]."'";   //source iz baze wp-a kroz city name, upit na zupanije
+    $zupanija5 = mysqli_query($link, $QZupanije5);
+    $njuskaZupanija5 = mysqli_fetch_assoc($zupanija5);
+
+
+                                  $QNjuskaloKvart_Lost5 = "SELECT  DISTINCT * from kvartovi WHERE kvartovi.naziv like '".$WPLOKACIJARow5["name"]."%'";
+                                  $kvartNjuskao_lost5 = mysqli_query($link, $QNjuskaloKvart_Lost5);
+                                  $njuskaloKvartRow_Lost5 = mysqli_fetch_assoc($kvartNjuskao_lost5);
+
+
+                                if($njuskaZupanija5["id"] > 0) //ako smo našli županiju idemo pogledati gradove
+                                {
+                                      $QGradovi5 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaZupanija5["id"];
+                                      $grad_njuskaloId5 = mysqli_query($link, $QGradovi5);
+                                      $nuskaloGradRow5 = mysqli_fetch_assoc($grad_njuskaloId5);
+
+                                      //ako ima grad tada idemo tražit i kvart
+                                      $QNjuskalo_Kvart5 = "SELECT * from kvartovi WHERE kvartovi.grad = ".$nuskaloGradRow5["id"];
+                                      $kvart_njuskaloId5 = mysqli_query($link,  $QNjuskalo_Kvart5);
+                                      $njuskaloKvartRow5 = mysqli_fetch_assoc($kvart_njuskaloId5);
+
+                                      if($njuskaloKvartRow5["njuskaloId"] < 1){
+                                          $njuskaloKvartRow5["njuskaloId"] = $njuskaloKvartRow_Lost5["njuskaloId"];
+                                          $njuskaloKvartRow5["naziv"] = $njuskaloKvartRow_Lost5["naziv"];
+                                      }
+                                }
+
+
+
+
+                                    ///karta i google zapisi
+                                            $QMap5 = "SELECT * FROM uudqv_postmeta where uudqv_postmeta.post_id = ".$row5["ID"].
+                                            " and uudqv_postmeta.meta_key = 'REAL_HOMES_property_location'".
+                                            " and uudqv_postmeta.meta_value >= 0";
+                                            $map5 = mysqli_query($link, $QMap5);
+                                            $gMapRow5 = mysqli_fetch_assoc($map5);
+
+
+                                              if(!is_null($gMapRow5["meta_value"]) || $gMapRow5["meta_value"] != ''){
+                                                  $rest5 = explode(",", $gMapRow5["meta_value"]);
+                                                  $Lon5 = $rest5[1];
+                                                  $Lat5 = $rest5[0];
+                                              }else{
+                                                $Lat5 = 0;
+                                                $Lon5 = 0;
+                                              }
+
+
+
+ $QbrojSoba4 = "SELECT meta_value FROM uudqv_postmeta where
+                                            uudqv_postmeta.post_id = ".$row4["ID"].
+                                            " and uudqv_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
+                                              and uudqv_postmeta.meta_value >= 0";
+                                              $brSoba4 = mysqli_query($link, $QbrojSoba4);
+                                              $sobeRow4 = mysqli_fetch_assoc($brSoba4);
+
+
+
+
+
+
+                                            $QSize4 = "SELECT meta_value FROM uudqv_postmeta
+                                            where uudqv_postmeta.post_id = ".$row4["ID"].
+                                            " and uudqv_postmeta.meta_key = 'REAL_HOMES_property_size'
+                                            and uudqv_postmeta.meta_value >= 0";
+                                            $size_4 = mysqli_query($link, $QSize4);
+                                            $sizeRow4 = mysqli_fetch_assoc($size_4);
+                                            $size4 = $sizeRow4["meta_value"];
+
+
+                                            $QSizeLot4 = "SELECT meta_value FROM uudqv_postmeta
+                                            where uudqv_postmeta.post_id = ".$row4["ID"].
+                                            " and uudqv_postmeta.meta_key = 'REAL_HOMES_property_lot_size'
+                                            and uudqv_postmeta.meta_value >= 0";
+                                            $sizeL_4 = mysqli_query($link, $QSizeLot4);
+                                            $sizeRowL4 = mysqli_fetch_assoc($sizeL_4);
+                                            $sizeL4 = $sizeRowL4["meta_value"];
+
+
+
+
+                                              $QYearBuild4 = "SELECT meta_value FROM uudqv_postmeta
+                                              where uudqv_postmeta.post_id = ".$row4["ID"].
+                                              " and uudqv_postmeta.meta_key = 'REAL_HOMES_property_year_built'
+                                              and uudqv_postmeta.meta_value >= 0";
+                                              $yearB4 = mysqli_query($link, $QYearBuild4);
+                                              $year4 = mysqli_fetch_assoc($yearB4);
+
+
+
+                                                $Grijanje4 = "SELECT  uudqv_terms.name
+                                                          from uudqv_term_relationships
+                                                          LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                          LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                          LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                          WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                          AND post_status='publish'
+                                                          AND uudqv_posts.ID = ".$row4["ID"]."
+                                                            AND uudqv_terms.name = 'Plinsko etažno'
+                                                            OR uudqv_terms.name = 'Radijatori na struju'
+                                                            OR uudqv_terms.name = 'Toplana'";
+                                                  $grijanjeTip4 = mysqli_query($link, $Grijanje4);
+                                                  $GrijanjeRow4 = mysqli_fetch_assoc($grijanjeTip4);
+
+
+                                                        $QParking4 = "SELECT uudqv_terms.name from uudqv_term_relationships
+                                              LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                              LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                              LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                              WHERE uudqv_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND uudqv_posts.ID = ".$row4["ID"].
+                                              " AND uudqv_terms.name = 'Parking' ";
+                                              $parking4 = mysqli_query($link, $QParking4);
+                                              $ParkingRow4 = mysqli_fetch_assoc($parking4);
+
+
+
+                                                          $QKlima4 = "SELECT  uudqv_terms.name
+                                                                    from uudqv_term_relationships
+                                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                    AND post_status='publish'
+                                                                    AND uudqv_posts.ID = ".$row4["ID"].
+                                                                      " AND uudqv_terms.name = 'Klima uređaj' ";
+                                              $klima4 = mysqli_query($link, $QKlima4);
+                                              $KlimaRow4 = mysqli_fetch_assoc($klima4);
+
+
+
+                                                              $QVlList4 = "SELECT  uudqv_terms.name
+                                                                    from uudqv_term_relationships
+                                                                    LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                    LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                    WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                    AND post_status='publish'
+                                                                    AND uudqv_posts.ID = ".$row4["ID"].
+                                                                      " AND uudqv_terms.name = 'Vlasnički list u posjedu'";
+                                              $Vlist4 = mysqli_query($link, $QVlList4);
+                                              $VlistRow4 = mysqli_fetch_assoc($Vlist4);
+
+
+
+
+                                                $QGaraza = "SELECT meta_value FROM uudqv_postmeta
+                                              where uudqv_postmeta.post_id = ".$row4["ID"].
+                                              " and uudqv_postmeta.meta_key = 'REAL_HOMES_property_garage'
+                                              and uudqv_postmeta.meta_value >= 0";
+                                              $garagaB4 = mysqli_query($link, $QGaraza);
+                                              $garaga4 = mysqli_fetch_assoc($garagaB4);
+
+
+
+                                              $QBazen4 = "SELECT  uudqv_terms.name
+                                                          from uudqv_term_relationships
+                                                          LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                          LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                          LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                          WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                          AND post_status='publish'
+                                                          AND uudqv_posts.ID = ".$row4["ID"].
+                                                            " AND uudqv_terms.name = 'Bazen'";
+                                                            $Bazen4 = mysqli_query($link, $QBazen4);
+                                                            $BazenRow4 = mysqli_fetch_assoc($Bazen4);
+
+
+
+                                                            $QKablovska4 = "SELECT  uudqv_terms.name
+                                                                            from uudqv_term_relationships
+                                                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                            AND post_status='publish'
+                                                                            AND uudqv_posts.ID = ".$row4["ID"].
+                                                                            " AND uudqv_terms.name = 'Kablovska'";
+                                                                            $Kablovska4 = mysqli_query($link, $QKablovska4);
+                                                                            $KablovskaRow4 = mysqli_fetch_assoc($Kablovska4);
+
+
+
+                                                            $QSatelit4 = "SELECT  uudqv_terms.name
+                                                                            from uudqv_term_relationships
+                                                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                            AND post_status='publish'
+                                                                            AND uudqv_posts.ID = ".$row4["ID"].
+                                                                            " AND uudqv_terms.name = 'Satelitska'";
+                                                                            $satelit4 = mysqli_query($link, $QSatelit4);
+                                                                            $SatelitRow4 = mysqli_fetch_assoc($satelit4);
+
+
+                                                                  $QAlarm4 = "SELECT  uudqv_terms.name
+                                                                            from uudqv_term_relationships
+                                                                            LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                            LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                            WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                            AND post_status='publish'
+                                                                            AND uudqv_posts.ID = ".$row4["ID"].
+                                                                            " AND uudqv_terms.name = 'Alarm'";
+                                                                            $alarm4 = mysqli_query($link, $QAlarm4);
+                                                                            $AlarmRow4 = mysqli_fetch_assoc($alarm4);
+
+
+
+                                                                $QTelefon4 = "SELECT  uudqv_terms.name
+                                                                from uudqv_term_relationships
+                                                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                AND post_status='publish'
+                                                                AND uudqv_posts.ID = ".$row4["ID"].
+                                                                " AND uudqv_terms.name = 'Telefon (upotreba)'";
+                                                                $telefon_4 = mysqli_query($link, $QTelefon4);
+                                                                $TelefonRow_4 = mysqli_fetch_assoc($telefon_4);
+
+
+                                                                $QTelefon_L4 = "SELECT  uudqv_terms.name
+                                                                from uudqv_term_relationships
+                                                                LEFT JOIN uudqv_posts ON uudqv_term_relationships.object_id = uudqv_posts.ID
+                                                                LEFT JOIN uudqv_terms ON uudqv_terms.term_id = uudqv_term_relationships.term_taxonomy_id
+                                                                LEFT JOIN uudqv_term_taxonomy ON uudqv_term_taxonomy.term_taxonomy_id = uudqv_term_relationships.term_taxonomy_id
+                                                                WHERE uudqv_term_taxonomy.taxonomy = 'property-feature'
+                                                                AND post_status='publish'
+                                                                AND uudqv_posts.ID = ".$row4["ID"].
+                                                                " AND uudqv_terms.name = 'Telefon'";
+                                                                $telefon_L4 = mysqli_query($link, $QTelefon_L4);
+                                                                $TelefonRow_L4 = mysqli_fetch_assoc($telefon_L4);
+
+
+
+
+                                                                
+
+
+echo '<ad_item class="ad_house_lease">
+<user_id>56</user_id>
+<original_id>k-'.$row5["ID"].'</original_id>';
+echo  '<category_id>10919</category_id>',"\n";
+
+
+//         //naslov
+echo '<title> Kuća: '.$row5['post_title'],'</title>';
+//link na stranicu
+echo '<external_url>'.$row5["guid"].'</external_url>', "\n";
+//tekst oglasa
+$html5 = preg_replace('#<iframe[^>]+>.*?</iframe>#is', '', $tekst5);
+
+echo '<description_raw>';
+echo '<![CDATA[',$html5,']]>';
+echo '</description_raw>',"\n";
+
+if($cijenaRow5 < 1){$cijenaRow5 = 100;}
+echo '<price>',$cijenaRow5['meta_value'],'</price>
+<currency_id>2</currency_id>',"\n";
+
+
+//                             //slike
+  echo '<image_list>',"\n";
+                  echo '<image>'. $slikeRow5["guid"].'</image>',"\n";
+                      //galerija slika
+                      $Qgalerija5 = "select DISTINCT uudqv_posts.guid
+                      from uudqv_posts
+                      INNER JOIN uudqv_postmeta ON (uudqv_postmeta.meta_value = uudqv_posts.ID)
+                      WHERE uudqv_posts.post_type = 'attachment'
+                      AND uudqv_postmeta.meta_key = 'REAL_HOMES_property_images'
+                      AND uudqv_postmeta.post_id = ".$row5["ID"].
+                      " ORDER BY uudqv_posts.post_date DESC";
+                                                $gallery5 = mysqli_query($link, $Qgalerija5);
+                                                while($galleryRow4= mysqli_fetch_assoc($gallery5)){
+                                                      echo '<image>'. $galleryRow5["guid"].'</image>',"\n";
+                                                }
+  echo '</image_list>',"\n";
+
+
+//                                                 //broj telefona vezan uz nekretninu (može se izvuć broj agenta)
+                      echo '<additional_contact></additional_contact>',"\n";
+
+      //određivanje lokacija
+      echo '<level_0_location_id>';
+      //zupanija
+      echo $njuskaZupanija5["njuskaloId"].'</level_0_location_id>',"\n";
+
+      //grad
+      echo '<level_1_location_id>'.$nuskaloGradRow5["njuskaloId"].'</level_1_location_id>',"\n";
+
+             //ovaj uvjet jebe dobijam 1
+                                             if($njuskaloKvartRow_Lost5["njuskaloId"] = 0 || is_null($njuskaloKvartRow_Lost5["njuskaloId"])){
+                                              
+                                                 echo '<level_5_location_id>'.$njuskaloKvartRow5["njuskaloId"].'</level_5_location_id>',"\n"; //zamjenski
+                                               }
+
+                                                else{
+                                                     if($WPLOKACIJARow5["name"] = "Grad   Zagreb")
+                                                     {echo '<level_5_location_id>5656</level_5_location_id>',"\n";}
+                                                       else{echo '<level_5_location_id>'.$njuskaloKvartRow_Lost5["njuskaloId"].'</level_5_location_id>',"\n"; //zamjenski
+                                                   }
+                                                }
+
+
+//                                                 //ulica (mikrolokacija po JAKO starom)
+//                                                 echo '<street_name>0</street_name>',"\n";
+
+
+                      //Lokacija na google karti
+                        if ( $Lon5 AND $Lat5 ) {
+                            echo '<location_x>'.$Lon5.'</location_x>',"\n";
+                            echo '<location_y>'.$Lat5.'</location_y>',"\n";
+                        }else{
+                             echo '<location_x>'.$njuskaloKvartRow_Lost5["lng"].'</location_x>',"\n";
+                            echo '<location_y>'.$njuskaloKvartRow_Lost5["lat"].'</location_y>',"\n";
+                        }
+
+
+
+
+
+
+
+                                                                      //vrsta kuće
+                                                                      $type;
+                                                                      $QStanbenoPoslovna = mysqli_query($link, $Contextz_Q->queryKucaStambenoPoslovna);
+                                                                      while($vrKuca = mysqli_fetch_assoc($QStanbenoPoslovna)){
+                                                                      if($vrKuca["ID"]){$type = 1;}; //Stambeno-poslovna
+                                                                      }
+                                                                      $QStanbenoPoslovna = mysqli_query($link, $Contextz_Q->queryKucaSamostojeca);
+                                                                      while($vrKuca = mysqli_fetch_assoc($QStanbenoPoslovna)){
+                                                                      if($vrKuca["ID"]){$type = 2;}; //Samostojeća
+                                                                      }
+                                                                      $QStanbenoPoslovna = mysqli_query($link, $Contextz_Q->queryKucaNiz);
+                                                                      while($vrKuca = mysqli_fetch_assoc($QStanbenoPoslovna)){
+                                                                      if($vrKuca["ID"]){$type = 3;}; //kuća u nizu
+                                                                      }
+                                                                      $QStanbenoPoslovna = mysqli_query($link, $Contextz_Q->queryKucaDvoj);
+                                                                      while($vrKuca = mysqli_fetch_assoc($QStanbenoPoslovna)){
+                                                                      if($vrKuca["ID"]){$type = 4;}; //Samostojeća
+                                                                      }
+                                                                      $QStanbenoPoslovna = mysqli_query($link, $Contextz_Q->queryKucaRoh);
+                                                                      while($vrKuca = mysqli_fetch_assoc($QStanbenoPoslovna)){
+                                                                      if($vrKuca["ID"]){$type = 5;}; //Roh-bau
+                                                                      }
+                                                                      $QStanbenoPoslovna = mysqli_query($link, $Contextz_Q->queryVikendica);
+                                                                      while($vrKuca = mysqli_fetch_assoc($QStanbenoPoslovna)){
+                                                                      if($vrKuca["ID"]){$type = 6;}; //Vikendica
+                                                                      }
+
+
+
+                                                                      switch ($type){
+
+                                                                        case '1':
+                                                                        $stan = "351";
+                                                                        break;
+
+                                                                        case '2':
+                                                                        $stan = "174";
+                                                                        break;
+
+                                                                        case '3':
+                                                                        $stan = "176";
+                                                                        break;
+
+                                                                        case '4':
+                                                                        $stan = "175";
+                                                                        break;
+
+                                                                        case '5':
+                                                                        case '6':
+                                                                        $stan = "174";
+                                                                        break;
+                                                                    }
+
+                                                                    echo '<house_type_id>'.$stan.'</house_type_id>',"\n";
+
+
+
+
+                                                          //broj etaža
+                                                          if(strstr($row5['post_content'], "Broj etaža :")){
+                                                            $etaza5 = strstr($row4['post_content'], "Broj etaža :",0);
+                                                            $etaza5 = substr($etaza5,14,1);
+                                                            switch ($etaza5){
+                                                              case "1":
+                                                              $etaza5 = "177";
+                                                              break;
+
+                                                              case "2":
+                                                                $etaza5 = "178";
+                                                                break;
+
+                                                                case "3":
+                                                                $etaza5 = "179";
+                                                                break;
+
+                                                                case "4":
+                                                                $etaza5 = "180";
+                                                                break;
+                                                              }
+
+
+                                                             if($etaza5 > 0){
+                                                                echo '<floor_count_id>177</floor_count_id>',"\n";
+                                                             }else {
+                                                               echo '<floor_count_id>'.$etaza5.'</floor_count_id>',"\n";
+                                                             }
+
+
+
+
+
+                                                      echo '<room_count>'.$sobeRow5["meta_value"].'</room_count>',"\n";
+
+
+
+
+
+ echo '</ad_item>',"\n"; //end nekretnine
+}// kraj loop kuće najam
