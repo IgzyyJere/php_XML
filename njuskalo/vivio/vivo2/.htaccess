@@ -1,0 +1,4 @@
+RewriteEngine On
+
+RewriteRule ([^/]+)/([^/]+)/([^/]+)/([^/]+)/([^/]+) vivo.php?navigacija=$1&stranica=$2&akcija=$3&id=$4&$5 [NE,L]
+RewriteRule ([^/]+)/([^/]+)/([^/]+)/([^/]+)/ vivo.php?navigacija=$1&stranica=$2&akcija=$3&id=$4 [NE,L]

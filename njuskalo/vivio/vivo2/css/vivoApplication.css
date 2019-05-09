@@ -1,0 +1,560 @@
+﻿.prikazFormLine {
+
+    width: 100%;
+
+    background-color: #f00;
+
+    float: left;
+
+    height: 22px;
+
+    padding: 4px 0 0 0;
+
+}
+
+
+
+.prikazFormLineNoHeight {
+
+    width: 100%;
+
+    background-color: #f00;
+
+    float: left;
+
+    padding: 2px 0 0 0;
+
+    border-bottom: 1px #555 solid;
+
+}
+
+
+
+.prikazLineLeft {
+
+    float: left;
+
+    width: 125px;
+
+}
+
+.prikazLineLeftLong{
+
+    float: left;
+
+    width: 250px;
+
+}
+
+.prikazLineRightShort{
+
+    float: left;
+
+    width: 290px;
+
+}
+
+.prikazLineRight{
+
+    float: left;
+
+    width: 520px;
+
+}
+
+
+
+.formLineObjekt{
+
+    width: 500px;
+
+    float: left;
+
+    margin: 0 0 0 100px;
+
+    border-bottom: 1px #888 solid;
+
+    padding: 2px 0;
+
+}
+
+.prikazPomocniNav{
+
+    float: right;
+
+    width: 340px;
+
+    text-align: right;
+
+    padding: 0 0 10px 0;
+
+}
+
+.prikazPomocniNav a{
+
+    color: #000;
+
+    text-decoration: none;
+
+    padding: 0 2px;
+
+}
+
+
+
+.lightLine {
+
+    background-color: #ddd;
+
+}
+
+.darkLine {
+
+    background-color: #bbb;
+
+}
+
+.greenBackgroundLine {
+
+    background-color: #CCFFCC;
+
+}
+
+.popisDatotekaSlikaOkvir {
+
+    width: 100px;
+
+    height: 110px;
+
+    text-align: center;
+
+    border: #aaa 1px solid;
+
+    float: left;
+
+    margin: 5px;
+
+    background-color: #ccc;
+
+}
+
+.popisDatotekaSlika {
+
+    width: 100px;
+
+    height: 80px;
+
+    overflow: hidden;
+
+    padding: 0 0 5px 0;
+
+}
+
+.naslovPopisaSlika, .naslovPopisaDatoteka {
+
+    width: 100%;
+
+    font-size: 13px;
+
+    font-weight: bold;
+
+    padding: 0 0 0 20px;
+
+    border-bottom: #aaa 1px solid;
+
+    margin: 20px 0 0 0;
+
+    background-image: url('../ikone/arrow_se.png');
+
+    background-repeat: no-repeat;
+
+    background-position: -2px 0;
+
+    clear: left;
+
+    float: left;
+
+}
+
+
+
+#formPopisSlika, #formPopisDatoteka {
+
+    width: 850px;
+
+    float: right;
+
+}
+
+
+
+#formPopisSlika input, #formPopisDatoteka input {
+
+    width: 740px;
+
+}
+
+
+
+.popisDatoteka {
+
+    padding: 0 0 0 4px;
+
+    width: 380px;
+
+    float: left;
+
+}
+
+#youtubeForm{
+
+    padding: 20px 0;
+
+    float: left;
+
+}
+
+
+
+#youtubeForm input{
+
+    width: 500px;
+
+}
+
+
+
+#youtubePlayer {
+
+    float: left;
+
+}
+
+#googleMapContainer {
+
+    width: 100%;
+
+    float: left;
+
+    padding: 10px 0;
+
+}
+
+#googleMapUnosPodataka {
+
+    width: 100%;
+
+}
+
+.GMformPart{
+
+    width: 200px;
+
+    float: left;
+
+}
+
+#googleMapKoordinate{
+
+    width: 100%;
+
+    padding: 0 0 20px 0;
+
+}
+
+
+
+.klijentZeleno {
+
+
+
+    background-color: #C0FFC0;
+
+    font-weight: normal;
+
+
+
+}
+
+
+
+.klijentZuto {
+
+
+
+    background-color: #FFFFC0;
+
+    font-weight: normal;
+
+
+
+}
+
+
+
+.klijentCrveno {
+
+
+
+    background-color: #FFC0C0;
+
+    font-weight: normal;
+
+
+
+}
+
+
+
+span.klijentZeleno, span.klijentZuto, span.klijentCrveno {
+
+
+
+    padding: 0 6px;
+
+    font-weight: bold;
+
+
+
+}
+
+
+
+.klijentNaslov {
+
+
+
+    margin: 0 0 10px 0;
+
+    border-bottom: #555 solid 1px;
+
+    font-weight: bold;
+
+    background-color: #d5d5d5;
+
+    width: 100%;
+
+
+
+}
+
+
+
+.linkDaljeSearch {
+
+    color: #000;
+
+    text-decoration: none;
+
+    padding: 2px 0 2px 20px;
+
+    display: block;
+
+}
+
+
+
+.linkDaljeSearch:hover {
+
+    background-color: #CCFFCC;
+
+}
+
+
+
+#brziPrikazNekretnine, #brzoPretrazivanjeNekretnina {
+
+    margin: 10px 0 10px 10px;
+
+    width: 730px;
+
+    background-color: #ddd;
+
+    border: 1px #999 solid;
+
+    padding: 10px;
+
+    float: left;
+
+}
+
+.pretraziNekretnineDodajGradDiv {
+
+    float: left;
+
+    width: 500px;
+
+}
+
+
+
+#pretraziNekretnineUbaciGrad {
+
+    width: 400px;
+
+    height: 60px;
+
+    display: block;
+
+    float: left;
+
+}
+
+#pretraziNekretnineZupanije {
+
+    float: left;
+
+}
+
+
+
+.formPrikazStrelice {
+
+    float: left;
+
+    width: 65px;
+
+    float: left;
+
+    margin: 0 0 0 4px;
+
+}
+
+.formPrikazID {
+
+    float: left;
+
+    width: 40px;
+
+    font-weight: bold;
+
+    margin: 0 0 0 6px;
+
+}
+
+.formPrikazPosjeti {
+
+    float: left;
+
+    width: 50px;
+
+}
+
+
+
+.formPrikazLokacija {
+
+    float: left;
+
+    width: 200px;
+
+}
+
+
+
+#prolinkVijesti {
+
+    width: 220px;
+
+    float: right;
+
+    margin: 10px 5px 0;
+
+    background-color: #ccc;
+
+    border: #999 1px solid;
+
+}
+
+#prolinkVijestiNaslov {
+
+    width: 200px;
+
+    padding: 10px 0 0 20px;
+
+    height: 30px;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    background-color: #999;
+
+    color: #333;
+
+}
+
+.prolinkVijest{
+
+   margin: 10px 0 0 0;
+
+   float: left;
+
+}
+
+.prolinkNaslov {
+
+   font-weight: bold;
+
+}
+
+.prolinkTekst {
+
+    height: 90px;
+
+    overflow: hidden;
+
+}
+
+.prolinkTekst a{
+
+    text-decoration: none;
+
+    color: #333;
+
+}
+
+#breadcrumb {
+
+   width: 100%;
+
+   background-color: #aaa;
+
+   color: #222;
+
+   padding: 0 0 0 12px;
+
+   font-weight: bold;
+
+}
+
+
+
+#searchFormWrap {
+
+    margin: 20px;
+
+    padding: 20px;
+
+    background-color: #fff;
+
+    width: 900px;
+
+    border: 1px #999 solid;
+
+}
+
+
+
+.dajIDnaklik {
+
+    color: #000;
+
+    text-decoration: none;
+
+}
+
+.uploadButton {
+    width: 100%;
+    float: left;
+}

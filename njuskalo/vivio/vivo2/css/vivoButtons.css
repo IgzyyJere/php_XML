@@ -1,0 +1,186 @@
+﻿.smallButton, .bigButton, .bigButtonLong, .smallButtonLong  {
+    text-decoration: none;
+    color: #000;
+}
+
+.bigButton {
+    height: 17px;
+    padding: 0 8px 3px;
+    width: 40px;
+    display: block;
+    float: left;
+    text-align: center;
+    margin: 0 0 0 10px;
+}
+
+.bigButtonLong {
+    height: 17px;
+    padding: 0 8px 3px;
+    display: block;
+    float: left;
+    text-align: center;
+    margin: 0 0 0 10px;
+}
+
+.greenButton {
+    border: 1px solid #0a7b1f;
+    background-image: url('../elementi/bigButtonBackGreen.png');
+}
+
+.greenButton:hover {
+    border: 1px solid #7CFC00;
+    background-image: none;
+    background-color: #90EE90;
+}
+
+.redButton {
+    border: 1px solid #800000;
+    background-image: url('../elementi/bigButtonBackRed.png');
+}
+
+.redButton:hover {
+    border: 1px solid #FFB5A8;
+    background-image: none;
+    background-color: #FF4500;
+}
+
+.yellowButton {
+    border: 1px solid #d5bc12;
+    background-image: url('../elementi/bigButtonBackYellow.png');
+}
+
+.yellowButton:hover {
+    border: 1px solid #FFFACD;
+    background-image: none;
+    background-color: #FFE75E;
+}
+.topBarContent form button {
+    margin: 0 0 0 70px;
+    height: 22px;
+    padding: 0 8px 3px;
+    width: 65px;
+    border: 1px solid #0a7b1f;
+    background-image: url('../elementi/bigButtonBackGreen.png');
+}
+
+.smallButton {
+    height: 12px;
+    padding: 0 8px 3px;
+    width: 34px;
+    display: block;
+    float: left;
+    text-align: center;
+    margin: 2px 0 0 10px;
+    font-size: 11px;
+}
+
+.smallButtonLong {
+    height: 12px;
+    padding: 0 8px 3px;
+    display: block;
+    float: left;
+    text-align: center;
+    margin: 2px 0 0 10px;
+    font-size: 11px;
+}
+
+.smallButtonPicture {
+    height: 12px;
+    padding: 0 8px 3px;
+    width: 34px;
+    text-align: center;
+    font-size: 11px;
+    text-decoration: none;
+    color: #000;
+}
+
+.smallRed {
+    border: 1px solid #B22222;
+    background-image: url('../elementi/buttonSmallRedBack.png');
+}
+
+.smallRed:hover {
+    border: 1px solid #FF8888;
+    background-image: none;
+    background-color: #FF5151;
+}
+.smallBlue{
+    border: 1px solid #00008B;
+    background-image: url('../elementi/buttonSmallBlueBack.png');
+}
+
+.smallBlue:hover {
+    border: 1px solid #87CEEB;
+    background-image: none;
+    background-color: #6495ED;
+}
+
+.buttonClear {
+    border: 1px solid #B22222;
+    background-image: url('../elementi/buttonSmallRedBack.png');
+}
+
+.buttonClear:hover {
+    border: 1px solid #FF8888;
+    background-image: none;
+    background-color: #FF5151;
+}
+
+.buttonGoBackEdit {
+    margin: 10px 0 10px 20px;
+}
+
+.prikazPomocniNav a {
+    margin: 0 4px;
+}
+
+.buttonsDown {
+    clear: left;
+    width: 790px;
+    text-align: center;
+}
+
+#uploadButtonsContainer{
+    border-top: 1px solid #888;
+    border-bottom: 1px solid #888;
+    width: 100%;
+    float: left;
+    padding: 10px 0;
+    text-align: center;
+}
+#uploadButtonsControl {
+    padding: 0 0 0 380px;
+}
+#uploadButtonsControl a {
+    margin: 10px 30px;
+}
+
+
+/*                                    /
+         modal prozor za potvrde      /
+                                     */
+
+#cleanblue_state0_buttonObriši {
+    background-color: #DC143C;
+    float: left;
+}
+#cleanblue_state0_buttonOdustani {
+  background-color: #1E90FF;
+}
+
+.cleanbluewarning .cleanblue{ background-color: #999; }
+.cleanbluefade{ position: absolute; background-color: #000; }
+div.cleanblue{ font-family: Arial, Helvetica, sans-serif; position: absolute; background-color: #ffffff; width: 800px; font-size: 14px; text-align: left; border: solid 1px #fff; }
+div.cleanblue .cleanbluecontainer{ background-color: #ffffff; border-top: solid 14px #555; padding: 5px; font-weight: bold; font-size: 14px; }
+div.cleanblue .cleanblueclose{ float: right; width: 18px; cursor: default; margin: -19px -12px 0 0; color: #ffffff; font-weight: bold; }
+div.cleanblue .cleanbluemessage{ padding: 10px; line-height: 20px; font-size: 14px; color: #000; font-weight: bold; }
+div.cleanblue .cleanbluemessage td{ font-size: 12px; padding: 3px 0; }
+div.cleanblue .cleanbluebuttons{ text-align: right; padding: 5px 0 5px 0; border: solid 1px #eeeeee; background-color: #aaa; }
+div.cleanblue button{ padding: 3px 10px; margin: 0 10px; background-color: #314e90; border: solid 1px #f4f4f4; color: #ffffff; font-weight: bold; font-size: 12px; }
+div.cleanblue button:hover{ border: solid 1px #d4d4d4; }
+div.cleanblue textarea {
+  width: 550px;
+  height: 50px;
+
+}
+

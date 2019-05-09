@@ -1,0 +1,8 @@
+<?php
+
+$spajanjeServer = "localhost";
+$spajanjeUser = "nekrtomislav";
+$spajanjePass = "65daszdasr4re4";
+$spajanjeBaza = "nekrtomislav";
+
+?>
