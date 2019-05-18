@@ -895,6 +895,32 @@ echo '<ad_item class="ad_flats">
 
                                               mysqli_free_result($kvartNjuskao_lost);
                                               mysqli_free_result($zupanija);
+                                              mysqli_free_result($cijena);
+
+                                              mysqli_free_result($slika);
+                                              mysqli_free_result($kvartNjuskao_lost);
+                                              mysqli_free_result($grad_njuskaloId);
+                                              mysqli_free_result($kvart_njuskaloId);
+                                              mysqli_free_result($brSoba);
+                                              mysqli_free_result($liftT_);
+
+
+                                              mysqli_free_result($sizeRow);
+                                              mysqli_free_result($yearB);
+                                              mysqli_free_result($grijanjeTip);
+                                              mysqli_free_result($parking);
+                                              mysqli_free_result($klima);
+                                              mysqli_free_result($Vlist);
+                                              mysqli_free_result($Bazen);
+                                              mysqli_free_result($Kablovska);
+                                              mysqli_free_result($satelit);
+                                              mysqli_free_result($alarm);
+
+
+                                              mysqli_free_result($telefon_);
+                                              mysqli_free_result($telefon_L);
+                                       
+
 
 }// KRAJ LOOPa stanova prodaja
 

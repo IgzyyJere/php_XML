@@ -333,11 +333,16 @@ echo '<ad_item class="ad_flats">
                 echo '<![CDATA[',$html,']]>';
             echo '</description_raw>',"\n";
 
-             if($cijenaRow < 1){$cijenaRow = 10000;}
-             echo '<price>'.$cijenaRow['meta_value'].'</price>
+             if($cijenaRow['meta_value'] < 1 || is_null($cijenaRow['meta_value']) || $cijenaRow['meta_value'] === '' || empty($cijenaRow['meta_value'])){
+               $cj = 10000;
+               echo '<price>'.$cj.'</price>';
+              }else{
+                echo '<price>'.$cijenaRow['meta_value'].'</price>';
+              }
+           
 
 
-                <currency_id>2</currency_id>',"\n";
+                echo'<currency_id>2</currency_id>',"\n";
 
 
                   //slike
@@ -415,17 +420,17 @@ echo '<ad_item class="ad_flats">
                                                         $etaza = "186";
                                                         break;
 
-
                                                         default:
                                                           $etaza = "184";
                                                         break;
 
                                                       }
 
-                                            echo '<floor_count_id>'. $etaza.'</floor_count_id>',"\n";
+                                          echo '<floor_count_id>'.$etaza.'</floor_count_id>',"\n";
                                           }   else{
                                             echo '<floor_count_id>184</floor_count_id>',"\n";
                                           }
+                                        
 
 
 
@@ -513,8 +518,10 @@ echo '<ad_item class="ad_flats">
 
 
                                                 //površina
-                                                if($size > 0){
+                                                if($size > 1){
                                                       echo '<main_area>'.$size.'</main_area>',"\n";
+                                                }else{
+                                                  echo '<main_area>35</main_area>',"\n";
                                                 }
 
                                                 //vrt površina
@@ -665,6 +672,8 @@ echo '<ad_item class="ad_flats">
 
 
         echo '</ad_item>',"\n"; //end nekretnine
+
+
 
 }// KRAJ LOOPa stanova prodaja
 
@@ -960,9 +969,21 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
                                           echo '<![CDATA[',$html2,']]>';
                                       echo '</description_raw>',"\n";
 
-                                       if($cijenaRow2 < 1){$cijenaRow2 = 10000;}
-                                          echo '<price>',$cijenaRow2['meta_value'],'</price>
-                                          <currency_id>2</currency_id>',"\n";
+                                      //  if($cijenaRow2 < 1){$cijenaRow2 = 10000;}
+                                      //     echo '<price>',$cijenaRow2['meta_value'],'</price>
+                                      //     <currency_id>2</currency_id>',"\n";
+
+
+
+                                          if($cijenaRow2['meta_value'] < 1 || is_null($cijenaRow2['meta_value']) || $cijenaRow2['meta_value'] === '' || empty($cijenaRow2['meta_value'])){
+                                            $cj2 = 10000;
+                                            echo '<price>'.$cj2.'</price>';
+                                           }else{
+                                             echo '<price>'.$cijenaRow2['meta_value'].'</price>';
+                                           }
+
+
+                                           echo'<currency_id>2</currency_id>',"\n";
 
 
                                             //slike
@@ -1121,9 +1142,13 @@ $QbrojSoba2 = "SELECT meta_value FROM uudqv_postmeta where
 
 
                                                                           //površina
-                                                                          if($size2 > 0){
-                                                                                echo '<main_area>'.$size2.'</main_area>',"\n";
-                                                                          }
+                                                                           if($size2 > 1){
+                                                                            echo '<main_area>'.$size2.'</main_area>',"\n";
+                                                                          }else{
+                                                                               echo '<main_area>35</main_area>',"\n";
+                                                                            }
+
+
 
                                                                           //vrt površina
                                                                             echo '<garden_area></garden_area>',"\n";
@@ -1585,9 +1610,19 @@ echo '<description_raw>';
 echo '<![CDATA[',$html3,']]>';
 echo '</description_raw>',"\n";
 
- if($cijenaRow3 < 1){$cijenaRow3 = 10000;}
-echo '<price>',$cijenaRow3['meta_value'],'</price>
-<currency_id>2</currency_id>',"\n";
+//  if($cijenaRow3 < 1){$cijenaRow3 = 10000;}
+// echo '<price>',$cijenaRow3['meta_value'],'</price>
+// <currency_id>2</currency_id>',"\n";
+
+if($cijenaRow3['meta_value'] < 1 || is_null($cijenaRow3['meta_value']) || $cijenaRow3['meta_value'] === '' || empty($cijenaRow3['meta_value'])){
+  $cj3 = 10000;
+  echo '<price>'.$cj3.'</price>';
+ }else{
+   echo '<price>'.$cijenaRow3['meta_value'].'</price>';
+ }
+
+ echo'<currency_id>2</currency_id>',"\n";
+
 
 
 //slike
@@ -1801,10 +1836,12 @@ echo '</image_list>',"\n";
 
 
                           //površina
-                          if($size3 > 0){
-                                echo '<main_area>'.$size3.'</main_area>',"\n";
-
-                          }
+                  
+                          if($size3 > 1){
+                            echo '<main_area>'.$size3.'</main_area>',"\n";
+                           }else{
+                             echo '<main_area>35</main_area>',"\n";
+                            }
 
 
 
@@ -2281,10 +2318,14 @@ echo  '<category_id>9579</category_id>',"\n";
                   echo '<![CDATA[',$html4,']]>';
               echo '</description_raw>',"\n";
 
-
-                  if($cijenaRow4 < 1){$cijenaRow4 = 10000;}
-                  echo '<price>',$cijenaRow4['meta_value'],'</price>
-                  <currency_id>2</currency_id>',"\n";
+              if($cijenaRow4['meta_value'] < 1 || is_null($cijenaRow4['meta_value']) || $cijenaRow4['meta_value'] === '' || empty($cijenaRow4['meta_value'])){
+                $cj4 = 10000;
+                echo '<price>'.$cj4.'</price>';
+               }else{
+                 echo '<price>'.$cijenaRow4['meta_value'].'</price>';
+               }
+            
+               echo'<currency_id>2</currency_id>',"\n";
 
 
 //                             //slike
@@ -2444,9 +2485,11 @@ echo  '<category_id>9579</category_id>',"\n";
 
 
                                                                         //površina
-                                                                        if($size3 > 0){
-                                                                              echo '<main_area>'.$size4.'</main_area>',"\n";
-                                                                        }
+                                                                        if($size4> 1){
+                                                                          echo '<main_area>'.$size4.'</main_area>',"\n";
+                                                                           }else{
+                                                                             echo '<main_area>35</main_area>',"\n";
+                                                                              }
 
 
                                                                         //površina okućnice
@@ -2654,4 +2697,3 @@ echo '</ad_list>';
 //rješene su samo Vlasnički list i bazen, ostalo će trebat pazit kako se unaša.
 
 ?>
-
