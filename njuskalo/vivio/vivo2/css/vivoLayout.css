@@ -1,0 +1,300 @@
+body {
+    margin: 0px;
+    font: 12px/1.5 Arial, Verdana, sans-serif;
+    text-align: center;
+    background-image: url('../elementi/vivoBack.png');
+    background-repeat: repeat-x;
+    background-color: #7d7d7d;
+}
+
+img {
+   border: 0;
+}
+
+
+#vivoContainer {
+    width: 1000px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+
+#header {
+    background-image: url('../elementi/logoBack.png');
+    background-repeat: no-repeat;
+    height: 100px;
+    width: 1000px;
+    position: relative;
+}
+
+#logo {
+    width: 138px;
+    height: 40px;
+    float: left;
+    background-image: url('../elementi/vivo_wide.png');
+    margin: 10px 0 0 10px;
+}
+
+/* topbar */
+
+#topbar {
+    margin: 6px 0 0 0;
+    float: left;
+    display: inline;
+    width: 500px;
+}
+.porukaGore {
+    margin: 0 0 0 40px;
+    width: 150px;
+    float: left;
+    display: inline;
+}
+#topbar img {
+    margin: 0 5px;
+}
+#topbar a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+/*  helpbar */
+
+#helpbar {
+    position: absolute;
+    top: 30px;
+    left: 870px;
+    width: 150px;
+    height: 30px;
+    text-align: right;
+}
+
+#helpbar img {
+    margin: 0 15px 0 0;
+}
+
+/*            /
+   mainbar    /
+             */
+
+#mainbar {
+    width: 1000px;
+    float: left;
+    margin: 18px 0 0 0;
+}
+
+.mainbarLink {
+    float: left;
+    width: 100px;
+    height: 32px;
+}
+
+.mainbarLink a {
+    color: #fff;
+    text-decoration: none;
+    width: 100px;
+    height: 25px;
+    padding: 7px 0 0 0;
+    display: block;
+    text-align: center;
+    font-weight: bold;
+}
+
+.mainbarLink a:hover {
+    background-image: url('../elementi/mainbarActive.png');
+    background-position: 100px;
+    color: #CC7100;
+}
+
+.mainbarActive {
+    background-image: url('../elementi/mainbarActive.png');
+}
+
+.mainbarLink a.mainbarActive {
+    color: #000;
+}
+
+.mainbarLink a.mainbarActive:hover {
+    background-position: 0;
+}
+
+/*                       /
+   main - glavni dio     /
+                        */
+
+#main {
+    width: 1000px;
+    margin: 20px 0 0 0;
+    padding: 0 0 20px 0;
+    overflow: hidden;
+}
+
+/* navigation */
+#navigation {
+    width: 180px;
+    float: left;
+    overflow: hidden;
+}
+
+#navContent{
+    background-image: url('../elementi/navBack.png');
+    background-position: 0 10px;
+    overflow: hidden;
+}
+
+
+#navTitle {
+    height: 28px;
+    width: 156px;
+    padding: 12px 0 0 24px;
+    color: #fff;
+    font-weight: bold;
+    background-image: url('../elementi/navTop.png');
+}
+
+#navFooter {
+    background-image: url('../elementi/navFooter.png');
+    height: 24px;
+    width: 180px;
+}
+
+.navLinksTitle {
+    width: 150px;
+    height: 24px;
+    padding: 6px 0 0 20px;
+    background-color: #fff;
+    color: #000;
+    font-weight: bold;
+    border-top: #aaa solid 1px;
+    border-bottom: #aaa solid 1px;
+    background-image: url('../ikone/arrow_se.png');
+    background-repeat: no-repeat;
+    background-position: -2px 3px;
+}
+
+.navLinks {
+    display: block;
+    width: 140px;
+    padding: 1px 0 1px 30px;
+    text-decoration: none;
+    color: #333;
+}
+.navLinks:hover {
+    color: #f00;
+    background-color: #bbb;
+}
+.navLinksList {
+    margin: 0 0 4px 0;
+}
+/* maniarea */
+#mainAreaContainer {
+    width: 1000px;
+    float: right;
+    border-bottom: 2px solid #222;
+}
+
+#mainarea {
+    width: 1000px;
+    float: left;
+    background-color: #eee;
+    overflow: hidden;
+}
+
+#mainButtonBar {
+    width: 100%;
+    float: left;
+    height: 36px;
+    border-bottom: #777 solid 1px;
+    background-image: url('../elementi/buttonBarBack.png');
+}
+
+#mainPaginationBar {
+    width: 100%;
+    float: left;
+    height: 26px;
+    padding: 4px 0 0 0;
+    border-bottom: #999 solid 1px;
+    background-image: url('../elementi/paginationBarBack.png');
+    text-align: center;
+}
+
+#mainPaginationBar b {
+    border: 1px #008000 solid;
+    padding: 0 3px;
+    background-color: #98FB98;
+    margin: 0 5px;
+}
+#mainPaginationBar a {
+    border: 1px #FFD700 solid;
+    padding: 0 3px;
+    background-color: #FFFACD;
+    margin: 0 5px;
+    color: #000;
+    text-decoration: none;
+}
+
+#mainPaginationBar a:hover {
+    border: 1px #FFFACD solid;
+    background-color: #FFD700;
+}
+
+#mainAreaFooter {
+    margin: 0 0 0 20px;
+    display: inline;
+    float: left;
+    width: 800px;
+    height: 11px;
+    background-image: url('../elementi/mainAreaFooter.png');
+}
+#mainButtons {
+    float: left;
+    padding: 6px 0 0 10px;
+}
+#additionalButtons {
+    float: right;
+    padding: 6px 10px 0 0;
+}
+
+#ajaxLoader {
+    position:fixed;
+    top: 0;
+    left: 0;
+    background-color: #b30000;
+    color: #fff;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 20px;
+    display: none;
+}
+
+.tooltip {
+    display:none;
+    background-color:#ffa;
+    border:1px solid #cc9;
+    padding:3px;
+    font-size:13px;
+    -moz-box-shadow: 2px 2px 11px #666;
+    -webkit-box-shadow: 2px 2px 11px #666;
+}
+
+#brzoPretrazivanjeNekretninaRezultat {
+    width: 750px;
+    float: left;
+}
+.pretrazivanjeNaPocetnojRezultati {
+    width: 200px;
+    margin: 10px;
+    border: 1px solid #777;
+    background-color: #bbb;
+    float: left;
+    display: inline;
+}
+.pretrazivanjeNaPocetnojRezultati img {
+    margin: 5px;
+}
+
+table.posrednckiDetalji {
+    margin: 50px;
+}
+table.posrednckiDetalji td {
+    padding: 5px 0;
+}

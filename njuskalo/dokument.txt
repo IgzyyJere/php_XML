@@ -1,0 +1,61 @@
+UPDATE uudqv_posts SET guid = REPLACE(guid, 'http://localhost/t-tomislav', 'https://www.nekretnine-tomislav.hr')
+
+
+UPDATE uudqv_terms SET uudqv_terms.name = REPLACE(uudqv_terms.name, 'Zagreb - Medveščak', 'Zagreb')
+
+
+
+
+               $QTbl_Lokacija1 = "SELECT * from zupanije
+                                                                 where zupanije.nazivZupanije = '".$zupanijaRow["name"]."'";        
+                                                                 $zupanija_njuskaloId = mysqli_query($link, $QTbl_Lokacija1);
+                                                                 $njuskaloZupRow = mysqli_fetch_assoc($zupanija_njuskaloId);
+
+                                                                          if($njuskaloZupRow["id"] > 0)
+                                                                          {
+                                                                                $QTbl_Lokacija2 = "SELECT * from gradovi WHERE gradovi.zupanija = ".$njuskaloZupRow["id"];    
+                                                                                $grad_njuskaloId = mysqli_query($link, $QTbl_Lokacija2);
+                                                                                $nuskaloGradRow = mysqli_fetch_assoc($grad_njuskaloId);
+                                                                          }else{
+                                                                            $nuskaloGradRow = null;
+                                                                          }
+
+
+
+                                                                       
+                                                                          
+                                                                                $Njuskalo_Lokacija2 = "SELECT * from kvartovi WHERE kvartovi.zupanija = ".$nuskaloGradRow["id"];    
+                                                                                $kvart_njuskaloId = mysqli_query($link,  $Njuskalo_Lokacija2);
+                                                                                $nuskaloKvartRow = mysqli_fetch_assoc($kvart_njuskaloId);
+																				
+																				
+																				
+																				   echo '<level_2_location_id>'.$nuskaloKvartRow2["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+																				   
+																				   
+																				   
+																				   
+																				   
+																				           // echo '<level_2_location_id></level_2_location_id>',"\n";
+                                                                                                                               if($nuskaloKvartRow4["njuskaloId"] == 0 || is_null($nuskaloKvartRow4["njuskaloId"])){
+                                                                                                                                $nuskaloKvartRow4["njuskaloId"] = 111;
+                                                                                                                                echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                                                                                                               }else{
+                                                                                                                                echo '<level_2_location_id>'.$nuskaloKvartRow4["njuskaloId"].'</level_2_location_id>',"\n"; //zamjenski
+                                                                                                                               }
+																															   
+																															   
+																															   
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+OPIS ALGORITMA
+
+U WP je to city i opisano je po Grad, Kvart, Županija	
+
+Lozinka za njuskalo 
+
+https://www.nekretnine-tomislav.hr/?cpro
+																															   
+																															   
+																															   
+																															   
+																															   

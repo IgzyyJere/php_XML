@@ -1,6 +1,6 @@
 <?php
  
-$mysqli = new mysqli("localhost", "root", "", "portal");
+$mysqli = new mysqli("localhost", "root", "", "svijet");
 mysqli_set_charset($mysqli,'utf-8');
 
 /* check connection */
@@ -21,16 +21,27 @@ function encode_to_utf8_if_needed($string)
 }
 $postId = $_GET["id"];
 if($_GET["id"]){
-            $stringQ = "select wp_posts.post_title, wp_posts.post_status ,wp_posts.guid ,wp_posts.post_type, wp_posts.post_date, wp_term_taxonomy.term_id, 
-            wp_term_taxonomy.taxonomy, wp_term_taxonomy.description, wp_terms.name
-            from wp_posts
-            LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-            LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-            LEFT JOIN wp_terms ON (wp_term_relationships.term_taxonomy_id = wp_terms.term_id)
-            WHERE wp_posts.post_type = 'post'
-            AND wp_term_taxonomy.taxonomy = 'category'
-            AND wp_term_taxonomy.term_id = ".$_GET["id"]."
-            AND wp_posts.post_status = 'publish'
+            $stringQ = "SELECT 
+            kgrdr_posts.post_title, 
+            kgrdr_posts.post_status,
+            kgrdr_posts.guid,
+            kgrdr_posts.post_type, 
+            kgrdr_posts.post_date,
+            kgrdr_term_taxonomy.term_id, 
+            kgrdr_term_taxonomy.taxonomy, 
+            kgrdr_term_taxonomy.description, 
+            kgrdr_terms.name,
+            kgrdr_postmeta.meta_value
+            FROM kgrdr_posts
+               JOIN kgrdr_term_relationships ON kgrdr_posts.ID = kgrdr_term_relationships.object_id
+               JOIN kgrdr_term_taxonomy ON kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id
+               JOIN kgrdr_terms ON kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id
+               LEFT JOIN kgrdr_postmeta on kgrdr_postmeta.post_id = kgrdr_posts.ID
+            WHERE kgrdr_posts.post_type = 'post'
+            AND kgrdr_term_taxonomy.taxonomy = 'category'
+            AND kgrdr_term_taxonomy.term_id = ".$_GET["id"]."
+            AND kgrdr_posts.post_status = 'publish'
+            AND kgrdr_postmeta.meta_key  = 'post_views_count'
             ORDER BY post_date DESC";
             $postId = $_GET["id"];
           
@@ -41,7 +52,7 @@ die();
 }
 
 
-$path = "report/portal.txt";
+$path = "report/portal.txt"; //ubaciti da se vidi na webu
 $file = fopen($path,"w");
 
 ?>
@@ -51,12 +62,12 @@ $file = fopen($path,"w");
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viekgrdrort" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Svijet Sigurnosti app</title>
   </head>
   <body>
 
@@ -84,7 +95,7 @@ $file = fopen($path,"w");
 
     
 <?php
- echo'<p><a class="btn btn-lg btn-success" href="./IEPortalDate.php?id='.$postId.'"' .'role="button">By date</a></p>';
+ echo'<p><a class="btn btn-lg btn-success" href="./IEPortalDate.php?id='.$postId.'"' .'role="button">Idi na petraživanje po datumu!</a></p>';
  echo '<p>ID kategorije je : '.$postId."</p>";
 ?>
 
@@ -114,22 +125,45 @@ if($rezContainer = mysqli_query($mysqli, $stringQ)){
 $count = 0;
 
 
+
 echo '<table class="table">
 <thead">
 <tr>
-<th>title</th>
-<th>status</th>
+<th>Naslov</th>
+<th>Status</th>
 <th>link</th>
 <th>tip</th>
 <th>datum objave</th>
 <th>id kategorije</th>
 <th>ime kategorije</th>
+<th>broj pregleda</th>
 
 </tr></thead><tbody>';
 $resulTitle = $mysqli ->query($stringQ);
 if($resulTitle ->num_rows > 0){
   while($row = $resulTitle -> fetch_assoc()){
     $count++;
+
+//pregled:
+$view_org = $row["meta_value"];
+if($view_org < 100){
+  $view_org = $view_org * 2;
+}
+if($view_org > 100 && $view_org < 400){
+   $view_org = $view_org + 25;
+}
+
+if($view_org > 400 && $view_org < 1000){
+   $view_org = $view_org + 300;
+}
+
+if($view_org > 1000 ){
+   $view_org = $view_org + 21;
+}
+
+
+
+
 echo'
 <tr>
 <td scope="row">'.$row["post_title"].'</td>
@@ -139,6 +173,7 @@ echo'
 <td> '.$row["post_date"].'</td>
 <td> '.$row["term_id"].'</td>
 <td> '.$row["name"].'</td>
+<td> '.$view_org.'</td>
 </tr>';
 $empty = "\n   ";
 $titl = $row["post_title"];
@@ -187,6 +222,6 @@ fclose($file);
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFkgrdri1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
 </html>

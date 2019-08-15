@@ -1,32 +1,39 @@
 <?php
 class QueryMain_Context{
 
+ ///"If!k%&C*70lN", "nekrettomisl_nekretW"
+
+var $user = "nekrettomisl_userP";
+var $db = "nekrettomisl_nekretW";
+var $passW = "If!k%&C*70lN";
+
+
 
 //prjašnji query
 //  $queryOglasi1 ="
-//  select wp_posts.ID, wp_posts.post_title, wp_posts.post_status ,wp_posts.guid ,wp_posts.post_type, wp_posts.post_date, wp_term_taxonomy.term_id, 
-//              wp_term_taxonomy.taxonomy, wp_term_taxonomy.description, wp_terms.name, wp_posts.post_content
-//              from wp_posts
-//              LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-//              LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-//              LEFT JOIN wp_terms ON (wp_term_relationships.term_taxonomy_id = wp_terms.term_id)
-//              WHERE wp_posts.post_type = 'property'
-//              AND wp_posts.post_status = 'publish'
-//              AND wp_terms.name IS NOT NULL
+//  select uudqv_posts.ID, uudqv_posts.post_title, uudqv_posts.post_status ,uudqv_posts.guid ,uudqv_posts.post_type, uudqv_posts.post_date, uudqv_term_taxonomy.term_id, 
+//              uudqv_term_taxonomy.taxonomy, uudqv_term_taxonomy.description, uudqv_terms.name, uudqv_posts.post_content
+//              from uudqv_posts
+//              LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+//              LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+//              LEFT JOIN uudqv_terms ON (uudqv_term_relationships.term_taxonomy_id = uudqv_terms.term_id)
+//              WHERE uudqv_posts.post_type = 'property'
+//              AND uudqv_posts.post_status = 'publish'
+//              AND uudqv_terms.name IS NOT NULL
 //              ORDER BY post_date DESC";
 
 
 
 
      //kvart
-                                            // $Qkvart = "SELECT wp_term_taxonomy.parent, wp_terms.name, wp_terms.term_id, wp_posts.ID
-                                            // from wp_terms
-                                            // RIGHT JOIN wp_term_taxonomy on wp_terms.term_id = wp_term_taxonomy.term_id
-                                            // LEFT JOIN wp_term_relationships ON wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id
-                                            // JOIN wp_posts on wp_posts.ID = wp_term_relationships.object_id
-                                            // WHERE wp_posts.ID = ".$row["ID"]."
-                                            // AND wp_term_taxonomy.taxonomy = 'property-city'
-                                            // GROUP BY wp_term_taxonomy.parent";
+                                            // $Qkvart = "SELECT uudqv_term_taxonomy.parent, uudqv_terms.name, uudqv_terms.term_id, uudqv_posts.ID
+                                            // from uudqv_terms
+                                            // RIGHT JOIN uudqv_term_taxonomy on uudqv_terms.term_id = uudqv_term_taxonomy.term_id
+                                            // LEFT JOIN uudqv_term_relationships ON uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id
+                                            // JOIN uudqv_posts on uudqv_posts.ID = uudqv_term_relationships.object_id
+                                            // WHERE uudqv_posts.ID = ".$row["ID"]."
+                                            // AND uudqv_term_taxonomy.taxonomy = 'property-city'
+                                            // GROUP BY uudqv_term_taxonomy.parent";
                                             // $zupanija = mysqli_query($link, $Qkvart);
                                             // $zupanijaRow = mysqli_fetch_assoc($zupanija);
 
@@ -34,162 +41,202 @@ class QueryMain_Context{
 
 ///stanovi prodaja
 
-// var $queryOglasi1 = "select  wp_posts.ID,  wp_posts.post_content, wp_posts.post_date, wp_posts.post_name,  wp_posts.post_title, wp_posts.guid
-// from wp_posts
-// WHERE wp_posts.post_type = 'property'
-// AND wp_posts.post_status = 'publish'";
+// var $queryOglasi1 = "select  uudqv_posts.ID,  uudqv_posts.post_content, uudqv_posts.post_date, uudqv_posts.post_name,  uudqv_posts.post_title, uudqv_posts.guid
+// from uudqv_posts
+// WHERE uudqv_posts.post_type = 'property'
+// AND uudqv_posts.post_status = 'publish'";
 
-var $queryOglasi1 = "SELECT * FROM wp_posts
-LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-WHERE  wp_term_taxonomy.taxonomy = 'property-status'
-AND wp_term_taxonomy.term_id = 17
+var $queryOglasi1 = "SELECT * FROM uudqv_posts
+LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
+AND uudqv_term_taxonomy.term_id = 560
 ORDER BY post_date DESC";
 
 
 
 
 
-///stanovi najam
-var $queryOglasi2 = "SELECT * FROM wp_posts
-LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-WHERE  wp_term_taxonomy.taxonomy = 'property-status'
-AND wp_term_taxonomy.term_id = 18
+///STANOVI NAJAM
+var $queryOglasi2 = "SELECT * FROM uudqv_posts
+LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
+AND uudqv_term_taxonomy.term_id = 623
 ORDER BY post_date DESC";
 
 
 
 ///POSLOVNI NAJAM
-var $queryOglasi3 = "SELECT * FROM wp_posts
-LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-WHERE  wp_term_taxonomy.taxonomy = 'property-status'
-AND wp_term_taxonomy.term_id = 22
+var $queryOglasi3 = "SELECT * FROM uudqv_posts
+LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
+AND uudqv_term_taxonomy.term_id = 801
 ORDER BY post_date DESC";
+
 
 
     //Ured – Office
     var $queryLokalOffice = "
-    SELECT * FROM wp_posts
-    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-    AND wp_term_taxonomy.term_id = 23
+    SELECT * FROM uudqv_posts
+    LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+    LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+    WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+    AND uudqv_term_taxonomy.term_id = 789
     ORDER BY post_date DESC";
 
 
     //Ulični lokal
     var $queryLokalUli = "
-    SELECT * FROM wp_posts
-    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-    AND wp_term_taxonomy.term_id = 25
+    SELECT * FROM uudqv_posts
+    LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+    LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+    WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+    AND uudqv_term_taxonomy.term_id = 799
     ORDER BY post_date DESC";
 
 
-        //Ugostiteljstvo
+    //Ugostiteljstvo
     var $queryLokalUgostiteljstvo = "
-    SELECT * FROM wp_posts
-    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-    AND wp_term_taxonomy.term_id = 26
+    SELECT * FROM uudqv_posts
+    LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+    LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+    WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+    AND uudqv_term_taxonomy.term_id = 797
     ORDER BY post_date DESC";
 
 
     //Hotel
     var $queryLokalHotel = "
-    SELECT * FROM wp_posts
-    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-    AND wp_term_taxonomy.term_id = 27
+    SELECT * FROM uudqv_posts
+    LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+    LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+    WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+    AND uudqv_term_taxonomy.term_id = 514 and uudqv_term_taxonomy.term_id = 523
     ORDER BY post_date DESC";
 
 
 
 
 //KUĆE PRODAJA
-var $queryKuceProdaja = "SELECT * FROM wp_posts
-LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-WHERE  wp_term_taxonomy.taxonomy = 'property-status'
-AND wp_term_taxonomy.term_id = 30
+var $queryKuceProdaja = "SELECT * FROM uudqv_posts
+LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
+AND uudqv_term_taxonomy.term_id = 881
 ORDER BY post_date DESC";
 
 
     
     //Stambeno-poslovna
     var $queryKucaStambenoPoslovna = "
-    SELECT * FROM wp_posts
-    LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-    LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-    WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-    AND wp_term_taxonomy.term_id = 29
+    SELECT * FROM uudqv_posts
+    LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+    LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+    WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+    AND uudqv_term_taxonomy.term_id = 803
     ORDER BY post_date DESC";
 
 
        //Stambeno-poslovna
        var $queryKucaSamostojeca = "
-       SELECT * FROM wp_posts
-       LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-       LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-       WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-       AND wp_term_taxonomy.term_id = 31
+       SELECT * FROM uudqv_posts
+       LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+       LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+       WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+       AND uudqv_term_taxonomy.term_id = 880
        ORDER BY post_date DESC";
 
 
               //Kuca u nizu
               var $queryKucaNiz = "
-              SELECT * FROM wp_posts
-              LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-              LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-              WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-              AND wp_term_taxonomy.term_id = 32
+              SELECT * FROM uudqv_posts
+              LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+              LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+              WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+              AND uudqv_term_taxonomy.term_id = 880
               ORDER BY post_date DESC";
 
 
                  //Dvojni objekt
                  var $queryKucaDvoj = "
-                 SELECT * FROM wp_posts
-                 LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-                 LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-                 WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-                 AND wp_term_taxonomy.term_id = 33
+                 SELECT * FROM uudqv_posts
+                 LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+                 LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+                 WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+                 AND uudqv_term_taxonomy.term_id = 880
                  ORDER BY post_date DESC";
 
 
                            //Roh Bau
                            var $queryKucaRoh = "
-                           SELECT * FROM wp_posts
-                           LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-                           LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-                           WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-                           AND wp_term_taxonomy.term_id = 34
+                           SELECT * FROM uudqv_posts
+                           LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+                           LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+                           WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+                           AND uudqv_term_taxonomy.term_id = 880
                            ORDER BY post_date DESC";
 
                                  //Vikendica
                                  var $queryVikendica = "
-                                 SELECT * FROM wp_posts
-                                 LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-                                 LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-                                 WHERE  wp_term_taxonomy.taxonomy = 'property-type'
-                                 AND wp_term_taxonomy.term_id = 34
+                                 SELECT * FROM uudqv_posts
+                                 LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+                                 LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+                                 WHERE  uudqv_term_taxonomy.taxonomy = 'property-type'
+                                 AND uudqv_term_taxonomy.term_id = 886
                                  ORDER BY post_date DESC";
 
 
 
 
+                                 
 
 //KUĆE NAJAM
-var $queryKuceNajam = "SELECT * FROM wp_posts
-LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-WHERE  wp_term_taxonomy.taxonomy = 'property-status'
-AND wp_term_taxonomy.term_id = 39
+var $queryKuceNajam = "SELECT * FROM uudqv_posts
+LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
+AND uudqv_term_taxonomy.term_id = 917
 ORDER BY post_date DESC";
+
+
+
+
+
+// ///LOKACIJE
+
+
+
+
+
+
+
+// //LOKACIJA iz WP-a
+// var  $ZupanijaWP = "SELECT * from zupanije where zupanije.nazivZupanije like '%".$WPRow["name"]."'";    
+// $zupanija_wp = mysqli_query($link, $ZupanijaWP);
+// $WPZupRow = mysqli_fetch_assoc($zupanija_wp);
+// var $t;
+// //ako je ukucana zupanija tada
+// if($WPZupRow["id"]>0){
+// $t = 1;
+// }
+
+
+
+
+
+
+//Samo za test i rješavanje buga s lokacijama
+
+
+var $queryOglasi_test = "SELECT * FROM uudqv_posts
+LEFT JOIN uudqv_term_relationships ON (uudqv_posts.ID = uudqv_term_relationships.object_id)
+LEFT JOIN uudqv_term_taxonomy ON (uudqv_term_relationships.term_taxonomy_id = uudqv_term_taxonomy.term_taxonomy_id)
+WHERE  uudqv_term_taxonomy.taxonomy = 'property-status'
+AND uudqv_posts.ID BETWEEN 9154 AND 11529
+AND uudqv_term_taxonomy.term_id = 560";
+
 
 
 
