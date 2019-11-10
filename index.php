@@ -131,7 +131,9 @@ $mysqli->close();
          <li class="nav-item">
             <a class="nav-link" href="portal.php">Tool portal</a>
       </li>
-
+   <li class="nav-item">
+       <a class="nav-link" href="report/csvPhp/index.php">Test insert CSV file</a>
+ </li>
 
 
 

@@ -1,5 +1,6 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "test", "phpsamples");
+$conn = mysqli_connect("localhost", "root", "", "test");
+mysqli_set_charset($conn,"utf8");
 
 if (isset($_POST["import"])) {
     
@@ -9,11 +10,22 @@ if (isset($_POST["import"])) {
         
         $file = fopen($fileName, "r");
         
-        while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
-            $sqlInsert = "INSERT into users (userId,userName,password,firstName,lastName)
-                   values ('" . $column[0] . "','" . $column[1] . "','" . $column[2] . "','" . $column[3] . "','" . $column[4] . "')";
-            $result = mysqli_query($conn, $sqlInsert);
-            
+       while (($column = fgetcsv($file, 200000, ",")) !== FALSE) {
+
+
+                         $sqlInsert = "INSERT into uudqv_terms (name) values ('" . $column[3]. "')";
+                         $result = mysqli_query($conn, $sqlInsert);
+
+                         $lastQ = "SELECT term_id FROM uudqv_terms ORDER BY term_id DESC LIMIT 0 , 1";
+                         $last_id = mysqli_query($conn,  $lastQ);//mysqli_insert_id($conn);
+                                        $row = mysqli_fetch_assoc($last_id);
+										$k = $row["term_id"];
+                                        $sqlInsert_f = 'INSERT INTO uudqv_term_taxonomy (term_id,taxonomy,description,parent,count) VALUES ('.$k.',"property-city","",0,0)';
+                                        $resultf = mysqli_query($conn,  $sqlInsert_f);
+                                        echo "<p>izvršen sam -----> " . $column[3] . " //ID =  ".$k."</p><br/>";
+                                        echo   $sqlInsert_f;
+                                    
+                     
             if (! empty($result)) {
                 $type = "success";
                 $message = "CSV Data Imported into the Database";
@@ -24,6 +36,8 @@ if (isset($_POST["import"])) {
         }
     }
 }
+
+// https://phppot.com/php/import-csv-file-into-mysql-using-php/
 ?>
 <!DOCTYPE html>
 <html>
@@ -139,8 +153,14 @@ $(document).ready(function() {
             </form>
 
         </div>
-               <?php
-            $sqlSelect = "SELECT * FROM users";
+    </div>
+	
+	
+	
+	<div>
+	<h1>taxonomy - županije</h1>
+	               <?php
+            $sqlSelect = "SELECT * FROM uudqv_terms";
             $result = mysqli_query($conn, $sqlSelect);
             
             if (mysqli_num_rows($result) > 0) {
@@ -148,11 +168,9 @@ $(document).ready(function() {
             <table id='userTable'>
             <thead>
                 <tr>
-                    <th>User ID</th>
-                    <th>User Name</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-
+                     <th>TERM ID</th>
+                     <th> Name</th>
+      
                 </tr>
             </thead>
 <?php
@@ -162,10 +180,9 @@ $(document).ready(function() {
                     
                 <tbody>
                 <tr>
-                    <td><?php  echo $row['userId']; ?></td>
-                    <td><?php  echo $row['userName']; ?></td>
-                    <td><?php  echo $row['firstName']; ?></td>
-                    <td><?php  echo $row['lastName']; ?></td>
+                    <td><?php  echo $row['term_id']; ?></td>
+                    <td><?php  echo $row['name']; ?></td>
+ 
                 </tr>
                     <?php
                 }
@@ -173,7 +190,76 @@ $(document).ready(function() {
                 </tbody>
         </table>
         <?php } ?>
+            <?php
+            $rowcount=mysqli_num_rows($result);
+            mysqli_free_result($result);
+            echo "<p> broj : ".$rowcount."</p>";
+            ?>
+	
+	</div>
+
+
+    <div>
+<h1>Term taxonomy -- Id i županije </h1>
+               <?php
+            $sqlSelect2 = "SELECT * FROM uudqv_term_taxonomy";
+            $result2 = mysqli_query($conn, $sqlSelect2);
+            if (mysqli_num_rows($result2) > 0) {
+                ?>
+            <table id='userTable'>
+            <thead>
+                <tr>
+                  <th>tax ID</th>
+                 <th>TERM ID</th>
+                 <th> Name</th>
+                </tr>
+            </thead>      
+<?php
+                
+             while ($row2 = mysqli_fetch_array($result2)) {
+            ?>     
+                <tbody>
+                <tr>
+                    <td><?php  echo $row2['term_taxonomy_id']; ?></td>
+                    <td><?php  echo $row2['term_id']; ?></td>
+                    <td><?php  echo $row2['taxonomy']; ?></td>
+ 
+                </tr>
+                    <?php
+                }
+                ?>
+                </tbody>
+        </table>
+        <?php } ?>
+
+             <?php
+             $rowcount2=mysqli_num_rows($result2);
+             mysqli_free_result($result2);
+             echo "<p> broj : ".$rowcount2."</p>";
+              ?>
+
     </div>
+	
+<?php
+                        // $lastQ = "SELECT term_id FROM uudqv_terms ORDER BY term_id DESC LIMIT 0 , 1";
+                         // $last_id = mysqli_query($conn,  $lastQ);//mysqli_insert_id($conn);
+                                  // $row = mysqli_fetch_assoc($last_id);
+                                  // $k = $row["term_id"];
+                                        // $sqlInsert_f = 'INSERT INTO uudqv_term_taxonomy (term_id,taxonomy,description,parent,count) VALUES ('.$k.',"property-city","",0,0)';
+                                        // $resultf = mysqli_query($conn,  $sqlInsert_f);
+                                        // echo "<p>izvršen sam -----> ". "//ID =  ".$row["term_id"]."</p><br/>";
+                                        // echo   $sqlInsert_f;
+                                    
+
+
+            // $sqlSelect2 = "SELECT term_id FROM uudqv_terms ORDER BY term_id DESC LIMIT 0 , 1";
+            // $result2 = mysqli_query($conn, $sqlSelect2);
+
+      // $row2 = mysqli_fetch_assoc($result2);
+      // echo "<p>izvršen sam -----> ". "//ID =  ".$row2["term_id"]."</p><br/>";
+  
+	
+	?>
 
 </body>
 
