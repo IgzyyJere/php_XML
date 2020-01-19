@@ -5,9 +5,7 @@ mysqli_set_charset($mysqli,'utf-8');
 
 /* check connection */
 if ($mysqli->connect_errno) {
-
    echo "Connect failed ".$mysqli->connect_error;
-
    exit();
 }
 
@@ -19,28 +17,18 @@ function encode_to_utf8_if_needed($string)
     }
     return $string;
 }
-$postId = $_GET["id"];
-if($_GET["id"]){
-        $stringQ = "select kgrdr_posts.post_title, kgrdr_posts.post_status ,kgrdr_posts.guid ,kgrdr_posts.post_type, kgrdr_posts.post_date, kgrdr_term_taxonomy.term_id, 
-        kgrdr_term_taxonomy.taxonomy, kgrdr_term_taxonomy.description, kgrdr_terms.name
-        from kgrdr_posts
-        LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
-        LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
-        LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
-        WHERE kgrdr_posts.post_type = 'post'
-        AND kgrdr_term_taxonomy.taxonomy = 'category'
-        AND kgrdr_term_taxonomy.term_id = ".$_GET["id"]."
-        AND kgrdr_posts.post_status = 'publish'
-        ORDER BY post_date DESC";
-            $postId = $_GET["id"];
-}
 
-else{
-  die();
-}
-
-
-$path = "report/portal.txt";
+ $stringQ = "SELECT post_title, post_content, post_date, guid , date_format(post_date, '%d-%m-%Y') as datum,  kgrdr_terms.name as kategorija_name
+  FROM kgrdr_posts 
+  LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
+  LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
+  LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id) 
+  WHERE post_content like '%HEP%' 
+  AND post_status like 'publish' 
+  AND post_type like 'post' 
+  AND post_date BETWEEN '2019-03-04' and '2020-01-04' ";
+ 
+$path = "report/portalHEP.txt";
 $file = fopen($path,"w");
 
 ?>
@@ -80,13 +68,6 @@ $file = fopen($path,"w");
                                         mysqli_set_charset($mysqli, 'utf8');
                                 }
        ?>
-
-    
-<?php
- echo'<p><a class="btn btn-lg btn-success" href="./IEPortalDate.php?id='.$postId.'"' .'role="button">By date</a></p>';
- echo '<p>ID kategorije je : '.$postId."</p>";
-?>
-
   </p>
 </div>
 
@@ -101,29 +82,24 @@ $file = fopen($path,"w");
 try {
 
 
-  //naslov
-if($rezContainer = mysqli_query($mysqli, $stringQ)){
+//naslov
+ if($rezContainer = mysqli_query($mysqli, $stringQ)){
   $zapis = mysqli_fetch_assoc($rezContainer);
-  $naslov = $zapis["name"];
-  //echo $naslov;
+  $naslov = $zapis["kategorija_name"];
+  echo $naslov;
   fwrite($file,"Naslov kategorije : ".$naslov."\r\n\r");
-}
+ }
 
 
 $count = 0;
-
-
 echo '<table class="table">
 <thead">
 <tr>
-<th>title</th>
-<th>status</th>
+<th>Ime posta</th>
+<th>Sadržaj</th>
 <th>link</th>
-<th>tip</th>
 <th>datum objave</th>
-<th>id kategorije</th>
-<th>ime kategorije</th>
-
+<th>Kategorija</th>
 </tr></thead><tbody>';
 $resulTitle = $mysqli ->query($stringQ);
 if($resulTitle ->num_rows > 0){
@@ -132,24 +108,23 @@ if($resulTitle ->num_rows > 0){
 echo'
 <tr>
 <td scope="row">'.$row["post_title"].'</td>
-<td> '.$row["post_status"].'</td>
+<td> '.strip_tags($row["post_content"]).'</td>
 <td scope="row"><a href="'.$row["guid"].'" target="_blank">'.$row["guid"].'</a></td>
-<td> '.$row["post_type"].'</td>
-<td> '.$row["post_date"].'</td>
-<td> '.$row["term_id"].'</td>
-<td> '.$row["name"].'</td>
+<td> '.$row["datum"].'</td>
+<td> '.$row["kategorija_name"].'</td>
 </tr>';
 $empty = "\n   ";
 $titl = $row["post_title"];
 $linkU = $row["guid"];
-$date = $row["post_date"];
+$date = $row["datum"];
+$kategory = $row["kategorija_name"];
 
-fwrite($file,"\r\n\r"."\r\n\r".$titl.$empty."link : ".$linkU.$empty."Datum objave :".$date);
+fwrite($file,"\r\n\r"."\r\n\r".$titl.$empty."link : ".$linkU.$empty.$empty."  Datum objave :".$date);
 
 //fwrite($file,"\r\n\r".$row["name"]);
 
   }
-  fwrite($file,"\r\n\r"."\r\n\r"."broj postova u kategroji : ".$count);
+  fwrite($file,"\r\n\r"."\r\n\r"."broj postova u razdoblju od 04.3.2019 do 4.01.2020 : ".$count);
 }
 
 
@@ -173,15 +148,6 @@ fclose($file);
 </div>
 </div>
 </div>
-
-
-
-
-
-
- 
-   
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

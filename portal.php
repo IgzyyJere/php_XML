@@ -7,7 +7,6 @@ mysqli_set_charset($mysqli,'utf-8');
 if ($mysqli->connect_errno) {
 
    echo "Connect failed ".$mysqli->connect_error;
-
    exit();
 }
 
@@ -21,17 +20,10 @@ function encode_to_utf8_if_needed($string)
 }
 
 
-
-
-
 // $path = "file.txt";
- 
 // $file = fopen($path,"w");
- 
 // echo fwrite($file,"ccccc");
- 
-
-// //zatvori me ako sma gotov
+// //zatvori me ako sam gotov
 // fclose($file);
  
 ?>
@@ -46,7 +38,7 @@ function encode_to_utf8_if_needed($string)
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>Svijet sigurnosti !</title>
   </head>
   <body>
 
@@ -95,11 +87,11 @@ echo '<table class="table">
 </tr></thead><tbody>';
 $count = 0;
 $query ="
-SELECT wp_terms.term_id, wp_terms.name 
-FROM wp_terms
-INNER JOIN wp_term_taxonomy ON (wp_terms.term_id = wp_term_taxonomy.term_id) 
-WHERE wp_term_taxonomy.taxonomy IN ('category') 
-ORDER BY wp_terms.name ASC";
+SELECT kgrdr_terms.term_id, kgrdr_terms.name 
+FROM kgrdr_terms
+INNER JOIN kgrdr_term_taxonomy ON (kgrdr_terms.term_id = kgrdr_term_taxonomy.term_id) 
+WHERE kgrdr_term_taxonomy.taxonomy IN ('category') 
+ORDER BY kgrdr_terms.name ASC";
 
 $resulTitle = $mysqli ->query($query);
 if($resulTitle ->num_rows){
@@ -112,7 +104,6 @@ echo'
 
   }
 }
-
 
 echo'
 </tbody>

@@ -26,35 +26,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["d1"] !='') {
     $datumDo = $_POST["d2"];
     $postId = $_POST["id"];
     
-       $stringQ = "select wp_posts.post_title, wp_posts.post_status ,wp_posts.guid ,wp_posts.post_type, wp_posts.post_date, wp_term_taxonomy.term_id, 
-             wp_term_taxonomy.taxonomy, wp_term_taxonomy.description, wp_terms.name
-             from wp_posts
-             LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-             LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-             LEFT JOIN wp_terms ON (wp_term_relationships.term_taxonomy_id = wp_terms.term_id)
-             WHERE wp_posts.post_type = 'post'
-             AND wp_term_taxonomy.taxonomy = 'category'
-             AND wp_term_taxonomy.term_id = ".$postId."
-             AND wp_posts.post_date >  '".$datumOd."' 
-             AND wp_posts.post_date < '".$datumDo."'
-             AND wp_posts.post_status = 'publish'
-             ORDER BY post_date DESC";
+    $stringQ = "select kgrdr_posts.post_title, kgrdr_posts.post_status ,kgrdr_posts.guid ,kgrdr_posts.post_type, kgrdr_posts.post_date, kgrdr_term_taxonomy.term_id, 
+    kgrdr_term_taxonomy.taxonomy, kgrdr_term_taxonomy.description, kgrdr_terms.name
+    from kgrdr_posts
+    LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
+    LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
+    LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
+    WHERE kgrdr_posts.post_type = 'post'
+    AND kgrdr_term_taxonomy.taxonomy = 'category'
+    AND kgrdr_term_taxonomy.term_id = ".$postId."
+    AND kgrdr_posts.post_date >  '".$datumOd."' 
+    AND kgrdr_posts.post_date < '".$datumDo."'
+    AND kgrdr_posts.post_status = 'publish'
+    ORDER BY post_date DESC";
+}
 
-}else{
-  $postId = $_GET["id"];
-       $stringQ = "select wp_posts.post_title, wp_posts.post_status ,wp_posts.guid ,wp_posts.post_type, wp_posts.post_date, wp_term_taxonomy.term_id, 
-             wp_term_taxonomy.taxonomy, wp_term_taxonomy.description, wp_terms.name
-             from wp_posts
-             LEFT JOIN wp_term_relationships ON (wp_posts.ID = wp_term_relationships.object_id)
-             LEFT JOIN wp_term_taxonomy ON (wp_term_relationships.term_taxonomy_id = wp_term_taxonomy.term_taxonomy_id)
-             LEFT JOIN wp_terms ON (wp_term_relationships.term_taxonomy_id = wp_terms.term_id)
-             WHERE wp_posts.post_type = 'post'
-             AND wp_term_taxonomy.taxonomy = 'category'
-             AND wp_term_taxonomy.term_id = ".$postId."
-             AND wp_posts.post_date >  '2016-1-1' 
-             AND wp_posts.post_date < '2020-1-1'
-             AND wp_posts.post_status = 'publish'
-             ORDER BY post_date DESC";
+//get from
+else{
+$postId = $_GET["id"];
+$stringQ = "select kgrdr_posts.post_title, kgrdr_posts.post_status, kgrdr_posts.guid, kgrdr_posts.post_type, kgrdr_posts.post_date, kgrdr_term_taxonomy.term_id, 
+    kgrdr_term_taxonomy.taxonomy, kgrdr_term_taxonomy.description, kgrdr_terms.name
+    from kgrdr_posts
+    LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
+    LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
+    LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
+    WHERE kgrdr_posts.post_type = 'post'
+    AND kgrdr_term_taxonomy.taxonomy = 'category'
+    AND kgrdr_term_taxonomy.term_id = ".$postId."
+    AND kgrdr_posts.post_date >  '2016-1-1' 
+    AND kgrdr_posts.post_date < '2020-1-1'
+    AND kgrdr_posts.post_status = 'publish'
+    ORDER BY post_date DESC";
 }
 
 
@@ -189,4 +191,19 @@ if($rezContainer = mysqli_query($mysqli, $stringQ)){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
+
+<script>
+portal = new {
+  from: 0,
+  unitl: 0
+}
+
+
+
+
+
+</script>
+
+
+
 </html>
