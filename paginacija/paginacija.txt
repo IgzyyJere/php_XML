@@ -1,0 +1,70 @@
+<?php
+try {
+
+
+//naslov
+ if($rezContainer = mysqli_query($mysqli, $stringQ)){
+  $zapis = mysqli_fetch_assoc($rezContainer);
+  $naslov = $zapis["kategorija_name"];
+  echo $naslov;
+  fwrite($file,"Naslov kategorije : ".$naslov."\r\n\r");
+ }
+
+
+$count = 0;
+echo '<table class="table">
+<thead">
+<tr>
+<th>Ime posta</th>
+<th>Sadržaj</th>
+<th>link</th>
+<th>datum objave</th>
+<th>Kategorija</th>
+</tr></thead><tbody>';
+$resulTitle = $mysqli ->query($stringQ);
+if($resulTitle ->num_rows > 0){
+  while($row = $resulTitle -> fetch_assoc()){
+    $count++;
+echo'
+<tr>
+<td scope="row">'.$row["post_title"].'</td>
+<td> '.strip_tags($row["post_content"]).'</td>
+<td scope="row"><a href="'.$row["guid"].'" target="_blank">'.$row["guid"].'</a></td>
+<td> '.$row["datum"].'</td>
+<td> '.$row["kategorija_name"].'</td>
+</tr>';
+$empty = "\n   ";
+$titl = $row["post_title"];
+$linkU = $row["guid"];
+$date = $row["datum"];
+$kategory = $row["kategorija_name"];
+
+fwrite($file,"\r\n\r"."\r\n\r".$titl.$empty."link : ".$linkU.$empty.$empty."  Datum objave :".$date);
+
+//fwrite($file,"\r\n\r".$row["name"]);
+
+  }
+  fwrite($file,"\r\n\r"."\r\n\r"."broj postova u razdoblju od 04.3.2019 do 4.01.2020 : ".$count);
+}
+
+
+echo'
+</tbody>
+</table>';
+
+  } catch (Exception $e) {
+  echo 'Poruka '. $e -> getMessage();
+  }
+    mysqli_free_result($resulTitle);
+    
+
+
+ 
+
+//zatvori me ako sma gotov
+fclose($file);
+
+?>
+
+
+https://makitweb.com/ajax-pagination-with-jquery-and-php/

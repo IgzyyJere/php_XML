@@ -54,26 +54,6 @@ class Spinach extends Vegetable {
 class mojaKlasa
 {
  var $miki = "jeboteeee";
-
-
-
-//https://stackoverflow.com/questions/35053773/php-using-a-function-to-insert-data
-
-
-function Insertdata($table,$field,$data)
-{
-        $field_values= implode(',',$field);
-        $data_values=implode("','",$data);
-
-        $sql= "INSERT INTO $table (".$field_values.") 
-        VALUES ('".$data_values."') ";
-        $result = $conn->query($sql);
-}
-
-
-
-
-
 }
 
 

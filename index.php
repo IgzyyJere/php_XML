@@ -1,7 +1,7 @@
 <?php
 
 /** create XML file */
-$mysqli = new mysqli("localhost", "root", "", "");
+$mysqli = new mysqli("localhost", "root", "", "testnekretnine");
 
 /* check connection */
 if ($mysqli->connect_errno) {

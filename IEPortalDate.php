@@ -26,42 +26,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["d1"] !='') {
     $datumDo = $_POST["d2"];
     $postId = $_POST["id"];
     
-       $stringQ = "select kgrdr_posts.post_title, 
-                  kgrdr_posts.post_status ,
-                  kgrdr_posts.guid,
-                  kgrdr_posts.post_type, 
-                  kgrdr_posts.post_date, 
-                  kgrdr_term_taxonomy.term_id, 
-                  kgrdr_term_taxonomy.taxonomy,
-                  kgrdr_term_taxonomy.description,
-                  kgrdr_terms.name
-                  from kgrdr_posts
-                  LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
-                  LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
-                  LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
-                  WHERE kgrdr_posts.post_type = 'post'
-                  AND kgrdr_term_taxonomy.taxonomy = 'category'
-                  AND kgrdr_term_taxonomy.term_id = ".$postId."
-                  AND kgrdr_posts.post_date >  '".$datumOd."' 
-                  AND kgrdr_posts.post_date < '".$datumDo."'
-                  AND kgrdr_posts.post_status = 'publish'
-                  ORDER BY post_date DESC";
+    $stringQ = "select kgrdr_posts.post_title, kgrdr_posts.post_status ,kgrdr_posts.guid ,kgrdr_posts.post_type, kgrdr_posts.post_date, kgrdr_term_taxonomy.term_id, 
+    kgrdr_term_taxonomy.taxonomy, kgrdr_term_taxonomy.description, kgrdr_terms.name
+    from kgrdr_posts
+    LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
+    LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
+    LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
+    WHERE kgrdr_posts.post_type = 'post'
+    AND kgrdr_term_taxonomy.taxonomy = 'category'
+    AND kgrdr_term_taxonomy.term_id = ".$postId."
+    AND kgrdr_posts.post_date >  '".$datumOd."' 
+    AND kgrdr_posts.post_date < '".$datumDo."'
+    AND kgrdr_posts.post_status = 'publish'
+    ORDER BY post_date DESC";
+}
 
-}else{
-  $postId = $_GET["id"];
-       $stringQ = "select kgrdr_posts.post_title, kgrdr_posts.post_status ,kgrdr_posts.guid ,kgrdr_posts.post_type, kgrdr_posts.post_date, kgrdr_term_taxonomy.term_id, 
-             kgrdr_term_taxonomy.taxonomy, kgrdr_term_taxonomy.description, kgrdr_terms.name
-             from kgrdr_posts
-             LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
-             LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
-             LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
-             WHERE kgrdr_posts.post_type = 'post'
-             AND kgrdr_term_taxonomy.taxonomy = 'category'
-             AND kgrdr_term_taxonomy.term_id = ".$postId."
-             AND kgrdr_posts.post_date >  '2016-1-1' 
-             AND kgrdr_posts.post_date < '2020-1-1'
-             AND kgrdr_posts.post_status = 'publish'
-             ORDER BY post_date DESC";
+//get from
+else{
+$postId = $_GET["id"];
+$stringQ = "select kgrdr_posts.post_title, kgrdr_posts.post_status, kgrdr_posts.guid, kgrdr_posts.post_type, kgrdr_posts.post_date, kgrdr_term_taxonomy.term_id, 
+    kgrdr_term_taxonomy.taxonomy, kgrdr_term_taxonomy.description, kgrdr_terms.name
+    from kgrdr_posts
+    LEFT JOIN kgrdr_term_relationships ON (kgrdr_posts.ID = kgrdr_term_relationships.object_id)
+    LEFT JOIN kgrdr_term_taxonomy ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_term_taxonomy.term_taxonomy_id)
+    LEFT JOIN kgrdr_terms ON (kgrdr_term_relationships.term_taxonomy_id = kgrdr_terms.term_id)
+    WHERE kgrdr_posts.post_type = 'post'
+    AND kgrdr_term_taxonomy.taxonomy = 'category'
+    AND kgrdr_term_taxonomy.term_id = ".$postId."
+    AND kgrdr_posts.post_date >  '2016-1-1' 
+    AND kgrdr_posts.post_date < '2020-1-1'
+    AND kgrdr_posts.post_status = 'publish'
+    ORDER BY post_date DESC";
 }
 
 
@@ -103,15 +98,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST["d1"] !='') {
 
 
         <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-        datum od <input type="date" name="d1" max="2021-12-31">
-        <br>
-        datum do <input type="date" name="d2" max="2021-12-31">
-        <br/>
-        <hr/>
-               <input type="text" name="id" value="<?php echo $postId ?>" />
-        <input type="submit" name="submit" value="Submit category id">  
-        </div>
- 
+        datum od <input type="text" name="d1"><br>
+        datum do <input type="text" name="d2"><br>
+        <input type="text" name="id" value="<?php echo $postId ?>" />
+        <input type="submit" name="submit" value="Submit">  
        </form>
 
   </p>
@@ -132,7 +122,7 @@ if($rezContainer = mysqli_query($mysqli, $stringQ)){
   $zapis = mysqli_fetch_assoc($rezContainer);
   $naslov = $zapis["name"];
   //echo $naslov;
-  fwrite($file,"Naslov kategorije : ".$naslov."\r\n ------------------------------------------------\r");
+  fwrite($file,"Naslov kategorije : ".$naslov."\r\n\r");
 }
 
 
@@ -151,33 +141,35 @@ if($rezContainer = mysqli_query($mysqli, $stringQ)){
 
               </tr></thead><tbody>';
 
-                                                   $resulTitle = $mysqli ->query($stringQ);
-                                                    if($resulTitle ->num_rows > 0){
-                                                      while($row = $resulTitle -> fetch_assoc()){
-                                                        $count++;
-                                                       echo'
-                                                       <tr>
-                                                       <td scope="row">'.$row["post_title"].'</td>
-                                                       <td> '.$row["post_status"].'</td>
-                                                       <td scope="row"><a href="'.$row["guid"].'" target="_blank">'.$row["guid"].'</a></td>
-                                                       <td> '.$row["post_type"].'</td>
-                                                       <td> '.$row["post_date"].'</td>
-                                                       <td> '.$row["term_id"].'</td>
-                                                       <td> '.$row["name"].'</td>
-                                                       </tr>';
-                                                        $empty = "\n   ";
-                                                        $titl = $row["post_title"];
-                                                        $linkU = $row["guid"];
-                                                        $date = $row["post_date"];
-                                                        fwrite($file,"\r\n\r".$titl.$empty."link : ".$linkU.$empty."Datum objave :".$date);
-                                                        fwrite($file,"\r\n\r"."Kategorija".$row["name"]);
-                                                        fwrite($file,"\r\n\r"."\r\n-----------------------------------------------------------\r");
+                                                      $resulTitle = $mysqli ->query($stringQ);
+                                                      if($resulTitle ->num_rows > 0){
+                                                        while($row = $resulTitle -> fetch_assoc()){
+                                                            $count++;
+                                                      echo'
+                                                      <tr>
+                                                      <td scope="row">'.$row["post_title"].'</td>
+                                                      <td> '.$row["post_status"].'</td>
+                                                      <td scope="row"><a href="'.$row["guid"].'" target="_blank">'.$row["guid"].'</a></td>
+                                                      <td> '.$row["post_type"].'</td>
+                                                      <td> '.$row["post_date"].'</td>
+                                                      <td> '.$row["term_id"].'</td>
+                                                      <td> '.$row["name"].'</td>
+                                                      </tr>';
+
+                                                      $empty = "\n   ";
+                                                      $titl = $row["post_title"];
+                                                      $linkU = $row["guid"];
+                                                      $date = $row["post_date"];
+
+                                                      fwrite($file,"\r\n\r"."\r\n\r".$titl.$empty."link : ".$linkU.$empty."Datum objave :".$date);
+
+                                                      //fwrite($file,"\r\n\r".$row["name"]);
 
                                                         }
-                                                         fwrite($file,"\r\n\r"."\r\n\r"."broj postova u kategroji : ".$count . ", Za razdoblje od ".$datumOd. " / datum do ".$datumDo);
-                                                       }
+                                                         fwrite($file,"\r\n\r"."\r\n\r"."broj postova u kategroji : ".$count);
+                                                      }
 
-                                                         mysqli_free_result($resulTitle);
+                                                          mysqli_free_result($resulTitle);
         echo'
         </tbody>
         </table>';
@@ -199,4 +191,19 @@ if($rezContainer = mysqli_query($mysqli, $stringQ)){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </body>
+
+<script>
+portal = new {
+  from: 0,
+  unitl: 0
+}
+
+
+
+
+
+</script>
+
+
+
 </html>
