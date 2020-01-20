@@ -11,8 +11,6 @@ if (isset($_POST["import"])) {
         $file = fopen($fileName, "r");
         
        while (($column = fgetcsv($file, 200000, ",")) !== FALSE) {
-
-
                          $sqlInsert = "INSERT into uudqv_terms (name) values ('" . $column[3]. "')";
                          $result = mysqli_query($conn, $sqlInsert);
 
@@ -22,8 +20,8 @@ if (isset($_POST["import"])) {
 										$k = $row["term_id"];
                                         $sqlInsert_f = 'INSERT INTO uudqv_term_taxonomy (term_id,taxonomy,description,parent,count) VALUES ('.$k.',"property-city","",0,0)';
                                         $resultf = mysqli_query($conn,  $sqlInsert_f);
-                                        echo "<p>izvršen sam -----> " . $column[3] . " //ID =  ".$k."</p><br/>";
-                                        echo   $sqlInsert_f;
+                                        //echo "<p>izvršen sam -----> " . $column[3] . " //ID =  ".$k."</p><br/>";
+                                        //echo   $sqlInsert_f;
                                     
                      
             if (! empty($result)) {
@@ -36,7 +34,7 @@ if (isset($_POST["import"])) {
         }
     }
 }
-
+//kod
 // https://phppot.com/php/import-csv-file-into-mysql-using-php/
 ?>
 <!DOCTYPE html>
@@ -239,28 +237,6 @@ $(document).ready(function() {
               ?>
 
     </div>
-	
-<?php
-                        // $lastQ = "SELECT term_id FROM uudqv_terms ORDER BY term_id DESC LIMIT 0 , 1";
-                         // $last_id = mysqli_query($conn,  $lastQ);//mysqli_insert_id($conn);
-                                  // $row = mysqli_fetch_assoc($last_id);
-                                  // $k = $row["term_id"];
-                                        // $sqlInsert_f = 'INSERT INTO uudqv_term_taxonomy (term_id,taxonomy,description,parent,count) VALUES ('.$k.',"property-city","",0,0)';
-                                        // $resultf = mysqli_query($conn,  $sqlInsert_f);
-                                        // echo "<p>izvršen sam -----> ". "//ID =  ".$row["term_id"]."</p><br/>";
-                                        // echo   $sqlInsert_f;
-                                    
-
-
-            // $sqlSelect2 = "SELECT term_id FROM uudqv_terms ORDER BY term_id DESC LIMIT 0 , 1";
-            // $result2 = mysqli_query($conn, $sqlSelect2);
-
-      // $row2 = mysqli_fetch_assoc($result2);
-      // echo "<p>izvršen sam -----> ". "//ID =  ".$row2["term_id"]."</p><br/>";
-  
-	
-	?>
-
 </body>
 
 </html>
