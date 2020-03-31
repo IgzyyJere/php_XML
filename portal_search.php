@@ -1,5 +1,4 @@
 <?php
- 
 $mysqli = new mysqli("localhost", "root", "", "portal");
 mysqli_set_charset($mysqli,'utf-8');
 
@@ -28,7 +27,7 @@ function encode_to_utf8_if_needed($string)
   AND post_type like 'post' 
   AND post_date BETWEEN '2019-03-04' and '2020-01-04' ";
  
- $path = "report/portalHEP.txt";
+ $path = "report/portalHEP_.txt";
  $file = fopen($path,"w");
 
 
