@@ -1,8 +1,4 @@
 
-<!--
-//index.php
-!-->
-
 <?php
 
 include('database.php');
@@ -21,8 +17,10 @@ if(!isset($_SESSION['user_id']))
         <title>Chat Application using PHP Ajax Jquery</title>  
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.rawgit.com/mervick/emojionearea/master/dist/emojionearea.min.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdn.rawgit.com/mervick/emojionearea/master/dist/emojionearea.min.js"></script>
     </head>  
     <body>  
         <div class="container">
@@ -38,6 +36,9 @@ if(!isset($_SESSION['user_id']))
     <div id="user_model_details"></div>
    </div>
   </div>
+  
+
+
     </body>  
 </html>  
 
@@ -84,7 +85,7 @@ $(document).ready(function(){
   modal_content += fetch_user_chat_history(to_user_id);
   modal_content += '</div>';
   modal_content += '<div class="form-group">';
-  modal_content += '<textarea name="chat_message_'+to_user_id+'" id="chat_message_'+to_user_id+'" class="form-control"></textarea>';
+  modal_content += '<textarea name="chat_message_'+to_user_id+'" id="chat_message_'+to_user_id+'" class="form-control chat_message"></textarea>';
   modal_content += '</div><div class="form-group" align="right">';
   modal_content+= '<button type="button" name="send_chat" id="'+to_user_id+'" class="btn btn-info send_chat">Send</button></div></div>';
   $('#user_model_details').html(modal_content);
@@ -99,6 +100,10 @@ $(document).ready(function(){
    width:400
   });
   $('#user_dialog_'+to_user_id).dialog('open');
+  $('#chat_message_'+to_user_id).emojioneArea({
+   pickerPosition:"top",
+   toneStyle: "bullet"
+  });
  });
 
  $(document).on('click', '.send_chat', function(){
@@ -110,7 +115,9 @@ $(document).ready(function(){
    data:{to_user_id:to_user_id, chat_message:chat_message},
    success:function(data)
    {
-    $('#chat_message_'+to_user_id).val('');
+    //$('#chat_message_'+to_user_id).val('');
+    var element = $('#chat_message_'+to_user_id).emojioneArea();
+    element[0].emojioneArea.setText('');
     $('#chat_history_'+to_user_id).html(data);
    }
   })
@@ -138,6 +145,32 @@ $(document).ready(function(){
 
  $(document).on('click', '.ui-button-icon', function(){
   $('.user_dialog').dialog('destroy').remove();
+ });
+
+ $(document).on('focus', '.chat_message', function(){
+  var is_type = 'yes';
+  $.ajax({
+   url:"update_is_type_status.php",
+   method:"POST",
+   data:{is_type:is_type},
+   success:function()
+   {
+
+   }
+  })
+ });
+
+ $(document).on('blur', '.chat_message', function(){
+  var is_type = 'no';
+  $.ajax({
+   url:"update_is_type_status.php",
+   method:"POST",
+   data:{is_type:is_type},
+   success:function()
+   {
+    
+   }
+  })
  });
  
 });  

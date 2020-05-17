@@ -2,7 +2,7 @@
 
 //database_connection.php
 
-$connect = new PDO("mysql:host=localhost;dbname=chat_app", "root", "");
+$connect = new PDO("mysql:host=localhost;dbname=chat_app;charset=utf8mb4", "root", "");
 
 
 date_default_timezone_set('Asia/Kolkata');
@@ -99,6 +99,28 @@ function count_unseen_message($from_user_id, $to_user_id, $connect)
  if($count > 0)
  {
   $output = '<span class="label label-success">'.$count.'</span>';
+ }
+ return $output;
+}
+
+function fetch_is_type_status($user_id, $connect)
+{
+ $query = "
+ SELECT is_type FROM login_details 
+ WHERE user_id = '".$user_id."' 
+ ORDER BY last_activity DESC 
+ LIMIT 1
+ "; 
+ $statement = $connect->prepare($query);
+ $statement->execute();
+ $result = $statement->fetchAll();
+ $output = '';
+ foreach($result as $row)
+ {
+  if($row["is_type"] == 'yes')
+  {
+   $output = ' - <small><em><span class="text-muted">Typing...</span></em></small>';
+  }
  }
  return $output;
 }
