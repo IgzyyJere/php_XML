@@ -1,7 +1,7 @@
 <?php
 class QueryMain_Context{
 var $user = "root";
-var $db = "mojecipeleDb";
+var $db = "cipele";
 var $passW = "";
 
 
@@ -18,7 +18,7 @@ var $passW = "";
 var $queryProduct = "SELECT * FROM wpdg_posts
 LEFT JOIN wpdg_postmeta ON (wpdg_posts.ID = wpdg_postmeta.post_id)
 WHERE  post_type = 'product' AND wpdg_postmeta.meta_key like '_stock'
-ORDER BY post_date DESC";
+ORDER BY post_date DESC limit 0,5";
 
 
 ///STANOVI NAJAM
