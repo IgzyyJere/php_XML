@@ -26,12 +26,12 @@ while($row = mysqli_fetch_assoc($container))
   $opis_content = htmlentities($tekst_content, ENT_XML1);
 
   ///parent varable
-  $parentQueryVariable = "SELECT * from wpdg_posts
+  $parentQueryVariable = "SELECT * from loxah_posts
   where post_type like 'product_variation' and post_status like 'publish' and  post_parent = ".$row['ID'];
   $variables_container = mysqli_query($link, $parentQueryVariable);
 
   ///SKU
-  $parentQuerySKU= "SELECT * FROM wpdg_postmeta WHERE meta_key like '%sku' and post_id = ".$row['ID'];
+  $parentQuerySKU= "SELECT * FROM loxah_postmeta WHERE meta_key like '%sku' and post_id = ".$row['ID'];
   $sku_container = mysqli_query($link, $parentQuerySKU);
 
   echo '<row>';
@@ -46,7 +46,7 @@ while($row = mysqli_fetch_assoc($container))
 
                        //image
                        $kk = $row_sku['meta_value'];
-                       $imageQuery = "SELECT * FROM wpdg_posts where post_name like '$kk' and post_type like 'attachment'";
+                       $imageQuery = "SELECT * FROM loxah_posts where post_name like '$kk' and post_type like 'attachment'";
                        $image_container = mysqli_query($link, $imageQuery);
                        $image = mysqli_fetch_assoc($image_container);
                        echo '<image>'.$image['guid'].'</image>';
@@ -67,20 +67,20 @@ while($row = mysqli_fetch_assoc($container))
                         echo '<variant_title_id>'.$row_variables['ID'].'</variant_title_id>', "\n"; //id broja cipele
 
                                 //stock broja cipele
-                                $stockByNumQuery= "SELECT * FROM wpdg_postmeta where meta_key like '_stock' and post_id = ".$row_variables['ID'];
+                                $stockByNumQuery= "SELECT * FROM loxah_postmeta where meta_key like '_stock' and post_id = ".$row_variables['ID'];
                                 $stock_variabales = mysqli_query($link, $stockByNumQuery);
                                 while($row_stockVariables = mysqli_fetch_assoc($stock_variabales)){
                                   echo '<variant_stock>'.$row_stockVariables['meta_value'].'</variant_stock>', "\n";
                                 }
                       echo '</variant>';
 
-                      $saleActionPriceQuery = "SELECT * FROM wpdg_postmeta where meta_key LIKE '_sale_price' and post_id = " .$row_variables['ID'];
+                      $saleActionPriceQuery = "SELECT * FROM loxah_postmeta where meta_key LIKE '_sale_price' and post_id = " .$row_variables['ID'];
                       $sale_price_action = mysqli_query($link, $saleActionPriceQuery);
                       $dataPrice_action = mysqli_fetch_assoc($sale_price_action);
                       echo '<discounted_price>'.$dataPrice_action['meta_value'].'</discounted_price>', "\n";
 
 
-                      $salePriceQuery = "SELECT * FROM wpdg_postmeta where meta_key LIKE '_regular_price' and post_id = " .$row_variables['ID'];
+                      $salePriceQuery = "SELECT * FROM loxah_postmeta where meta_key LIKE '_regular_price' and post_id = " .$row_variables['ID'];
                       $sale_price = mysqli_query($link, $salePriceQuery);
                       $dataPrice = mysqli_fetch_assoc($sale_price);
                       echo '<base_price>'.$dataPrice['meta_value'].'</base_price>', "\n";

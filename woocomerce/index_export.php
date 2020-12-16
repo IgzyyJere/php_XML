@@ -20,10 +20,10 @@ $tekst = $row["post_content"];
 
 
 //polja - detalji
-$Qdetails = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row["ID"]."
-and wpdg_postmeta.meta_key = 'REAL_HOMES_property_price'
-and wpdg_postmeta.meta_value >= 0";
+$Qdetails = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row["ID"]."
+and loxah_postmeta.meta_key = 'REAL_HOMES_property_price'
+and loxah_postmeta.meta_value >= 0";
 $cijena = mysqli_query($link, $Qdetails);
 $cijenaRow = mysqli_fetch_assoc($cijena);
 
@@ -31,12 +31,12 @@ $cijenaRow = mysqli_fetch_assoc($cijena);
 
 
 //naslovna slika
-$QslikeFe = "select DISTINCT  wpdg_posts.guid
-from wpdg_posts
-INNER JOIN wpdg_postmeta ON wpdg_postmeta.meta_value = wpdg_posts.ID
-WHERE wpdg_posts.post_type = 'attachment'
-AND wpdg_postmeta.meta_key = '_thumbnail_id'
-AND wpdg_postmeta.post_id = ".$row["ID"];
+$QslikeFe = "select DISTINCT  loxah_posts.guid
+from loxah_posts
+INNER JOIN loxah_postmeta ON loxah_postmeta.meta_value = loxah_posts.ID
+WHERE loxah_posts.post_type = 'attachment'
+AND loxah_postmeta.meta_key = '_thumbnail_id'
+AND loxah_postmeta.post_id = ".$row["ID"];
 $slika = mysqli_query($link, $QslikeFe);
 $slikeRow = mysqli_fetch_assoc($slika);
 
@@ -45,15 +45,15 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
 
-  //lokacija wpdg // //lokacija wpdg iz WP baze
-  $CityWP= "SELECT wpdg_terms.name
-                from wpdg_terms
-                RIGHT JOIN wpdg_term_taxonomy on wpdg_terms.term_id = wpdg_term_taxonomy.term_id
-                LEFT JOIN wpdg_term_relationships ON wpdg_term_relationships.term_taxonomy_id = wpdg_term_taxonomy.term_taxonomy_id
-                JOIN wpdg_posts on wpdg_posts.ID = wpdg_term_relationships.object_id
-                WHERE wpdg_posts.ID = ".$row['ID'].
-                " AND wpdg_term_taxonomy.taxonomy = 'property-city'
-                GROUP BY wpdg_term_taxonomy.parent";
+  //lokacija loxah // //lokacija loxah iz WP baze
+  $CityWP= "SELECT loxah_terms.name
+                from loxah_terms
+                RIGHT JOIN loxah_term_taxonomy on loxah_terms.term_id = loxah_term_taxonomy.term_id
+                LEFT JOIN loxah_term_relationships ON loxah_term_relationships.term_taxonomy_id = loxah_term_taxonomy.term_taxonomy_id
+                JOIN loxah_posts on loxah_posts.ID = loxah_term_relationships.object_id
+                WHERE loxah_posts.ID = ".$row['ID'].
+                " AND loxah_term_taxonomy.taxonomy = 'property-city'
+                GROUP BY loxah_term_taxonomy.parent";
                 $WPLokacija = mysqli_query($link, $CityWP);
                 $WPLOKACIJARow= mysqli_fetch_assoc($WPLokacija);
                 $zupanijaname = $WPLOKACIJARow["name"];
@@ -91,9 +91,9 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
             ///karta i google zapisi
-                    $QMap = "SELECT * FROM wpdg_postmeta where wpdg_postmeta.post_id = ".$row["ID"].
-                    " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_location'".
-                    " and wpdg_postmeta.meta_value >= 0";
+                    $QMap = "SELECT * FROM loxah_postmeta where loxah_postmeta.post_id = ".$row["ID"].
+                    " and loxah_postmeta.meta_key = 'REAL_HOMES_property_location'".
+                    " and loxah_postmeta.meta_value >= 0";
                     $map = mysqli_query($link, $QMap);
                     $gMapRow = mysqli_fetch_assoc($map);
                       if(!is_null($gMapRow["meta_value"]) || $gMapRow["meta_value"] != ''){
@@ -107,7 +107,7 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
 
-                    //orignal kaže wpdg
+                    //orignal kaže loxah
                     // $property_location = get_post_meta( get_the_ID(), 'REAL_HOMES_property_location', true );
                     // if ( ! empty( $property_location ) ) {
                     // 	$lat_lng = explode( ',', $property_location );
@@ -115,10 +115,10 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
                     // 	$current_property_data[ 'lng' ] = $lat_lng[ 1 ];
                     // }
 
-                      $QbrojSoba = "SELECT meta_value FROM wpdg_postmeta where
-                      wpdg_postmeta.post_id = ".$row["ID"].
-                      " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
-                      and wpdg_postmeta.meta_value >= 0";
+                      $QbrojSoba = "SELECT meta_value FROM loxah_postmeta where
+                      loxah_postmeta.post_id = ".$row["ID"].
+                      " and loxah_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
+                      and loxah_postmeta.meta_value >= 0";
                       $brSoba = mysqli_query($link, $QbrojSoba);
                       $sobeRow = mysqli_fetch_assoc($brSoba);
 
@@ -128,28 +128,28 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
 
-                      $QFeaturesT1 = "SELECT  wpdg_terms.name
-                                      from wpdg_term_relationships
-                                      LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                      LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                      LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                      WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                      $QFeaturesT1 = "SELECT  loxah_terms.name
+                                      from loxah_term_relationships
+                                      LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                      LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                      LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                      WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                       AND post_status='publish'
-                                      AND wpdg_posts.ID = ".$row["ID"].
-                                      " AND wpdg_terms.name = 'Teretni Lift'";
+                                      AND loxah_posts.ID = ".$row["ID"].
+                                      " AND loxah_terms.name = 'Teretni Lift'";
                                       $liftT = mysqli_query($link, $QFeaturesT1);
                                       $liftRow = mysqli_fetch_assoc($liftT);
 
 
-                      $QFeaturesT1_ = "SELECT  wpdg_terms.name
-                                      from wpdg_term_relationships
-                                      LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                      LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                      LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                      WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                      $QFeaturesT1_ = "SELECT  loxah_terms.name
+                                      from loxah_term_relationships
+                                      LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                      LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                      LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                      WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                       AND post_status='publish'
-                                      AND wpdg_posts.ID = ".$row["ID"].
-                                      " AND wpdg_terms.name = 'Lift'";
+                                      AND loxah_posts.ID = ".$row["ID"].
+                                      " AND loxah_terms.name = 'Lift'";
                                       $liftT_ = mysqli_query($link, $QFeaturesT1_);
                                       $liftRow_ = mysqli_fetch_assoc($liftT_);
 
@@ -160,10 +160,10 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
 
-                      $QSize = "SELECT meta_value FROM wpdg_postmeta
-                      where wpdg_postmeta.post_id = ".$row["ID"].
-                      " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_size'
-                      and wpdg_postmeta.meta_value >= 0";
+                      $QSize = "SELECT meta_value FROM loxah_postmeta
+                      where loxah_postmeta.post_id = ".$row["ID"].
+                      " and loxah_postmeta.meta_key = 'REAL_HOMES_property_size'
+                      and loxah_postmeta.meta_value >= 0";
                       $size_ = mysqli_query($link, $QSize);
                       $sizeRow = mysqli_fetch_assoc($size_);
                       $size = $sizeRow["meta_value"];
@@ -171,148 +171,148 @@ $patternIframe = "#<iframe[^>]+>.*?</iframe>#is";
 
 
 
-                      $QYearBuild = "SELECT meta_value FROM wpdg_postmeta
-                      where wpdg_postmeta.post_id = ".$row["ID"].
-                      " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_year_built'
-                      and wpdg_postmeta.meta_value >= 0";
+                      $QYearBuild = "SELECT meta_value FROM loxah_postmeta
+                      where loxah_postmeta.post_id = ".$row["ID"].
+                      " and loxah_postmeta.meta_key = 'REAL_HOMES_property_year_built'
+                      and loxah_postmeta.meta_value >= 0";
                       $yearB = mysqli_query($link, $QYearBuild);
                       $year = mysqli_fetch_assoc($yearB);
 
 
-                      $Grijanje = "SELECT  wpdg_terms.name
-                                  from wpdg_term_relationships
-                                  LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                  LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                  WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                      $Grijanje = "SELECT  loxah_terms.name
+                                  from loxah_term_relationships
+                                  LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                  LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                  LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                  WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
-                                  AND wpdg_posts.ID = ".$row["ID"]."
-                                    AND wpdg_terms.name = 'Plinsko etažno'
-                                  OR wpdg_terms.name = 'Radijatori na struju'
-                                  OR wpdg_terms.name = 'Toplana'";
+                                  AND loxah_posts.ID = ".$row["ID"]."
+                                    AND loxah_terms.name = 'Plinsko etažno'
+                                  OR loxah_terms.name = 'Radijatori na struju'
+                                  OR loxah_terms.name = 'Toplana'";
                           $grijanjeTip = mysqli_query($link, $Grijanje);
                           $GrijanjeRow = mysqli_fetch_assoc($grijanjeTip);
 
 
 
 
-                      $QParking = "SELECT wpdg_terms.name from wpdg_term_relationships
-                      LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                      LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                      LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                      WHERE wpdg_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND wpdg_posts.ID = ".$row["ID"].
-                      " AND wpdg_terms.name = 'Parking' ";
+                      $QParking = "SELECT loxah_terms.name from loxah_term_relationships
+                      LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                      LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                      LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                      WHERE loxah_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND loxah_posts.ID = ".$row["ID"].
+                      " AND loxah_terms.name = 'Parking' ";
                       $parking = mysqli_query($link, $QParking);
                       $ParkingRow = mysqli_fetch_assoc($parking);
 
 
 
-                                  $QKlima = "SELECT  wpdg_terms.name
-                                            from wpdg_term_relationships
-                                            LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                            LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                            WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                  $QKlima = "SELECT  loxah_terms.name
+                                            from loxah_term_relationships
+                                            LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                            LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                            LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                            WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
-                                            AND wpdg_posts.ID = ".$row["ID"].
-                                              " AND wpdg_terms.name = 'Klima uređaj' ";
+                                            AND loxah_posts.ID = ".$row["ID"].
+                                              " AND loxah_terms.name = 'Klima uređaj' ";
                       $klima = mysqli_query($link, $QKlima);
                       $KlimaRow = mysqli_fetch_assoc($klima);
 
 
 
 
-                                  $QVlList = "SELECT  wpdg_terms.name
-                                            from wpdg_term_relationships
-                                            LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                            LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                            WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                  $QVlList = "SELECT  loxah_terms.name
+                                            from loxah_term_relationships
+                                            LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                            LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                            LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                            WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
-                                            AND wpdg_posts.ID = ".$row["ID"].
-                                              " AND wpdg_terms.name = 'Vlasnički list u posjedu'";
+                                            AND loxah_posts.ID = ".$row["ID"].
+                                              " AND loxah_terms.name = 'Vlasnički list u posjedu'";
                       $Vlist = mysqli_query($link, $QVlList);
                       $VlistRow = mysqli_fetch_assoc($Vlist);
 
 
 
-                      $QBazen = "SELECT  wpdg_terms.name
-                                  from wpdg_term_relationships
-                                  LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                  LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                  WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                      $QBazen = "SELECT  loxah_terms.name
+                                  from loxah_term_relationships
+                                  LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                  LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                  LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                  WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
-                                  AND wpdg_posts.ID = ".$row["ID"].
-                                    " AND wpdg_terms.name = 'Bazen'";
+                                  AND loxah_posts.ID = ".$row["ID"].
+                                    " AND loxah_terms.name = 'Bazen'";
                                     $Bazen = mysqli_query($link, $QBazen);
                                     $BazenRow = mysqli_fetch_assoc($Bazen);
 
 
 
-                                    $QKablovska = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                    $QKablovska = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row["ID"].
-                                                    " AND wpdg_terms.name = 'Kablovska'";
+                                                    AND loxah_posts.ID = ".$row["ID"].
+                                                    " AND loxah_terms.name = 'Kablovska'";
                                                     $Kablovska = mysqli_query($link, $QKablovska);
                                                     $KablovskaRow = mysqli_fetch_assoc($Kablovska);
 
 
 
-                                    $QSatelit = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                    $QSatelit = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row["ID"].
-                                                    " AND wpdg_terms.name = 'Satelitska'";
+                                                    AND loxah_posts.ID = ".$row["ID"].
+                                                    " AND loxah_terms.name = 'Satelitska'";
                                                     $satelit = mysqli_query($link, $QSatelit);
                                                     $SatelitRow = mysqli_fetch_assoc($satelit);
 
 
-                                          $QAlarm = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                          $QAlarm = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row["ID"].
-                                                    " AND wpdg_terms.name = 'Alarm'";
+                                                    AND loxah_posts.ID = ".$row["ID"].
+                                                    " AND loxah_terms.name = 'Alarm'";
                                                     $alarm = mysqli_query($link, $QAlarm);
                                                     $AlarmRow = mysqli_fetch_assoc($alarm);
 
 
-                                                    $QTelefon = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                                    $QTelefon = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row["ID"].
-                                                    " AND wpdg_terms.name = 'Telefon (upotreba)'";
+                                                    AND loxah_posts.ID = ".$row["ID"].
+                                                    " AND loxah_terms.name = 'Telefon (upotreba)'";
                                                     $telefon_ = mysqli_query($link, $QTelefon);
                                                     $TelefonRow_ = mysqli_fetch_assoc($telefon_);
 
 
 
-                                                  $QTelefon_L = "SELECT  wpdg_terms.name
-                                                  from wpdg_term_relationships
-                                                  LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                  LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                  LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                  WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                                  $QTelefon_L = "SELECT  loxah_terms.name
+                                                  from loxah_term_relationships
+                                                  LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                  LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                  LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                  WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                   AND post_status='publish'
-                                                  AND wpdg_posts.ID = ".$row["ID"].
-                                                  " AND wpdg_terms.name = 'Telefon'";
+                                                  AND loxah_posts.ID = ".$row["ID"].
+                                                  " AND loxah_terms.name = 'Telefon'";
                                                   $telefon_L = mysqli_query($link, $QTelefon_L);
                                                   $TelefonRow_L = mysqli_fetch_assoc($telefon_L);
 
@@ -349,13 +349,13 @@ echo '<ad_item class="ad_flats">
                   echo '<image_list>',"\n";
                                   echo '<image>'. $slikeRow["guid"].'</image>',"\n";
                                       //galerija slika
-                                      $Qgalerija = "select DISTINCT wpdg_posts.guid
-                                      from wpdg_posts
-                                      INNER JOIN wpdg_postmeta ON (wpdg_postmeta.meta_value = wpdg_posts.ID)
-                                      WHERE wpdg_posts.post_type = 'attachment'
-                                      AND wpdg_postmeta.meta_key = 'REAL_HOMES_property_images'
-                                      AND wpdg_postmeta.post_id = ".$row["ID"].
-                                      " ORDER BY wpdg_posts.post_date DESC";
+                                      $Qgalerija = "select DISTINCT loxah_posts.guid
+                                      from loxah_posts
+                                      INNER JOIN loxah_postmeta ON (loxah_postmeta.meta_value = loxah_posts.ID)
+                                      WHERE loxah_posts.post_type = 'attachment'
+                                      AND loxah_postmeta.meta_key = 'REAL_HOMES_property_images'
+                                      AND loxah_postmeta.post_id = ".$row["ID"].
+                                      " ORDER BY loxah_posts.post_date DESC";
                                                                 $gallery = mysqli_query($link, $Qgalerija);
                                                                 while( $galleryRow = mysqli_fetch_assoc($gallery)){
                                                                       echo '<image>'. $galleryRow["guid"].'</image>',"\n";
@@ -689,10 +689,10 @@ $tekst2 = $row2["post_content"];
 
 
 //polja - detalji
-$Qdetails2 = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row2["ID"]."
-and wpdg_postmeta.meta_key = 'REAL_HOMES_property_price'
-and wpdg_postmeta.meta_value >= 0";
+$Qdetails2 = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row2["ID"]."
+and loxah_postmeta.meta_key = 'REAL_HOMES_property_price'
+and loxah_postmeta.meta_value >= 0";
 $cijena2 = mysqli_query($link, $Qdetails2);
 $cijenaRow2 = mysqli_fetch_assoc($cijena2);
 
@@ -700,12 +700,12 @@ $cijenaRow2 = mysqli_fetch_assoc($cijena2);
 
 
 //naslovna slika
-$QslikeFe2 = "select DISTINCT  wpdg_posts.guid
-from wpdg_posts
-INNER JOIN wpdg_postmeta ON wpdg_postmeta.meta_value = wpdg_posts.ID
-WHERE wpdg_posts.post_type = 'attachment'
-AND wpdg_postmeta.meta_key = '_thumbnail_id'
-AND wpdg_postmeta.post_id = ".$row2["ID"];
+$QslikeFe2 = "select DISTINCT  loxah_posts.guid
+from loxah_posts
+INNER JOIN loxah_postmeta ON loxah_postmeta.meta_value = loxah_posts.ID
+WHERE loxah_posts.post_type = 'attachment'
+AND loxah_postmeta.meta_key = '_thumbnail_id'
+AND loxah_postmeta.post_id = ".$row2["ID"];
 $slika2 = mysqli_query($link, $QslikeFe2);
 $slikeRow2 = mysqli_fetch_assoc($slika2);
 
@@ -713,15 +713,15 @@ $slikeRow2 = mysqli_fetch_assoc($slika2);
 
 
 
-//lokacija wpdg
-$CityWP2 = "SELECT wpdg_terms.name
-from wpdg_terms
-RIGHT JOIN wpdg_term_taxonomy on wpdg_terms.term_id = wpdg_term_taxonomy.term_id
-LEFT JOIN wpdg_term_relationships ON wpdg_term_relationships.term_taxonomy_id = wpdg_term_taxonomy.term_taxonomy_id
-JOIN wpdg_posts on wpdg_posts.ID = wpdg_term_relationships.object_id
-WHERE wpdg_posts.ID = ".$row2["ID"].
-" AND wpdg_term_taxonomy.taxonomy = 'property-city'
-GROUP BY wpdg_term_taxonomy.parent";
+//lokacija loxah
+$CityWP2 = "SELECT loxah_terms.name
+from loxah_terms
+RIGHT JOIN loxah_term_taxonomy on loxah_terms.term_id = loxah_term_taxonomy.term_id
+LEFT JOIN loxah_term_relationships ON loxah_term_relationships.term_taxonomy_id = loxah_term_taxonomy.term_taxonomy_id
+JOIN loxah_posts on loxah_posts.ID = loxah_term_relationships.object_id
+WHERE loxah_posts.ID = ".$row2["ID"].
+" AND loxah_term_taxonomy.taxonomy = 'property-city'
+GROUP BY loxah_term_taxonomy.parent";
 $WPLokacija2 = mysqli_query($link, $CityWP2);
 $WPLokacijaRow2 = mysqli_fetch_assoc($WPLokacija2);
 $zupanijaname2 = $WPLOKACIJARow2["name"];
@@ -758,9 +758,9 @@ $zupanijaname2 = $WPLOKACIJARow2["name"];
 
 
 ///karta i google zapisi
-$QMap2 = "SELECT * FROM wpdg_postmeta where wpdg_postmeta.post_id = ".$row2["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_location'".
-" and wpdg_postmeta.meta_value >= 0";
+$QMap2 = "SELECT * FROM loxah_postmeta where loxah_postmeta.post_id = ".$row2["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_location'".
+" and loxah_postmeta.meta_value >= 0";
 $map2 = mysqli_query($link, $QMap2);
 $gMapRow2 = mysqli_fetch_assoc($map2);
 
@@ -777,10 +777,10 @@ $gMapRow2 = mysqli_fetch_assoc($map2);
 
 
 
-$QbrojSoba2 = "SELECT meta_value FROM wpdg_postmeta where
-  wpdg_postmeta.post_id = ".$row2["ID"].
-  " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
-  and wpdg_postmeta.meta_value >= 0";
+$QbrojSoba2 = "SELECT meta_value FROM loxah_postmeta where
+  loxah_postmeta.post_id = ".$row2["ID"].
+  " and loxah_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
+  and loxah_postmeta.meta_value >= 0";
   $brSoba2 = mysqli_query($link, $QbrojSoba2);
   $sobeRow2 = mysqli_fetch_assoc($brSoba2);
 
@@ -789,10 +789,10 @@ $QbrojSoba2 = "SELECT meta_value FROM wpdg_postmeta where
 
 
 
-  $QSize2 = "SELECT meta_value FROM wpdg_postmeta
-  where wpdg_postmeta.post_id = ".$row2["ID"].
-  " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_size'
-  and wpdg_postmeta.meta_value >= 0";
+  $QSize2 = "SELECT meta_value FROM loxah_postmeta
+  where loxah_postmeta.post_id = ".$row2["ID"].
+  " and loxah_postmeta.meta_key = 'REAL_HOMES_property_size'
+  and loxah_postmeta.meta_value >= 0";
   $size_2 = mysqli_query($link, $QSize2);
   $sizeRow2 = mysqli_fetch_assoc($size_2);
   $size2 = $sizeRow2["meta_value"];
@@ -800,146 +800,146 @@ $QbrojSoba2 = "SELECT meta_value FROM wpdg_postmeta where
 
 
 
-  $QYearBuild2 = "SELECT meta_value FROM wpdg_postmeta
-  where wpdg_postmeta.post_id = ".$row2["ID"].
-  " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_year_built'
-  and wpdg_postmeta.meta_value >= 0";
+  $QYearBuild2 = "SELECT meta_value FROM loxah_postmeta
+  where loxah_postmeta.post_id = ".$row2["ID"].
+  " and loxah_postmeta.meta_key = 'REAL_HOMES_property_year_built'
+  and loxah_postmeta.meta_value >= 0";
   $yearB2 = mysqli_query($link, $QYearBuild2);
   $year2 = mysqli_fetch_assoc($yearB2);
 
 
 
-    $Grijanje2 = "SELECT  wpdg_terms.name
-              from wpdg_term_relationships
-              LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-              LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-              LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-              WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+    $Grijanje2 = "SELECT  loxah_terms.name
+              from loxah_term_relationships
+              LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+              LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+              LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+              WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
               AND post_status='publish'
-              AND wpdg_posts.ID = ".$row2["ID"]."
-                AND wpdg_terms.name = 'Plinsko etažno'
-              OR wpdg_terms.name = 'Radijatori na struju'
-              OR wpdg_terms.name = 'Toplana'";
+              AND loxah_posts.ID = ".$row2["ID"]."
+                AND loxah_terms.name = 'Plinsko etažno'
+              OR loxah_terms.name = 'Radijatori na struju'
+              OR loxah_terms.name = 'Toplana'";
       $grijanjeTip2 = mysqli_query($link, $Grijanje2);
       $GrijanjeRow2 = mysqli_fetch_assoc($grijanjeTip2);
 
 
-            $QParking2 = "SELECT wpdg_terms.name from wpdg_term_relationships
-  LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-  LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-  LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-  WHERE wpdg_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND wpdg_posts.ID = ".$row2["ID"].
-  " AND wpdg_terms.name = 'Parking' ";
+            $QParking2 = "SELECT loxah_terms.name from loxah_term_relationships
+  LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+  LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+  LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+  WHERE loxah_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND loxah_posts.ID = ".$row2["ID"].
+  " AND loxah_terms.name = 'Parking' ";
   $parking2 = mysqli_query($link, $QParking2);
   $ParkingRow2 = mysqli_fetch_assoc($parking2);
 
 
 
-              $QKlima2 = "SELECT  wpdg_terms.name
-                        from wpdg_term_relationships
-                        LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                        LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                        LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                        WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+              $QKlima2 = "SELECT  loxah_terms.name
+                        from loxah_term_relationships
+                        LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                        LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                        LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                        WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                         AND post_status='publish'
-                        AND wpdg_posts.ID = ".$row2["ID"].
-                          " AND wpdg_terms.name = 'Klima uređaj' ";
+                        AND loxah_posts.ID = ".$row2["ID"].
+                          " AND loxah_terms.name = 'Klima uređaj' ";
   $klima2 = mysqli_query($link, $QKlima2);
   $KlimaRow2 = mysqli_fetch_assoc($klima2);
 
 
 
-                  $QVlList2 = "SELECT  wpdg_terms.name
-                        from wpdg_term_relationships
-                        LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                        LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                        LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                        WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                  $QVlList2 = "SELECT  loxah_terms.name
+                        from loxah_term_relationships
+                        LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                        LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                        LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                        WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                         AND post_status='publish'
-                        AND wpdg_posts.ID = ".$row2["ID"].
-                          " AND wpdg_terms.name = 'Vlasnički list u posjedu'";
+                        AND loxah_posts.ID = ".$row2["ID"].
+                          " AND loxah_terms.name = 'Vlasnički list u posjedu'";
   $Vlist2 = mysqli_query($link, $QVlList2);
   $VlistRow2 = mysqli_fetch_assoc($Vlist2);
 
 
 
-  $QBazen2 = "SELECT  wpdg_terms.name
-              from wpdg_term_relationships
-              LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-              LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-              LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-              WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+  $QBazen2 = "SELECT  loxah_terms.name
+              from loxah_term_relationships
+              LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+              LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+              LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+              WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
               AND post_status='publish'
-              AND wpdg_posts.ID = ".$row2["ID"].
-                " AND wpdg_terms.name = 'Bazen'";
+              AND loxah_posts.ID = ".$row2["ID"].
+                " AND loxah_terms.name = 'Bazen'";
                 $Bazen2 = mysqli_query($link, $QBazen2);
                 $BazenRow2 = mysqli_fetch_assoc($Bazen2);
 
 
 
-                $QKablovska2 = "SELECT  wpdg_terms.name
-                                from wpdg_term_relationships
-                                LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                $QKablovska2 = "SELECT  loxah_terms.name
+                                from loxah_term_relationships
+                                LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                 AND post_status='publish'
-                                AND wpdg_posts.ID = ".$row2["ID"].
-                                " AND wpdg_terms.name = 'Kablovska'";
+                                AND loxah_posts.ID = ".$row2["ID"].
+                                " AND loxah_terms.name = 'Kablovska'";
                                 $Kablovska2 = mysqli_query($link, $QKablovska2);
                                 $KablovskaRow2 = mysqli_fetch_assoc($Kablovska2);
 
 
 
-                $QSatelit2 = "SELECT  wpdg_terms.name
-                                from wpdg_term_relationships
-                                LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                $QSatelit2 = "SELECT  loxah_terms.name
+                                from loxah_term_relationships
+                                LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                 AND post_status='publish'
-                                AND wpdg_posts.ID = ".$row2["ID"].
-                                " AND wpdg_terms.name = 'Satelitska'";
+                                AND loxah_posts.ID = ".$row2["ID"].
+                                " AND loxah_terms.name = 'Satelitska'";
                                 $satelit2 = mysqli_query($link, $QSatelit2);
                                 $SatelitRow2 = mysqli_fetch_assoc($satelit2);
 
 
-                      $QAlarm2 = "SELECT  wpdg_terms.name
-                                from wpdg_term_relationships
-                                LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                      $QAlarm2 = "SELECT  loxah_terms.name
+                                from loxah_term_relationships
+                                LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                 AND post_status='publish'
-                                AND wpdg_posts.ID = ".$row2["ID"].
-                                " AND wpdg_terms.name = 'Alarm'";
+                                AND loxah_posts.ID = ".$row2["ID"].
+                                " AND loxah_terms.name = 'Alarm'";
                                 $alarm2 = mysqli_query($link, $QAlarm2);
                                 $AlarmRow2 = mysqli_fetch_assoc($alarm2);
 
 
 
-                    $QTelefon2 = "SELECT  wpdg_terms.name
-                    from wpdg_term_relationships
-                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                    $QTelefon2 = "SELECT  loxah_terms.name
+                    from loxah_term_relationships
+                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                     AND post_status='publish'
-                    AND wpdg_posts.ID = ".$row2["ID"].
-                    " AND wpdg_terms.name = 'Telefon (upotreba)'";
+                    AND loxah_posts.ID = ".$row2["ID"].
+                    " AND loxah_terms.name = 'Telefon (upotreba)'";
                     $telefon_2 = mysqli_query($link, $QTelefon2);
                     $TelefonRow_2 = mysqli_fetch_assoc($telefon_2);
 
 
-                    $QTelefon_L2 = "SELECT  wpdg_terms.name
-                    from wpdg_term_relationships
-                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                    $QTelefon_L2 = "SELECT  loxah_terms.name
+                    from loxah_term_relationships
+                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                     AND post_status='publish'
-                    AND wpdg_posts.ID = ".$row2["ID"].
-                    " AND wpdg_terms.name = 'Telefon'";
+                    AND loxah_posts.ID = ".$row2["ID"].
+                    " AND loxah_terms.name = 'Telefon'";
                     $telefon_L2 = mysqli_query($link, $QTelefon_L2);
                     $TelefonRow_L2 = mysqli_fetch_assoc($telefon_L2);
 
@@ -990,13 +990,13 @@ $QbrojSoba2 = "SELECT meta_value FROM wpdg_postmeta where
                                             echo '<image_list>',"\n";
                                                             echo '<image>'. $slikeRow2["guid"].'</image>',"\n";
                                                                 //galerija slika
-                                                                $Qgalerija2 = "select DISTINCT wpdg_posts.guid
-                                                                from wpdg_posts
-                                                                INNER JOIN wpdg_postmeta ON (wpdg_postmeta.meta_value = wpdg_posts.ID)
-                                                                WHERE wpdg_posts.post_type = 'attachment'
-                                                                AND wpdg_postmeta.meta_key = 'REAL_HOMES_property_images'
-                                                                AND wpdg_postmeta.post_id = ".$row2["ID"].
-                                                                " ORDER BY wpdg_posts.post_date DESC";
+                                                                $Qgalerija2 = "select DISTINCT loxah_posts.guid
+                                                                from loxah_posts
+                                                                INNER JOIN loxah_postmeta ON (loxah_postmeta.meta_value = loxah_posts.ID)
+                                                                WHERE loxah_posts.post_type = 'attachment'
+                                                                AND loxah_postmeta.meta_key = 'REAL_HOMES_property_images'
+                                                                AND loxah_postmeta.post_id = ".$row2["ID"].
+                                                                " ORDER BY loxah_posts.post_date DESC";
                                                                                           $gallery2 = mysqli_query($link, $Qgalerija2);
                                                                                           while($galleryRow2= mysqli_fetch_assoc($gallery2)){
                                                                                                 echo '<image>'. $galleryRow2["guid"].'</image>',"\n";
@@ -1321,10 +1321,10 @@ $tekst3 = $row3["post_content"];
 
 
   //polja - detalji
-$Qdetails3 = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row3["ID"]."
-and wpdg_postmeta.meta_key = 'REAL_HOMES_property_price'
-and wpdg_postmeta.meta_value >= 0";
+$Qdetails3 = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row3["ID"]."
+and loxah_postmeta.meta_key = 'REAL_HOMES_property_price'
+and loxah_postmeta.meta_value >= 0";
 $cijena3 = mysqli_query($link, $Qdetails3);
 $cijenaRow3 = mysqli_fetch_assoc($cijena3);
 
@@ -1332,12 +1332,12 @@ $cijenaRow3 = mysqli_fetch_assoc($cijena3);
 
 
 //naslovna slika
-$QslikeFe3 = "select DISTINCT  wpdg_posts.guid
-from wpdg_posts
-INNER JOIN wpdg_postmeta ON wpdg_postmeta.meta_value = wpdg_posts.ID
-WHERE wpdg_posts.post_type = 'attachment'
-AND wpdg_postmeta.meta_key = '_thumbnail_id'
-AND wpdg_postmeta.post_id = ".$row3["ID"];
+$QslikeFe3 = "select DISTINCT  loxah_posts.guid
+from loxah_posts
+INNER JOIN loxah_postmeta ON loxah_postmeta.meta_value = loxah_posts.ID
+WHERE loxah_posts.post_type = 'attachment'
+AND loxah_postmeta.meta_key = '_thumbnail_id'
+AND loxah_postmeta.post_id = ".$row3["ID"];
 $slika3 = mysqli_query($link, $QslikeFe3);
 $slikeRow3 = mysqli_fetch_assoc($slika3);
 
@@ -1345,15 +1345,15 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 
-  //lokacija wpdg
-  $CityWP3 = "SELECT wpdg_terms.name
-                from wpdg_terms
-                RIGHT JOIN wpdg_term_taxonomy on wpdg_terms.term_id = wpdg_term_taxonomy.term_id
-                LEFT JOIN wpdg_term_relationships ON wpdg_term_relationships.term_taxonomy_id = wpdg_term_taxonomy.term_taxonomy_id
-                JOIN wpdg_posts on wpdg_posts.ID = wpdg_term_relationships.object_id
-                WHERE wpdg_posts.ID = ".$row3["ID"].
-                " AND wpdg_term_taxonomy.taxonomy = 'property-city'
-                GROUP BY wpdg_term_taxonomy.parent";
+  //lokacija loxah
+  $CityWP3 = "SELECT loxah_terms.name
+                from loxah_terms
+                RIGHT JOIN loxah_term_taxonomy on loxah_terms.term_id = loxah_term_taxonomy.term_id
+                LEFT JOIN loxah_term_relationships ON loxah_term_relationships.term_taxonomy_id = loxah_term_taxonomy.term_taxonomy_id
+                JOIN loxah_posts on loxah_posts.ID = loxah_term_relationships.object_id
+                WHERE loxah_posts.ID = ".$row3["ID"].
+                " AND loxah_term_taxonomy.taxonomy = 'property-city'
+                GROUP BY loxah_term_taxonomy.parent";
                 $WPLokacija3 = mysqli_query($link, $CityWP3);
                 $WPLokacijaRow3 = mysqli_fetch_assoc($WPLokacija3);
                 $zup3= $WPLOKACIJARow3["name"];
@@ -1391,9 +1391,9 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
             ///karta i google zapisi
-                    $QMap3 = "SELECT * FROM wpdg_postmeta where wpdg_postmeta.post_id = ".$row3["ID"].
-                    " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_location'".
-                    " and wpdg_postmeta.meta_value >= 0";
+                    $QMap3 = "SELECT * FROM loxah_postmeta where loxah_postmeta.post_id = ".$row3["ID"].
+                    " and loxah_postmeta.meta_key = 'REAL_HOMES_property_location'".
+                    " and loxah_postmeta.meta_value >= 0";
                     $map3 = mysqli_query($link, $QMap3);
                     $gMapRow3 = mysqli_fetch_assoc($map3);
 
@@ -1410,10 +1410,10 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 
-                $QbrojSoba3 = "SELECT meta_value FROM wpdg_postmeta where
-                      wpdg_postmeta.post_id = ".$row3["ID"].
-                      " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
-                      and wpdg_postmeta.meta_value >= 0";
+                $QbrojSoba3 = "SELECT meta_value FROM loxah_postmeta where
+                      loxah_postmeta.post_id = ".$row3["ID"].
+                      " and loxah_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
+                      and loxah_postmeta.meta_value >= 0";
                       $brSoba3 = mysqli_query($link, $QbrojSoba3);
                       $sobeRow3 = mysqli_fetch_assoc($brSoba3);
 
@@ -1422,10 +1422,10 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 
-                      $QSize3 = "SELECT meta_value FROM wpdg_postmeta
-                      where wpdg_postmeta.post_id = ".$row3["ID"].
-                      " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_size'
-                      and wpdg_postmeta.meta_value >= 0";
+                      $QSize3 = "SELECT meta_value FROM loxah_postmeta
+                      where loxah_postmeta.post_id = ".$row3["ID"].
+                      " and loxah_postmeta.meta_key = 'REAL_HOMES_property_size'
+                      and loxah_postmeta.meta_value >= 0";
                       $size_3 = mysqli_query($link, $QSize3);
                       $sizeRow3 = mysqli_fetch_assoc($size_3);
                       $size3 = $sizeRow3["meta_value"];
@@ -1433,159 +1433,159 @@ $slikeRow3 = mysqli_fetch_assoc($slika3);
 
 
 
-                      $QYearBuild3 = "SELECT meta_value FROM wpdg_postmeta
-                      where wpdg_postmeta.post_id = ".$row3["ID"].
-                      " and wpdg_postmeta.meta_key = 'REAL_HOMES_property_year_built'
-                      and wpdg_postmeta.meta_value >= 0";
+                      $QYearBuild3 = "SELECT meta_value FROM loxah_postmeta
+                      where loxah_postmeta.post_id = ".$row3["ID"].
+                      " and loxah_postmeta.meta_key = 'REAL_HOMES_property_year_built'
+                      and loxah_postmeta.meta_value >= 0";
                       $yearB3 = mysqli_query($link, $QYearBuild3);
                       $year3 = mysqli_fetch_assoc($yearB3);
 
 
 
-                        $Grijanje3 = "SELECT  wpdg_terms.name
-                                  from wpdg_term_relationships
-                                  LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                  LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                  WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                        $Grijanje3 = "SELECT  loxah_terms.name
+                                  from loxah_term_relationships
+                                  LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                  LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                  LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                  WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
-                                  AND wpdg_posts.ID = ".$row3["ID"]."
-                                    AND wpdg_terms.name = 'Plinsko etažno'
-                                  OR wpdg_terms.name = 'Radijatori na struju'
-                                  OR wpdg_terms.name = 'Toplana'";
+                                  AND loxah_posts.ID = ".$row3["ID"]."
+                                    AND loxah_terms.name = 'Plinsko etažno'
+                                  OR loxah_terms.name = 'Radijatori na struju'
+                                  OR loxah_terms.name = 'Toplana'";
                           $grijanjeTip3 = mysqli_query($link, $Grijanje3);
                           $GrijanjeRow3 = mysqli_fetch_assoc($grijanjeTip3);
 
 
-                                $QParking3 = "SELECT wpdg_terms.name from wpdg_term_relationships
-                      LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                      LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                      LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                      WHERE wpdg_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND wpdg_posts.ID = ".$row3["ID"].
-                      " AND wpdg_terms.name = 'Parking' ";
+                                $QParking3 = "SELECT loxah_terms.name from loxah_term_relationships
+                      LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                      LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                      LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                      WHERE loxah_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND loxah_posts.ID = ".$row3["ID"].
+                      " AND loxah_terms.name = 'Parking' ";
                       $parking3 = mysqli_query($link, $QParking3);
                       $ParkingRow3 = mysqli_fetch_assoc($parking3);
 
 
 
-                                  $QKlima3 = "SELECT  wpdg_terms.name
-                                            from wpdg_term_relationships
-                                            LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                            LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                            WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                  $QKlima3 = "SELECT  loxah_terms.name
+                                            from loxah_term_relationships
+                                            LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                            LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                            LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                            WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
-                                            AND wpdg_posts.ID = ".$row3["ID"].
-                                              " AND wpdg_terms.name = 'Klima uređaj' ";
+                                            AND loxah_posts.ID = ".$row3["ID"].
+                                              " AND loxah_terms.name = 'Klima uređaj' ";
                       $klima3 = mysqli_query($link, $QKlima3);
                       $KlimaRow3 = mysqli_fetch_assoc($klima3);
 
 
 
-                                      $QVlList3 = "SELECT  wpdg_terms.name
-                                            from wpdg_term_relationships
-                                            LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                            LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                            LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                            WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                      $QVlList3 = "SELECT  loxah_terms.name
+                                            from loxah_term_relationships
+                                            LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                            LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                            LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                            WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                             AND post_status='publish'
-                                            AND wpdg_posts.ID = ".$row3["ID"].
-                                              " AND wpdg_terms.name = 'Vlasnički list u posjedu'";
+                                            AND loxah_posts.ID = ".$row3["ID"].
+                                              " AND loxah_terms.name = 'Vlasnički list u posjedu'";
                       $Vlist3 = mysqli_query($link, $QVlList3);
                       $VlistRow3 = mysqli_fetch_assoc($Vlist3);
 
 
 
-                      $QBazen3 = "SELECT  wpdg_terms.name
-                                  from wpdg_term_relationships
-                                  LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                  LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                  LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                  WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                      $QBazen3 = "SELECT  loxah_terms.name
+                                  from loxah_term_relationships
+                                  LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                  LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                  LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                  WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                   AND post_status='publish'
-                                  AND wpdg_posts.ID = ".$row3["ID"].
-                                    " AND wpdg_terms.name = 'Bazen'";
+                                  AND loxah_posts.ID = ".$row3["ID"].
+                                    " AND loxah_terms.name = 'Bazen'";
                                     $Bazen3 = mysqli_query($link, $QBazen3);
                                     $BazenRow3 = mysqli_fetch_assoc($Bazen3);
 
 
 
-                                    $QKablovska3 = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                    $QKablovska3 = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row3["ID"].
-                                                    " AND wpdg_terms.name = 'Kablovska'";
+                                                    AND loxah_posts.ID = ".$row3["ID"].
+                                                    " AND loxah_terms.name = 'Kablovska'";
                                                     $Kablovska3 = mysqli_query($link, $QKablovska3);
                                                     $KablovskaRow3 = mysqli_fetch_assoc($Kablovska3);
 
 
 
-                                    $QSatelit3 = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                    $QSatelit3 = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row3["ID"].
-                                                    " AND wpdg_terms.name = 'Satelitska'";
+                                                    AND loxah_posts.ID = ".$row3["ID"].
+                                                    " AND loxah_terms.name = 'Satelitska'";
                                                     $satelit3 = mysqli_query($link, $QSatelit3);
                                                     $SatelitRow3 = mysqli_fetch_assoc($satelit3);
 
 
-                                          $QAlarm3 = "SELECT  wpdg_terms.name
-                                                    from wpdg_term_relationships
-                                                    LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                                    LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                                    LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                                    WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                          $QAlarm3 = "SELECT  loxah_terms.name
+                                                    from loxah_term_relationships
+                                                    LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                                    LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                                    LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                                    WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                                     AND post_status='publish'
-                                                    AND wpdg_posts.ID = ".$row3["ID"].
-                                                    " AND wpdg_terms.name = 'Alarm'";
+                                                    AND loxah_posts.ID = ".$row3["ID"].
+                                                    " AND loxah_terms.name = 'Alarm'";
                                                     $alarm3 = mysqli_query($link, $QAlarm3);
                                                     $AlarmRow3 = mysqli_fetch_assoc($alarm3);
 
 
 
-                                        $QTelefon3 = "SELECT  wpdg_terms.name
-                                        from wpdg_term_relationships
-                                        LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                        LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                        LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                        WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                        $QTelefon3 = "SELECT  loxah_terms.name
+                                        from loxah_term_relationships
+                                        LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                        LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                        LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                        WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                         AND post_status='publish'
-                                        AND wpdg_posts.ID = ".$row3["ID"].
-                                        " AND wpdg_terms.name = 'Telefon (upotreba)'";
+                                        AND loxah_posts.ID = ".$row3["ID"].
+                                        " AND loxah_terms.name = 'Telefon (upotreba)'";
                                         $telefon_3 = mysqli_query($link, $QTelefon3);
                                         $TelefonRow_3 = mysqli_fetch_assoc($telefon_3);
 
 
-                                        $QTelefon_L3 = "SELECT  wpdg_terms.name
-                                        from wpdg_term_relationships
-                                        LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                        LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                        LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                        WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                        $QTelefon_L3 = "SELECT  loxah_terms.name
+                                        from loxah_term_relationships
+                                        LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                        LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                        LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                        WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                         AND post_status='publish'
-                                        AND wpdg_posts.ID = ".$row3["ID"].
-                                        " AND wpdg_terms.name = 'Telefon'";
+                                        AND loxah_posts.ID = ".$row3["ID"].
+                                        " AND loxah_terms.name = 'Telefon'";
                                         $telefon_L3 = mysqli_query($link, $QTelefon_L3);
                                         $TelefonRow_L3 = mysqli_fetch_assoc($telefon_L3);
 
 
-                                        $QKuhinja = "SELECT  wpdg_terms.name
-                                        from wpdg_term_relationships
-                                        LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-                                        LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-                                        LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-                                        WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+                                        $QKuhinja = "SELECT  loxah_terms.name
+                                        from loxah_term_relationships
+                                        LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+                                        LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+                                        LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+                                        WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
                                         AND post_status='publish'
-                                        AND wpdg_posts.ID = ".$row3["ID"].
-                                        " AND wpdg_terms.name = 'Čajna kuhinja'";
+                                        AND loxah_posts.ID = ".$row3["ID"].
+                                        " AND loxah_terms.name = 'Čajna kuhinja'";
                                         $cajna_kuhinja = mysqli_query($link, $QKuhinja);
                                         $cajnaKuhinjaRow = mysqli_fetch_assoc($cajna_kuhinja);
 
@@ -1629,13 +1629,13 @@ if($cijenaRow3['meta_value'] < 1 || is_null($cijenaRow3['meta_value']) || $cijen
 echo '<image_list>',"\n";
             echo '<image>'. $slikeRow3["guid"].'</image>',"\n";
                 //galerija slika
-                $Qgalerija3 = "select DISTINCT wpdg_posts.guid
-                from wpdg_posts
-                INNER JOIN wpdg_postmeta ON (wpdg_postmeta.meta_value = wpdg_posts.ID)
-                WHERE wpdg_posts.post_type = 'attachment'
-                AND wpdg_postmeta.meta_key = 'REAL_HOMES_property_images'
-                AND wpdg_postmeta.post_id = ".$row3["ID"].
-                " ORDER BY wpdg_posts.post_date DESC";
+                $Qgalerija3 = "select DISTINCT loxah_posts.guid
+                from loxah_posts
+                INNER JOIN loxah_postmeta ON (loxah_postmeta.meta_value = loxah_posts.ID)
+                WHERE loxah_posts.post_type = 'attachment'
+                AND loxah_postmeta.meta_key = 'REAL_HOMES_property_images'
+                AND loxah_postmeta.post_id = ".$row3["ID"].
+                " ORDER BY loxah_posts.post_date DESC";
                                           $gallery3 = mysqli_query($link, $Qgalerija3);
                                           while($galleryRow3= mysqli_fetch_assoc($gallery3)){
                                                 echo '<image>'. $galleryRow3["guid"].'</image>',"\n";
@@ -2023,10 +2023,10 @@ $tekst4 = $row4["post_content"];
 
 
 //polja - detalji
-$Qdetails4 = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row4["ID"]."
-and wpdg_postmeta.meta_key = 'REAL_HOMES_property_price'
-and wpdg_postmeta.meta_value >= 0";
+$Qdetails4 = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row4["ID"]."
+and loxah_postmeta.meta_key = 'REAL_HOMES_property_price'
+and loxah_postmeta.meta_value >= 0";
 $cijena4 = mysqli_query($link, $Qdetails4);
 $cijenaRow4 = mysqli_fetch_assoc($cijena4);
 
@@ -2034,12 +2034,12 @@ $cijenaRow4 = mysqli_fetch_assoc($cijena4);
 
 
 //naslovna slika
-$QslikeFe4 = "select DISTINCT  wpdg_posts.guid
-from wpdg_posts
-INNER JOIN wpdg_postmeta ON wpdg_postmeta.meta_value = wpdg_posts.ID
-WHERE wpdg_posts.post_type = 'attachment'
-AND wpdg_postmeta.meta_key = '_thumbnail_id'
-AND wpdg_postmeta.post_id = ".$row4["ID"];
+$QslikeFe4 = "select DISTINCT  loxah_posts.guid
+from loxah_posts
+INNER JOIN loxah_postmeta ON loxah_postmeta.meta_value = loxah_posts.ID
+WHERE loxah_posts.post_type = 'attachment'
+AND loxah_postmeta.meta_key = '_thumbnail_id'
+AND loxah_postmeta.post_id = ".$row4["ID"];
 $slika4 = mysqli_query($link, $QslikeFe4);
 $slikeRow4 = mysqli_fetch_assoc($slika4);
 
@@ -2047,15 +2047,15 @@ $slikeRow4 = mysqli_fetch_assoc($slika4);
 
 
 
-//lokacija wpdg
-$CityWP4 = "SELECT wpdg_terms.name
-from wpdg_terms
-RIGHT JOIN wpdg_term_taxonomy on wpdg_terms.term_id = wpdg_term_taxonomy.term_id
-LEFT JOIN wpdg_term_relationships ON wpdg_term_relationships.term_taxonomy_id = wpdg_term_taxonomy.term_taxonomy_id
-JOIN wpdg_posts on wpdg_posts.ID = wpdg_term_relationships.object_id
-WHERE wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_term_taxonomy.taxonomy = 'property-city'
-GROUP BY wpdg_term_taxonomy.parent";
+//lokacija loxah
+$CityWP4 = "SELECT loxah_terms.name
+from loxah_terms
+RIGHT JOIN loxah_term_taxonomy on loxah_terms.term_id = loxah_term_taxonomy.term_id
+LEFT JOIN loxah_term_relationships ON loxah_term_relationships.term_taxonomy_id = loxah_term_taxonomy.term_taxonomy_id
+JOIN loxah_posts on loxah_posts.ID = loxah_term_relationships.object_id
+WHERE loxah_posts.ID = ".$row4["ID"].
+" AND loxah_term_taxonomy.taxonomy = 'property-city'
+GROUP BY loxah_term_taxonomy.parent";
 $WPLokacija4 = mysqli_query($link, $CityWP4);
 $WPLokacijaRow4 = mysqli_fetch_assoc($WPLokacija4);
 $zupanijaname4 = $WPLOKACIJARow4["name"];
@@ -2090,9 +2090,9 @@ $zupanijaname4 = $WPLOKACIJARow4["name"];
 
 
 ///karta i google zapisi
-$QMap4 = "SELECT * FROM wpdg_postmeta where wpdg_postmeta.post_id = ".$row4["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_location'".
-" and wpdg_postmeta.meta_value >= 0";
+$QMap4 = "SELECT * FROM loxah_postmeta where loxah_postmeta.post_id = ".$row4["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_location'".
+" and loxah_postmeta.meta_value >= 0";
 $map4 = mysqli_query($link, $QMap4);
 $gMapRow4 = mysqli_fetch_assoc($map4);
 
@@ -2109,10 +2109,10 @@ $Lon4 = 0;
 
 
 
-$QbrojSoba4 = "SELECT meta_value FROM wpdg_postmeta where
-wpdg_postmeta.post_id = ".$row4["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
-and wpdg_postmeta.meta_value >= 0";
+$QbrojSoba4 = "SELECT meta_value FROM loxah_postmeta where
+loxah_postmeta.post_id = ".$row4["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_bedrooms'
+and loxah_postmeta.meta_value >= 0";
 $brSoba4 = mysqli_query($link, $QbrojSoba4);
 $sobeRow4 = mysqli_fetch_assoc($brSoba4);
 
@@ -2121,19 +2121,19 @@ $sobeRow4 = mysqli_fetch_assoc($brSoba4);
 
 
 
-$QSize4 = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row4["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_size'
-and wpdg_postmeta.meta_value >= 0";
+$QSize4 = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row4["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_size'
+and loxah_postmeta.meta_value >= 0";
 $size_4 = mysqli_query($link, $QSize4);
 $sizeRow4 = mysqli_fetch_assoc($size_4);
 $size4 = $sizeRow4["meta_value"];
 
 
-$QSizeLot4 = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row4["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_lot_size'
-and wpdg_postmeta.meta_value >= 0";
+$QSizeLot4 = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row4["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_lot_size'
+and loxah_postmeta.meta_value >= 0";
 $sizeL_4 = mysqli_query($link, $QSizeLot4);
 $sizeRowL4 = mysqli_fetch_assoc($sizeL_4);
 $sizeL4 = $sizeRowL4["meta_value"];
@@ -2141,156 +2141,156 @@ $sizeL4 = $sizeRowL4["meta_value"];
 
 
 
-$QYearBuild4 = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row4["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_year_built'
-and wpdg_postmeta.meta_value >= 0";
+$QYearBuild4 = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row4["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_year_built'
+and loxah_postmeta.meta_value >= 0";
 $yearB4 = mysqli_query($link, $QYearBuild4);
 $year4 = mysqli_fetch_assoc($yearB4);
 
 
 
-$Grijanje4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$Grijanje4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"]."
-AND wpdg_terms.name = 'Plinsko etažno'
-OR wpdg_terms.name = 'Radijatori na struju'
-OR wpdg_terms.name = 'Toplana'";
+AND loxah_posts.ID = ".$row4["ID"]."
+AND loxah_terms.name = 'Plinsko etažno'
+OR loxah_terms.name = 'Radijatori na struju'
+OR loxah_terms.name = 'Toplana'";
 $grijanjeTip4 = mysqli_query($link, $Grijanje4);
 $GrijanjeRow4 = mysqli_fetch_assoc($grijanjeTip4);
 
 
-$QParking4 = "SELECT wpdg_terms.name from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Parking' ";
+$QParking4 = "SELECT loxah_terms.name from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature' AND post_status='publish' AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Parking' ";
 $parking4 = mysqli_query($link, $QParking4);
 $ParkingRow4 = mysqli_fetch_assoc($parking4);
 
 
 
-$QKlima4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QKlima4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Klima uređaj' ";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Klima uređaj' ";
 $klima4 = mysqli_query($link, $QKlima4);
 $KlimaRow4 = mysqli_fetch_assoc($klima4);
 
 
 
-$QVlList4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QVlList4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Vlasnički list u posjedu'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Vlasnički list u posjedu'";
 $Vlist4 = mysqli_query($link, $QVlList4);
 $VlistRow4 = mysqli_fetch_assoc($Vlist4);
 
 
 
 
-$QGaraza = "SELECT meta_value FROM wpdg_postmeta
-where wpdg_postmeta.post_id = ".$row4["ID"].
-" and wpdg_postmeta.meta_key = 'REAL_HOMES_property_garage'
-and wpdg_postmeta.meta_value >= 0";
+$QGaraza = "SELECT meta_value FROM loxah_postmeta
+where loxah_postmeta.post_id = ".$row4["ID"].
+" and loxah_postmeta.meta_key = 'REAL_HOMES_property_garage'
+and loxah_postmeta.meta_value >= 0";
 $garagaB4 = mysqli_query($link, $QGaraza);
 $garaga4 = mysqli_fetch_assoc($garagaB4);
 
 
 
-$QBazen4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QBazen4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Bazen'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Bazen'";
 $Bazen4 = mysqli_query($link, $QBazen4);
 $BazenRow4 = mysqli_fetch_assoc($Bazen4);
 
 
 
-$QKablovska4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QKablovska4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Kablovska'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Kablovska'";
 $Kablovska4 = mysqli_query($link, $QKablovska4);
 $KablovskaRow4 = mysqli_fetch_assoc($Kablovska4);
 
 
 
-$QSatelit4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QSatelit4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Satelitska'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Satelitska'";
 $satelit4 = mysqli_query($link, $QSatelit4);
 $SatelitRow4 = mysqli_fetch_assoc($satelit4);
 
 
-$QAlarm4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QAlarm4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Alarm'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Alarm'";
 $alarm4 = mysqli_query($link, $QAlarm4);
 $AlarmRow4 = mysqli_fetch_assoc($alarm4);
 
 
 
-$QTelefon4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QTelefon4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Telefon (upotreba)'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Telefon (upotreba)'";
 $telefon_4 = mysqli_query($link, $QTelefon4);
 $TelefonRow_4 = mysqli_fetch_assoc($telefon_4);
 
 
-$QTelefon_L4 = "SELECT  wpdg_terms.name
-from wpdg_term_relationships
-LEFT JOIN wpdg_posts ON wpdg_term_relationships.object_id = wpdg_posts.ID
-LEFT JOIN wpdg_terms ON wpdg_terms.term_id = wpdg_term_relationships.term_taxonomy_id
-LEFT JOIN wpdg_term_taxonomy ON wpdg_term_taxonomy.term_taxonomy_id = wpdg_term_relationships.term_taxonomy_id
-WHERE wpdg_term_taxonomy.taxonomy = 'property-feature'
+$QTelefon_L4 = "SELECT  loxah_terms.name
+from loxah_term_relationships
+LEFT JOIN loxah_posts ON loxah_term_relationships.object_id = loxah_posts.ID
+LEFT JOIN loxah_terms ON loxah_terms.term_id = loxah_term_relationships.term_taxonomy_id
+LEFT JOIN loxah_term_taxonomy ON loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+WHERE loxah_term_taxonomy.taxonomy = 'property-feature'
 AND post_status='publish'
-AND wpdg_posts.ID = ".$row4["ID"].
-" AND wpdg_terms.name = 'Telefon'";
+AND loxah_posts.ID = ".$row4["ID"].
+" AND loxah_terms.name = 'Telefon'";
 $telefon_L4 = mysqli_query($link, $QTelefon_L4);
 $TelefonRow_L4 = mysqli_fetch_assoc($telefon_L4);
 
@@ -2332,13 +2332,13 @@ echo  '<category_id>9579</category_id>',"\n";
                     echo '<image_list>',"\n";
                                     echo '<image>'. $slikeRow4["guid"].'</image>',"\n";
                                         //galerija slika
-                                        $Qgalerija4 = "select DISTINCT wpdg_posts.guid
-                                        from wpdg_posts
-                                        INNER JOIN wpdg_postmeta ON (wpdg_postmeta.meta_value = wpdg_posts.ID)
-                                        WHERE wpdg_posts.post_type = 'attachment'
-                                        AND wpdg_postmeta.meta_key = 'REAL_HOMES_property_images'
-                                        AND wpdg_postmeta.post_id = ".$row4["ID"].
-                                        " ORDER BY wpdg_posts.post_date DESC";
+                                        $Qgalerija4 = "select DISTINCT loxah_posts.guid
+                                        from loxah_posts
+                                        INNER JOIN loxah_postmeta ON (loxah_postmeta.meta_value = loxah_posts.ID)
+                                        WHERE loxah_posts.post_type = 'attachment'
+                                        AND loxah_postmeta.meta_key = 'REAL_HOMES_property_images'
+                                        AND loxah_postmeta.post_id = ".$row4["ID"].
+                                        " ORDER BY loxah_posts.post_date DESC";
                                                                   $gallery4 = mysqli_query($link, $Qgalerija4);
                                                                   while($galleryRow4= mysqli_fetch_assoc($gallery4)){
                                                                         echo '<image>'. $galleryRow4["guid"].'</image>',"\n";
