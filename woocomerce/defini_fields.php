@@ -1,7 +1,7 @@
 <?php
 class QueryMain_Context{
 var $user = "root";
-var $db = "mojecipeledb";
+var $db = "cipele";
 var $passW = "";
 
 

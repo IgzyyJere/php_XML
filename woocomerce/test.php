@@ -27,12 +27,17 @@ while($row = mysqli_fetch_assoc($container))
 
   ///parent varable
   $parentQueryVariable = "SELECT * from loxah_posts
-  where post_type like 'product_variation' and post_status like 'publish' and  post_parent = ".$row['ID'];
+  where post_type like 'product_variation' and post_status like 'publish' and post_parent = ".$row['ID'];
   $variables_container = mysqli_query($link, $parentQueryVariable);
 
   ///SKU
-  $parentQuerySKU= "SELECT * FROM loxah_postmeta WHERE meta_key like '%sku' and post_id = ".$row['ID'];
+  $parentQuerySKU = "SELECT * FROM loxah_postmeta WHERE meta_key like '%sku' and post_id = ".$row['ID'];
   $sku_container = mysqli_query($link, $parentQuerySKU);
+
+
+  //image fix
+  $imageFixQ =  "SELECT * FROM loxah_postmeta WHERE meta_key like '_thumbnail_id' and post_id = ".$row['ID'];
+  $imageFixquery = mysqli_query($link, $imageFixQ);
 
   echo '<row>';
           //naslov
@@ -49,7 +54,20 @@ while($row = mysqli_fetch_assoc($container))
                        $imageQuery = "SELECT * FROM loxah_posts where post_name like '$kk' and post_type like 'attachment'";
                        $image_container = mysqli_query($link, $imageQuery);
                        $image = mysqli_fetch_assoc($image_container);
-                       echo '<image>'.$image['guid'].'</image>';
+                       if($image != null){
+                        echo '<image>'.$image['guid'].'</image>';
+                       }
+                       else{
+                        while($row_sku2 = mysqli_fetch_assoc($imageFixquery)){
+                          $kk2 = $row_sku2['meta_value'];
+                          $imageQuery2 = "SELECT * FROM loxah_posts where id = '$kk2' and post_type like 'attachment'";
+                          $image_container2 = mysqli_query($link, $imageQuery2);
+                          $image2 = mysqli_fetch_assoc($image_container2);
+                          echo '<image>'.$image2['guid'].'</image>';
+                        }
+                      
+                       }
+                   
             }
 
                 
