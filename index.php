@@ -62,7 +62,7 @@
       </li>
      
       <li class="nav-item">
-       <a class="nav-link" href="woocomerce/index_export.php">Woocomerce test</a>
+       <a class="nav-link" href="woocomerce/test.php">Woocomerce test</a>
  </li>
 
 
@@ -83,6 +83,33 @@
     <p class="card-text">Klikni i rješio si, ako si napravio pritom kod ;)</p>
   
 <p>Za T-tomislav dio, svaka aplikacija ima genereriranje google map koda
+
+<?php
+$conn = mysqli_connect("localhost", "root", "");
+$result = mysqli_query($conn,'SHOW DATABASES'); 
+while ($row = mysqli_fetch_array($result)) { 
+    echo $row[0]."<br>"; 
+}
+
+
+
+$path = 'htdocs';
+
+$dirs = array();
+
+// directory handle
+$dir = dir($path);
+
+while (false !== ($entry = $dir->read())) {
+    if ($entry != '.' && $entry != '..') {
+       if (is_dir($path . '/' .$entry)) {
+            $dirs[] = $entry; 
+       }
+    }
+}
+
+echo "<pre>"; print_r($dirs); exit;
+?>
 
 
   </div>
