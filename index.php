@@ -62,7 +62,7 @@
       </li>
      
       <li class="nav-item">
-       <a class="nav-link" href="woocomerce/test.php">Woocomerce test</a>
+       <a class="nav-link" href="woocomerce/bazzar_mc.php">Woocomerce test</a>
  </li>
 
 
