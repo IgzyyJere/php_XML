@@ -1,0 +1,57 @@
+--
+-- Indexes for table `wpdg_actionscheduler_logs`
+--
+ALTER TABLE `wpdg_actionscheduler_logs`
+  ADD PRIMARY KEY (`log_id`),
+  ADD KEY `action_id` (`action_id`),
+  ADD KEY `log_date_gmt` (`log_date_gmt`)
+MySQL said: Documentation
+
+#1062 - Duplicate entry '0' for key 'PRIMARY'
+
+
+
+UPDATE wp_posts SET post_content=(REPLACE (post_content, ‘https://mojecipele.com/’,'http://localhost:8001/mojecipele/’));
+
+
+UPDATE wpdg_options SET option_value = '' WHERE option_name = 'active_plugins';
+UPDATE wpdg_options SET option_value = 'http://localhost:8001/mojecipele2_old/' WHERE option_name = 'siteurl';
+UPDATE wpdg_options SET option_value = 'http://localhost:8001/mojecipele2_old/' WHERE option_name = 'home';
+
+
+
+
+
+UPDATE wp_posts SET guid = replace(guid, 'http://www.oldurl','http://www.newurl');
+
+UPDATE wp_posts SET post_content = replace(post_content, 'http://www.oldurl', 'http://www.newurl');
+
+UPDATE wp_postmeta SET meta_value = replace(meta_value,'http://www.oldurl','http://www.newurl');
+
+
+
+SELECT * FROM `wp_postmeta` WHERE meta_value like '%penguinfootprints.com%'
+
+
+siteurl
+home
+
+
+SELECT * FROM `wp_options` where option_name = 'db_version'
+
+S*SYm2z5b?7J
+
+
+mojecipe_cici2
+
+5.5.3
+
+
+
+Main_M_f_Vuco  
+0Hh9lgsEH^VcRipw!g%N%pwS
+
+--------------------------------IVA (SEO)
+
+Work_!SeoManager
+lozinka : KA*qvvOrdzjFbO&GdAik4#dc

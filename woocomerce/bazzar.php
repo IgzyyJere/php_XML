@@ -1,6 +1,4 @@
 <?php
-header('Content-Type: text/xml');
-echo '<?xml version="1.0" encoding="utf-8"?>';
 
 include 'defini_fields.php';
 $Contextz_Q = new QueryMain_Context();
@@ -10,8 +8,8 @@ mysqli_set_charset($link,"utf8");
 
 
 
-
-echo '<root>';
+$xmlString = '<?xml version="1.0" encoding="utf-8"?>';
+$xmlString .= '<root>';
 
 //main query
 $container = mysqli_query($link, $Contextz_Q->queryProduct);
@@ -39,15 +37,15 @@ while($row = mysqli_fetch_assoc($container))
   $imageFixQ =  "SELECT * FROM loxah_postmeta WHERE meta_key like '_thumbnail_id' and post_id = ".$row['ID'];
   $imageFixquery = mysqli_query($link, $imageFixQ);
 
-  echo '<row>';
+  $xmlString .= '<row>';
           //naslov
-          echo '<title>'.$row['post_title'].'</title>', "\n";
-          //echo '<description>'.$opis_content.'</description>', "\n";
-          echo '<description><![CDATA['.$opis_content.']]></description>', "\n"; 
+          $xmlString .= '<title>'.$row['post_title'].'</title>';
+          //$xmlString .= '<description>'.$opis_content.'</description>', "\n";
+          $xmlString .= '<description><![CDATA['.$opis_content.']]></description>'; 
 
             while($row_sku = mysqli_fetch_assoc($sku_container))
             {
-              echo '<id>'.$row_sku['meta_value'].'</id>';
+              $xmlString .= '<id>'.$row_sku['meta_value'].'</id>';
 
                        //image
                        $kk = $row_sku['meta_value'];
@@ -55,7 +53,7 @@ while($row = mysqli_fetch_assoc($container))
                        $image_container = mysqli_query($link, $imageQuery);
                        $image = mysqli_fetch_assoc($image_container);
                        if($image != null){
-                        echo '<image>'.$image['guid'].'</image>';
+                        $xmlString .= '<image>'.$image['guid'].'</image>';
                        }
                        else{
                         while($row_sku2 = mysqli_fetch_assoc($imageFixquery)){
@@ -63,7 +61,7 @@ while($row = mysqli_fetch_assoc($container))
                           $imageQuery2 = "SELECT * FROM loxah_posts where id = '$kk2' and post_type like 'attachment'";
                           $image_container2 = mysqli_query($link, $imageQuery2);
                           $image2 = mysqli_fetch_assoc($image_container2);
-                          echo '<image>'.$image2['guid'].'</image>';
+                          $xmlString .= '<image>'.$image2['guid'].'</image>';
                         }
                       
                        }
@@ -72,43 +70,108 @@ while($row = mysqli_fetch_assoc($container))
 
                 
 
-          //echo '<stock>'.$row["meta_value"].'</stock>'; nema ukupno samo pojedinčano po brojevima
-          echo '<id_control>'.$row["ID"].'</id_control>';
+          //$xmlString .= '<stock>'.$row["meta_value"].'</stock>'; nema ukupno samo pojedinčano po brojevima
+          $xmlString .= '<id_control>'.$row["ID"].'</id_control>';
          
-                echo'<variants>';
+                $xmlString .='<variants>';
 
                     while($row_variables = mysqli_fetch_assoc($variables_container))
                     {
-                      echo '<variant>';
+                      $xmlString .= '<variant>';
                         $filterBroj = preg_replace('/[^0-9]/', '', $row_variables['post_title']);
-                        echo '<variant_title>'.$filterBroj.'</variant_title>', "\n"; //broj cipele
-                        echo '<variant_title_id>'.$row_variables['ID'].'</variant_title_id>', "\n"; //id broja cipele
+                        $xmlString .= '<variant_title>'.$filterBroj.'</variant_title>'; //broj cipele
+                        $xmlString .= '<variant_title_id>'.$row_variables['ID'].'</variant_title_id>'; //id broja cipele
 
                                 //stock broja cipele
                                 $stockByNumQuery= "SELECT * FROM loxah_postmeta where meta_key like '_stock' and post_id = ".$row_variables['ID'];
                                 $stock_variabales = mysqli_query($link, $stockByNumQuery);
                                 while($row_stockVariables = mysqli_fetch_assoc($stock_variabales)){
-                                  echo '<variant_stock>'.$row_stockVariables['meta_value'].'</variant_stock>', "\n";
+                                  $xmlString .= '<variant_stock>'.$row_stockVariables['meta_value'].'</variant_stock>';
                                 }
-                      echo '</variant>';
+                      $xmlString .= '</variant>';
 
                       $saleActionPriceQuery = "SELECT * FROM loxah_postmeta where meta_key LIKE '_sale_price' and post_id = " .$row_variables['ID'];
                       $sale_price_action = mysqli_query($link, $saleActionPriceQuery);
                       $dataPrice_action = mysqli_fetch_assoc($sale_price_action);
-                      echo '<discounted_price>'.$dataPrice_action['meta_value'].'</discounted_price>', "\n";
+                      $xmlString .= '<discounted_price>'.$dataPrice_action['meta_value'].'</discounted_price>';
 
 
                       $salePriceQuery = "SELECT * FROM loxah_postmeta where meta_key LIKE '_regular_price' and post_id = " .$row_variables['ID'];
                       $sale_price = mysqli_query($link, $salePriceQuery);
                       $dataPrice = mysqli_fetch_assoc($sale_price);
-                      echo '<base_price>'.$dataPrice['meta_value'].'</base_price>', "\n";
+                      $xmlString .= '<base_price>'.$dataPrice['meta_value'].'</base_price>';
                                      
                      }
-          echo'</variants>';
-echo '</row>'; //end proizvod
+          $xmlString .='</variants>';
+$xmlString .= '</row>'; //end proizvod
 }// KRAJ LOOPa stanova prodaja
 
-echo '</root>';
+$xmlString .= '</root>';
 
+
+
+$dom = new DOMDocument;
+$dom->preserveWhiteSpace = FALSE;
+$dom->loadXML($xmlString);
+
+$dom->formatOutput = TRUE;
+//Save XML as a file
+$dom->save('xmlData/bazzar_mc.xml');
+
+
+
+echo '<!DOCTYPE html>
+<html>
+<head>
+<title>Bazzar</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js" integrity="sha384-LtrjvnR4Twt/qOuYxE721u19sVFLVSA4hf/rRt6PrZTmiPltdZcI7q7PXQBYTKyf" crossorigin="anonymous"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+<script>
+ $(document).ready(function(){
+ 
+ //$("#alert").show();
+ setTimeout(function() { $("#alert").hide(); }, 5000);
+ 
+ 
+    setInterval(function(){ reload_page(); },600000);
+ });
+
+ function reload_page()
+ {
+    window.location.reload(true);
+    // $("#alert").hide();
+ }
+ 
+ 
+</script>
+
+</head>
+<body>
+
+
+<div class="container" style="margin-top:100px">
+
+
+<div class="jumbotron">
+  <h1 class="display-4">Bazzar</h1>
+  <hr class="my-4">
+  <p>Imaj tvoren URL da bi se skripta mogla sama ažurirati ili ručno klikni na osviježi!!, prevremeno ;)</p>
+  <a class="btn btn-primary btn-lg" href="javascript:void(0);" role="button" onclick="reload_page();">Osviježi</a>
+  <br/>
+  <div class="alert alert-primary" role="alert" id="alert">
+ XML je kreiran!!
+</div>
+</div>
+
+
+</div>
+
+</body>
+</html>';
 
 ?>
+
