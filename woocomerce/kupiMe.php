@@ -16,15 +16,27 @@ while($row = mysqli_fetch_assoc($container))
 
   ///kategorija
   $ID = $row['ID'];
-  $querycategory = "select loxah_terms.name, loxah_terms.term_id, loxah_terms.term_group from loxah_terms 
+  $querycategory1 = "select loxah_terms.name, loxah_terms.term_id, loxah_terms.term_group from loxah_terms 
   left join loxah_term_relationships on loxah_term_relationships.term_taxonomy_id = loxah_terms.term_id  
   left join loxah_posts on loxah_posts.ID = loxah_term_relationships.object_id 
   left join loxah_term_taxonomy on loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
   where loxah_term_taxonomy.taxonomy like 'product_cat'
   and loxah_posts.ID = '$ID'  
-  order by loxah_terms.name ASC LIMIT 1";
-  $category_container = mysqli_query($link, $querycategory);
-  $category = mysqli_fetch_assoc($category_container);
+  order by loxah_terms.name ASC LIMIT 1 ";
+  $category_container1 = mysqli_query($link, $querycategory1);
+  $category_asc = mysqli_fetch_assoc($category_container1);
+
+
+
+  $querycategory2 = "select loxah_terms.name, loxah_terms.term_id, loxah_terms.term_group from loxah_terms 
+  left join loxah_term_relationships on loxah_term_relationships.term_taxonomy_id = loxah_terms.term_id  
+  left join loxah_posts on loxah_posts.ID = loxah_term_relationships.object_id 
+  left join loxah_term_taxonomy on loxah_term_taxonomy.term_taxonomy_id = loxah_term_relationships.term_taxonomy_id
+  where loxah_term_taxonomy.taxonomy like 'product_cat'
+  and loxah_posts.ID = '$ID'  
+  order by loxah_terms.name DESC LIMIT 1 ";
+  $category_container2 = mysqli_query($link, $querycategory2);
+  $category_desc = mysqli_fetch_assoc($category_container2);
 
 
   //filtriranje texta cipele
@@ -85,7 +97,25 @@ while($row = mysqli_fetch_assoc($container))
          
                 $xmlString .='<variants>';
              
-                $xmlString .='<kategorija>'.$category['name'].'</kategorija>';
+
+                // if($category_asc['name'] != "Akcija i popusti" && $category_asc['name'] != "Outlet" && $category_asc['name'] != "Nova kolekcija"){
+                //     $xmlString .='<kategorija>'.$category_asc['name'].'</kategorija>';
+                // }
+                // elseif($category_asc['name'] == "Akcija i popusti" && $category_asc['name'] == "Outlet" && $category_asc['name'] == "Nova kolekcija" && $category_desc['name'] != "Akcija i popusti" && $category_desc['name'] != "Outlet" && $category_desc['name'] != "Nova kolekcija"){
+                //   $xmlString .='<kategorija>'.$category_desc['name'].'</kategorija>';
+                // }else{
+                //   $xmlString .='<kategorija>--Cipele--</kategorija>';
+                // }
+                
+
+                if(strcmp($category_asc['name'], "Akcija i popusti") !== 0 && strcmp($category_asc['name'], "Outlet") !== 0 && strcmp($category_asc['name'], "Nova kolekcija") !== 0 && strcmp($category_asc['name'], "Veliki brojevi") !== 0){
+                  $xmlString .='<kategorija>'.$category_asc['name'].'</kategorija>';
+                }
+                elseif(strcmp($category_desc['name'], "Akcija i popusti") !== 0 && strcmp($category_desc['name'], "Outlet") !== 0 && strcmp($category_desc['name'], "Nova kolekcija") !== 0 && strcmp($category_desc['name'], "Veliki brojevi") !== 0){
+                  $xmlString .='<kategorija>'.$category_desc['name'].'</kategorija>';
+                }
+
+              
 
                     while($row_variables = mysqli_fetch_assoc($variables_container))
                     {
