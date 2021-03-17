@@ -1,0 +1,153 @@
+------------------------------------------------------------------------------------------------------------------------
+* 11.03.2021 WOOCMERCE DEV API
+*Autor : Igor Jerčić	
+*
+*
+-------------------------------------------------------------------------------------------------------------------------
+
+-----***1 UNOS U ORDERS***-----
+
+1.Unos podataka u POSTS tablicu
+
+Post title : Order &ndash; June 9, 2014 @ 10:02 AM   Datum 
+Post status : wc-processing, wc-on-hold. _wc_pending, wc-completed, wc-cancelled
+post name : order
+post type : shop_order
+
+
+
+INSERT INTO  loxah_posts
+( 
+ post_author, 
+ post_date, 
+ post_date_gmt, 
+ post_title, 
+ post_status, 
+ comment_status,
+ ping_status, 
+ post_name, 
+ post_type
+ ) 
+ VALUES 
+ (
+ 1,
+ CURRENT_DATE() ,
+ gmmktime() ,
+ 'Order Bazzar &ndash;',
+ 'wc-completed', 
+ 'closed',
+ 'closed',
+ 'order',
+ 'shop_order'
+ )
+ 
+ 
+ 
+ 
+ 2. Unos podataka u POST_META, to je puno podataka o korisniku koje se moraju unjeti
+ 
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_order_stock_reduced','yes')    ---skini stanje
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_customer_user','0')    ---korisnik u bazi oji je kupac
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_payment_method','Bazzar shop')    ---način plačanja
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_payment_method_title','Bazzar shop/online plačanje')    ---način plačanja
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_created_via','Bazzar')    ---način naruđbe
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_first_name','Bazzar')    ---način naruđbe
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_last_name','Bazzar')    ---način naruđbe
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_company',' Prati me d.o.o')    ---tvrtka
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_address_1','')    ---tvrtka adresa
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_city','Zagreb')    ---tvrtka adresa
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_postcode','10000')    ---tvrtka adresa
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_billing_country','Croatia')    ---tvrtka adresa
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_shipping_country','HR')    ---tvrtka adresa
+
+
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_shipping_country','HR')    ---tvrtka adresa
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_order_currency','HRK')    ---plačanje valuta
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_order_total','220.00')    ---cijena bez PDV-a
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_prices_include_tax','no')    ---cijena bez PDV-a
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_order_shipping_tax','0')    ---shipping nula
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_order_tax','25')    ---porez nula jer je rješeno kod bazzar
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_order_total','245.00')    ---kompletan račun
+INSERT INTO loxah_postmeta(post_id, meta_key, meta_value) VALUES (POST_ID, '_paid_date','2021-03-22 18:59:58')    ---vrijeme računa
+
+
+
+ 3. Unos podataka u WOOCOMMERCE_ORDER_ITEMS samo jedna linija
+ 
+ INSERT INTO loxah_woocommerce_order_items
+ (
+ order_item_name,
+ order_item_type,
+ order_id
+ ) 
+ VALUES
+ (
+ POST_NAME,
+ 'line_item',
+ POST_ID
+ )
+ 
+ 
+ 4. Unos podataka u WOOCOMMERCE_ORDER_ITEMMETA
+ ------- ORDER_ITEM_ID = loxah_woocommerce_order_items - order_item_id (ID)
+ 
+ 
+ 
+Rješenje za Product_Id
+select meta_value from loxah_posts where meta_value  = SKU
+ 
+Rješenje za Varidacija id
+
+SELECT ID from loxah_posts
+where post_type like 'product_variation' and post_status like 'publish' and post_parent = PRODUCT_ID
+and post_excerpt  like '%41'
+
+Tražiš u polju post_excerpt  po stringu Veličina:: 41 dok int je izuzetak
+
+ 
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_product_id', PRODUCT_ID) ---- veza s proizvodom id
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_variation_id', PRODUCT_ID) ---- veza s proizvodom --varijacija
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_qty', '1') ---- komada koliko
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_tax_class', '') ---- ??
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_line_subtotal', '199') ---- cijena
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_line_subtotal_tax', '0') ---- ??
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_line_tax', '0') ---- tax
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'pa_velicina', '32') ---- veličina
+INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES (ORDER_ITEM_ID,'_reduced_stock', '1') ---- skidaj s stanja
+
+
+
+provjera prije unosa
+1. nađi proizvodo
+select * from loxah_postmeta  where meta_value  = 'Q12';
+
+
+2. /*nađi proizvod iz gore upita*/
+SELECT * from  loxah_posts where id = 15563;
+
+
+3. /*nađi broj od prizvoda koji je prodan*/
+SELECT from loxah_posts
+where post_type like 'product_variation' and post_status like 'publish' and post_parent = 15563
+and post_excerpt  like '%40';
+
+
+
+---------------------TODO---------------------
+TREBA VIDJETI ŠTO AKO SE PRODA VIŠE KOMADA ISTE CIPELE I ŠTO AKO NIJE NAĐEN BROJ I KAKO SE SMANJUJE KOLIČINA
+CIJNE SU BEZ PDV-A
+
+razvij sigurnost :
+
+https://docs.agora.io/en/All/faq/restful_authentication
+   
+  
+ 
+ 
+
+
+
+
+
+ 
+ 
