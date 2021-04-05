@@ -6,7 +6,7 @@ $link = new mysqli("localhost", $Contextz_Q->user, $Contextz_Q->passW, $Contextz
 mysqli_set_charset($link,"utf8");
 
 //samo ua tesetiranje
-$url = "http://localhost:8001/php_XML/APP/3-work/test.json";
+$url = "http://localhost:8001/php_XML/woocomerce/APP/test.json";
 
 
 $ch = curl_init($url);
@@ -40,7 +40,7 @@ $data = json_decode($json,true);
 $countProductJson = 0;
     //brojać artikala
     for($y = 1; $y <= count($data); $y++){
-        //echo "($y) = broj broj objekata ".count($data)." ----<br/>";
+        echo "($y) = broj broj objekata ".count($data)." ----<br/>";
         $countProductJson++;
     }     
 
