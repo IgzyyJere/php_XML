@@ -119,11 +119,11 @@ INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_valu
 
 provjera prije unosa
 1. nađi proizvodo
-select * from loxah_postmeta  where meta_value  = 'Q12';
+select * from loxah_postmeta where meta_value like 'Q12';
 
 
 2. /*nađi proizvod iz gore upita*/
-SELECT * from  loxah_posts where id = 15563;
+SELECT * from  loxah_posts where ID = 15563;
 
 
 3. /*nađi broj od prizvoda koji je prodan*/
@@ -132,14 +132,47 @@ where post_type like 'product_variation' and post_status like 'publish' and post
 and post_excerpt  like '%40';
 
 
+4./*nađi broj i skini sa stanja i eventualno zatvori da nema tog broja ako je komad manji od 1*/
+
+
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = PRODUCT_ID ---od post_parent
+		and meta_key like '_stock'
+		
+		
+//na stanju ili ??
+
+select meta_id from loxah_postmeta where post_id = PRODUCT_ID ---od post_parent
+and meta_key like '_stock_status'
+
+
+61686
+select * from loxah_postmeta where meta_key like '_stock_status'
+		and meta_key = meta_id
+		and post_id =  PRODUCT_ID ---od post_parent
+		
+		
+var @komad  = _stock 		
+var @komadOstalo = komad -1;
+
+if(komadOstalo > 1){
+UPDATE loxah_postmeta SET meta_value = @komadOstalo WHERE loxah_postmeta.meta_id = meta_id
+}
+else{
+UPDATE loxah_postmeta SET meta_value = 'outofstock' WHERE loxah_postmeta.meta_id = meta_id --izmjena stocka
+}
+
 
 ---------------------TODO---------------------
 TREBA VIDJETI ŠTO AKO SE PRODA VIŠE KOMADA ISTE CIPELE I ŠTO AKO NIJE NAĐEN BROJ I KAKO SE SMANJUJE KOLIČINA
 CIJNE SU BEZ PDV-A
 
+
 razvij sigurnost :
 
 https://docs.agora.io/en/All/faq/restful_authentication
+
+
+
    
   
  

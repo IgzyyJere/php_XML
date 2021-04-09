@@ -24,4 +24,17 @@ ORDER BY post_date DESC";
 
 
 }
+
+
+//https://codeofaninja.com/2018/09/rest-api-authentication-example-php-jwt-tutorial.html
+//https://stackoverflow.com/questions/5647461/how-do-i-send-a-post-request-with-php
+//https://zetcode.com/php/getpostrequest/
+//https://developer.okta.com/blog/2019/03/08/simple-rest-api-php
+
+//https://reqbin.com/req/php/v0crmky0/rest-api-post-example
+//https://support.liveagent.com/061754-How-to-make-REST-calls-in-PHP
+
+
+
+//https://jinujawad.com/php-send-http-get-post-request-and-read-json-response/
 ?>

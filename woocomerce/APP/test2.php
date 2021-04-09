@@ -40,11 +40,8 @@ if(isset($_POST['submit'])) {
               
 
             curl_setopt( $ch, CURLOPT_POSTFIELDS, $bodyData );
-
             curl_setopt( $ch, CURLOPT_HTTPHEADER,  array("Authorization-Key: 5996880420","headerdata: ".$data.",Content-Type:application/json;charset=utf-8"));
-
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-
             $result = curl_exec($ch);
 
             curl_close($ch);
