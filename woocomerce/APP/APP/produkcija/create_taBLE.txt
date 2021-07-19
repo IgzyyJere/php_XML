@@ -1,0 +1,29 @@
+CREATE TABLE tbl_BazzarELog (
+    bazzar_ID int NOT NULL AUTO_INCREMENT,
+    dateTimeevent DATETIME NOT NULL,
+    status varchar(100) NULL,
+    Opis_Error varchar(255) NULL,
+	ipAdress varchar(50) NULL,
+	SKU varchar(10) NULL,
+	bazzarID varchar(10) INT,
+    PRIMARY KEY (bazzar_ID)
+)
+
+
+$date = date('d-m-y H:i:s');
+$ErrorInsert = "
+INSERT INTO tbl_BazzarELog
+(dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID) VALUES ($date, "ERROR", ,)";
+
+$linkError->query($ErrorInsert);
+
+
+   (post_id, meta_key, meta_value) VALUES (".$getPostId["ID"].",'_billing_company',' Prati me d.o.o')";
+   
+   
+   #region procuction server connection
+$user = 'mojecipe_userSh';
+$db = 'mojecipe_dbSho_p';
+$passW = 'rLwW0wm@4Eh;';
+$link = new mysqli("localhost", $user, $passW, $db);
+#endregion
