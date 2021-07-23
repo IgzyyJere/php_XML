@@ -1,10 +1,9 @@
 <?php
 
-   
 #region procuction server connection
-$user = 'mojecipe_userSh';
-$db = 'mojecipe_dbSho_p';
-$passW = 'rLwW0wm@4Eh;';
+$user = 'mojecipe_mojecipedev';
+$db = 'mojecipe_dev';
+$passW = '*p{XDDIN7;VK';
 $link = new mysqli("localhost", $user, $passW, $db);
 #endregion
 
@@ -13,7 +12,7 @@ $userE = 'mojecipe_mileSa_VL';
 $dbE = 'mojecipe_cr_mpK';
 $passWE = 'BVFcUu4Yhg$D';
 $linkError = new mysqli("localhost", $userE, $passWE, $dbE);
-$date = date('d-m-y H:i:s');
+$date = date('yy-m-d H:i:s');
 #endregion
 
 
@@ -127,11 +126,9 @@ else {
           $gmtDate = date('Y-m-d H:i:s');
           $return = "";
 
-          $json_arr = '';
-          file_put_contents('data.json', json_encode($json_arr));
+
         
             $countProductJson = 0;
-            
 
             foreach($data as $valueData){
             $countProductJson = $countProductJson+1;
@@ -242,8 +239,7 @@ else {
                                                               "Broj cipele : ".$variantData."\r\n".
                                                               "Stanje cipele  : ".$onStock."\r\n".
                                                               "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                                                              $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                                                              "CC: info@mojecipele.com";
+                                                              $headers = "From: BazzarReport@mojecipele.com";
                                                               mail($to,$subject,$txt,$headers);
                                                               $checkForGo = false;
 
@@ -524,8 +520,8 @@ else {
                                                                             "Naziv proizvoda : ".$title ."\r\n".
                                                                             "Broj cipele : ".$variantData."\r\n".
                                                                             "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                                                                            $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                                                                            "CC: info@mojecipele.com";
+                                                                            $headers = "From: BazzarReport@mojecipele.com";// "\r\n" .
+                                                                            //"CC: info@mojecipele.com";
                                                                             
                                                                             mail($to,$subject,$txt,$headers);
                                                 
@@ -548,33 +544,11 @@ else {
                                                                             ('$date',        'ERROR','".$message."', '".$_SERVER['REMOTE_ADDR']."' , 'SKU', 0)";
                                                                             $linkError->query($ErrorInsert);
                                                                            // echo ".$ErrorInsert.";
-
-                                                                           $subject = "ERROR NA SEKTORU PRODAJE";
-                                                                           $txt = "Upravo je prodan artikl na bazzar shopu ALI S GREŠKOM,"."\r\n".
-                                                                           "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
-                                                                           "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
-                                                                           "Naziv proizvoda : ".$title ."\r\n".
-                                                                           "Broj cipele : ".$variantData."\r\n".
-                                                                           "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                                                                           $headers = "From: BazzarReport@mojecipele.com";
-                                                                           
                                                                           }
     
                                                                           $link->close();
                                           
                                                                           $fileToDelete = "data.json";
-                                                                          $json_arr = '';
-                                                                          file_put_contents('data.json', json_encode($json_arr));
-
-                                                                          
-                                                                          mysql_free_result($getProductID);
-                                                                          mysql_free_result($getVariantId);
-                                                                          mysql_free_result($getFSTOCK);
-                                                                          mysql_free_result($getSTOCK);
-                                                                          mysql_free_result($getStock);  
-                                                                          mysql_free_result($postId); 
-                                                                          mysql_free_result($getOrderID); 
-                                                                          mysql_free_result($getVariantId); 
     
                                         
                                               }///nema problema s stanjem
@@ -608,17 +582,7 @@ else {
                                               "Broj cipele : ".$variantData."\r\n".
                                               "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
                                               $headers = "From: BazzarReport@mojecipele.com";
-
-                                              
-                                              mysql_free_result($getProductID);
-                                              mysql_free_result($getVariantId);
-                                              mysql_free_result($getFSTOCK);
-                                              mysql_free_result($getSTOCK);
-                                              mysql_free_result($getStock);  
-                                              mysql_free_result($postId); 
-                                              mysql_free_result($getOrderID); 
-                                              mysql_free_result($getVariantId); 
-  
+                                              mail($to,$subject,$txt,$headers);
                                             }
                                 }
 
@@ -648,15 +612,15 @@ else {
                    // echo ".$ErrorInsert.";
     
                         $to = "igorsfera7@gmail.com";
-                        $subject = "Prodaja bazzar - NEMA PROIZVODA NA LAGERU ZA PRODAJU";
+                        $subject = "Prodaja bazzar - NEMA PRIZVODA NA LAGERU";
                         $txt = "Upravo je pokušano prodati artikl na bazzar shopu koji nije na stanju,"."\r\n".
                         "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
                         "Proizvod (Bazzar sales id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
                         "Naziv proizvoda : ".$title ."\r\n".
                         "Broj cipele : ".$variantData."\r\n".
                         "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                        $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                         "CC: info@mojecipele.com";
+                        $headers = "From: BazzarReport@mojecipele.com";// "\r\n" 
+                       // "CC: info@mojecipele.com";
                         mail($to,$subject,$txt,$headers);
     
                   }
@@ -684,7 +648,7 @@ else {
                 (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID) VALUES 
                 ('$date',        'ERROR','".$message."', '".$_SERVER['REMOTE_ADDR']."' , 'SKU', 0)";
                 $linkError->query($ErrorInsert);
-              
+               // echo ".$ErrorInsert.";
 
                         $to = "igorsfera7@gmail.com";
                         $subject = "Prodaja bazzar - NEMA TRAŽENOG BROJA";
@@ -694,8 +658,8 @@ else {
                         "Naziv proizvoda : ".$title ."\r\n".
                         "Broj cipele : ".$variantData."\r\n".
                         "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                        $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                        "CC: info@mojecipele.com";
+                        $headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
+                      //  "CC: info@mojecipele.com";  
                         mail($to,$subject,$txt,$headers);
               }
               }//CHECK PROIZVOD SKU
@@ -719,7 +683,7 @@ else {
                       (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID) VALUES 
                       ('$date',        'ERROR','".$message."', '".$_SERVER['REMOTE_ADDR']."' , 'SKU', 0)";
                       $linkError->query($ErrorInsert);
-                     
+                     // echo ".$ErrorInsert.";
               
 
               $to = "igorsfera7@gmail.com";
@@ -730,8 +694,8 @@ else {
               "Naziv proizvoda : ".$title ."\r\n".
               "Broj cipele : ".$variantData."\r\n".
               "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-              $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-              "CC: info@mojecipele.com";
+              $headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
+             // "CC: info@mojecipele.com";
               mail($to,$subject,$txt,$headers);
 
             }
@@ -770,8 +734,8 @@ else {
           "Naziv proizvoda : ".$title ."\r\n".
           "Broj cipele : ".$variantData."\r\n".
           "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-          $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-           "CC: info@mojecipele.com";
+          $headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
+         // "CC: info@mojecipele.com";
           
           mail($to,$subject,$txt,$headers);
         }
@@ -781,10 +745,5 @@ $data = implode(" - ", $dataToLog);
 $data .= PHP_EOL;
 $pathToFile = 'logSales.log';
 file_put_contents($pathToFile, $data, FILE_APPEND);
-if($countProductJson === $countSumProductJson ){
-  $fileToDelete = "data.json";
-  $json_arr = '';
-  file_put_contents('data.json', json_encode($json_arr));
-}
 
 ?>

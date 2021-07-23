@@ -171,9 +171,65 @@ razvij sigurnost :
 
 https://docs.agora.io/en/All/faq/restful_authentication
 
+NIJE ZABILJKEŽENO
+[{"title":"Crne Natikače S Mašnom","source_id":"U397","id":"45VA4DG","variant":"37","sku":" Crne Natikače S Mašnom - 37 - Order Q2ZEGR","purchase_price_cents":13134,"currency":"kn","quantity":1}]
+[{"title":"Crne Natikače S Mašnom","source_id":"U397","id":"45VA4DG","variant":"37","sku":" Crne Natikače S Mašnom - 37 - Order Q2ZEGR","purchase_price_cents":13134,"currency":"kn","quantity":1}]
+1. NAĐI PROIZVOD BY SKU
+  select post_id from loxah_postmeta where meta_value like 'U397'   //$SKU = $data[$x]["source_id"]; //SKU
+
+2. PROVJERI DOSTUPNOST broja s podacima iz step 1
+
+SELECT ID from loxah_posts
+where post_type like 'product_variation' 
+and post_status like 'publish' 
+and post_parent = 25589      ---27854
+and post_excerpt  LIKE '%37';
+
+--25593
+--27855
+
+3. -nadji meta_id ZA STOCK
+
+select meta_id from loxah_postmeta
+where post_id = 25593          ----id varijacice
+and meta_key like '_stock_status'
+
+--534008
+--605456
+
+4. NADJI PODATKE O STOCKU PREKO META_ID
+
+select meta_value, meta_id from loxah_postmeta
+where meta_id = 534008
+and meta_key like '_stock_status'";
+
+---instock  534008
+---outofstock 605456
 
 
-   
+5. da li je na stocka a ko je onda
+
+ select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 25593  ---------".$VId["ID"]." 
+  and meta_key like '_stock'";
+
+  ----_stock   534007 3
+
+
+
+  ZOVI TEST : 
+https://mojecipele.com/TEST/app-SvP/post.php
+
+
+          //get data from json data ---
+            $source_id = $valueData["source_id"]; //$data[$x]["source_id"]; //moj id SKU
+            $bazzarId = $valueData["id"]; //$data[$x]["id"]; //prodaja artikla id od bazzara
+            $piceFromBazzarValue = $valueData["purchase_price_cents"]; //$data[$x]["purchase_price_cents"]; 
+            $SKU = $valueData["source_id"]; //$data[$x]["source_id"]; //NASLOV ARTIKLA + NJIHOVA CJELODNEVNA NARUĐBA
+            $variantData =  $valueData["variant"]; //$data[$x]["variant"]; //broj cipele
+            $komada = $valueData["quantity"]; //$data[$x]["quantity"];
+            $title = $valueData["title"]; //$data[$x]["title"];
+
+
   
  
  
