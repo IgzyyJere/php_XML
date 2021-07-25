@@ -216,7 +216,11 @@ and meta_key like '_stock_status'";
 
 
 
-  ZOVI TEST : 
+
+
+
+
+ZOVI TEST : 
 https://mojecipele.com/TEST/app-SvP/post.php
 
 
@@ -228,6 +232,293 @@ https://mojecipele.com/TEST/app-SvP/post.php
             $variantData =  $valueData["variant"]; //$data[$x]["variant"]; //broj cipele
             $komada = $valueData["quantity"]; //$data[$x]["quantity"];
             $title = $valueData["title"]; //$data[$x]["title"];
+
+
+
+
+  //lets make up some data:
+  $udata['user'] = "mitch";
+  $udata['date'] = "2006-10-19";
+  $udata['accnt'] = "EDGERS";
+  $udata['data'] = $udata; //array inside
+  
+  
+  //var_dump($udata); //show what we made
+
+  //lets put that in a file
+  //$json = file_get_contents('file.json');
+  //$data = json_decode($json);
+  //$data[] = $udata;
+  //file_put_contents('file.json', json_encode($data));
+
+  //lets get our json data
+  //$json = file_get_contents('data.json');
+  //$data = json_decode($json);
+  //foreach ($data as $obj) {
+        //var_dump($obj->source_id);
+//  }
+
+
+
+
+
+------PROCEDURA 
+
+DELIMITER $$
+CREATE FUNCTION F_TEST(PID INT) RETURNS VARCHAR
+BEGIN
+/*DECLARE VALUES YOU MAY NEED, EXAMPLE:
+  DECLARE NOM_VAR1 DATATYPE [DEFAULT] VALUE;
+  */
+  DECLARE NAME_FOUND VARCHAR DEFAULT "";
+
+    SELECT EMPLOYEE_NAME INTO NAME_FOUND FROM TABLE_NAME WHERE ID = PID;
+  RETURN NAME_FOUND;
+END;//
+--END$$
+DELIMITER ;
+
+
+-------------------
+DELIMITER //
+
+CREATE PROCEDURE sp_test(var1 INT) 
+BEGIN   
+    DECLARE start  INT unsigned DEFAULT 1;  
+    DECLARE finish INT unsigned DEFAULT 10;
+
+    SELECT  var1, start, finish;
+
+    SELECT * FROM places WHERE place BETWEEN start AND finish; 
+END; //
+
+DELIMITER ;
+
+CALL sp_test(5);
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+------------ZA TESTIRANJE ('P85') 
+
+select post_id from loxah_postmeta where meta_value like 'P85'    I BROJ 38
+--20421
+
+
+SELECT ID from loxah_posts where post_type like 'product_variation' and post_status like 'publish' and post_parent = 20421 
+and post_excerpt LIKE '%38'
+--20422
+
+
+select meta_id from loxah_postmeta where post_id = 20422 and meta_key like '_stock_status'
+--377717
+
+
+
+select meta_value, meta_id from loxah_postmeta where meta_id = 377717 and meta_key like '_stock_status'
+--outofstock  
+--377717
+
+---STANJE CIPELA S $VId["ID"] KORAK 2
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 20422 and meta_key like '_stock'
+---377716  0 _stock
+
+
+
+
+------------ZA TESTIRANJE ('N3') 
+
+select post_id from loxah_postmeta where meta_value like 'N3'    I BROJ 38
+--21849
+
+
+SELECT * from loxah_posts where post_type like 'product_variation' and post_status like 'publish' and post_parent = 21849 
+and post_excerpt LIKE '%38'
+--21851
+
+
+select meta_id from loxah_postmeta where post_id = 21851 and meta_key like '_stock_status'
+--413140
+
+
+
+select meta_value, meta_id from loxah_postmeta where meta_id = 413140 and meta_key like '_stock_status'
+--413140
+--outofstock
+
+
+
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 20422 and meta_key like '_stock'
+
+--413139 0 _stock
+
+
+
+------------ZA TESTIRANJE ('M284') 
+
+select post_id from loxah_postmeta where meta_value like 'M284'    I BROJ 36
+--20500
+
+
+SELECT * from loxah_posts where post_type like 'product_variation' and post_status like 'publish' and post_parent = 20500 
+and post_excerpt LIKE '%36'
+---20502
+
+
+
+select meta_id from loxah_postmeta where post_id = 20502 and meta_key like '_stock_status'
+---379779
+
+
+
+select meta_value, meta_id from loxah_postmeta where meta_id = 379779 and meta_key like '_stock_status'
+--instock   379779
+
+
+
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 20502 and meta_key like '_stock'
+
+--_stock 379778 2kom
+
+
+
+
+
+------------ZA TESTIRANJE ('S53') 
+
+select post_id from loxah_postmeta where meta_value like 'M284'    I BROJ 36
+--4801
+
+
+SELECT * from loxah_posts where post_type like 'product_variation' and post_status like 'publish' and post_parent = 4801 
+and post_excerpt LIKE '%38'
+---4804
+
+
+
+select meta_id from loxah_postmeta where post_id = 4804 and meta_key like '_stock_status'
+---17463
+
+
+
+select meta_value, meta_id from loxah_postmeta where meta_id = 17463 and meta_key like '_stock_status'
+--instock   17463
+
+
+
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 4804 and meta_key like '_stock'
+
+--_stock 17462 2kom
+
+
+
+
+
+
+------------ZA TESTIRANJE ('S61') 
+
+select post_id from loxah_postmeta where meta_value like 'S61'    I BROJ 38
+--4826
+
+
+
+SELECT * from loxah_posts where post_type like 'product_variation' and post_status like 'publish' and post_parent = 4826 
+and post_excerpt LIKE '%38'
+
+--4830
+
+
+
+select meta_id from loxah_postmeta where post_id = 4830 and meta_key like '_stock_status'
+
+--18038
+
+
+select meta_value, meta_id from loxah_postmeta where meta_id = 18038 and meta_key like '_stock_status'
+--outofstock
+
+
+
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 4830 and meta_key like '_stock'
+
+_stock  18037  0 komada
+
+
+
+
+
+
+
+#region hvatanje i zapis loga test
+$message = "USPJEšNA PRODAJA SKU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+$dataLog = "SKU :" .$SKU;
+$dataToLog = array(date("d-m-Y H:i:s"),  
+                    $_SERVER['REMOTE_ADDR'], //IP address
+                    $message, 
+                    $dataLog
+                    );
+
+//ZAPIS LOG U FILE
+$data = implode(" - ", $dataToLog);
+$data .= PHP_EOL;
+$pathToFile = 'logSales.log';
+file_put_contents($pathToFile, $data, FILE_APPEND);
+            
+$to = "igorsfera7@gmail.com";
+$subject = "Prodaja artikla na Bazzaru";
+$txt = "Upravo je prodan artikl na bazzar shopu,"."\r\n".
+"broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
+"BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
+"Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
+"Naziv proizvoda : ".$title ."\r\n".
+"Broj cipele : ".$variantData."\r\n".
+"Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
+$headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
+// "CC: info@mojecipele.com";
+
+mail($to,$subject,$txt,$headers);
+$ErrorInsert = "
+INSERT INTO tbl_BazzarELog
+(dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
+('$date',        'OK','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
+$linkError->query($ErrorInsert);
+//echo ".$ErrorInsert.";
+
+#endregion  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   

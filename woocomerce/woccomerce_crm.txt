@@ -1,0 +1,21 @@
+1. update za stanje
+
+select meta_key, meta_id, meta_value from loxah_postmeta where post_id = 21851 and meta_key like '_stock'
+
+update loxah_postmeta 
+set meta_value = 22 
+where post_id = 
+and meta_key like '_stock'
+
+--------------------------------------------------
+ako je na nula treba i 
+
+select meta_value, meta_id from loxah_postmeta where meta_id = 413140 and meta_key like '_stock_status'
+
+update loxah_postmeta 
+set meta_value = 'outofstock'  ili 'instock'
+where meta_id = 
+and meta_key  like '_stock_status'
+-------------------------------------------------
+
+2.
