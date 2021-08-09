@@ -181,7 +181,7 @@ else {
                                                   if($komada > $onStock || $onStock === 0){
 
                                                     echo "Nema dovoljno na lageru za prodaju!";
-                                                    $message = "Nema dovoljno na lageru prozvod SKU : : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                                    $message = "Nema dovoljno na lageru prozvod SKU : : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se rezervira :".$komada." ,broj cipele :".$variantData;
                                                     $dataLog = "SKU :" .$SKU;
                                                                 $dataToLog = array(
                                                                   date("d-m-Y H:i:s"), //Date and time
@@ -205,7 +205,7 @@ else {
                                                           $linkError->query($ErrorInsert);
 
                                                           $to = "igorsfera7@gmail.com";
-                                                          $subject = "Pokušaj prodaje bazzar - NEMA DOVOLJNO NA LAGERU, NARUĐBA JE PREVELIKA";
+                                                          $subject = "Pokušaj rezervacije bazzar - NEMA DOVOLJNO NA LAGERU, NARUĐBA JE PREVELIKA";
                                                           $txt = "Upravo je pokušana prodaja artikla na bazzar shopu kojeg nema dovoljno na lageru za prodaju,"."\r\n".
                                                           "broj proizvoda :".$countProductJson."\r\n".
                                                           "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
@@ -361,17 +361,17 @@ else {
                                                                                                                               $link->query($InsertMetaData17); 
                                                                                                                               $link->query($InsertMetaData18); 
 
-                                                                                                                                                                                                  ///3.Unos podataka u WOOCOMMERCE_ORDER_ITEMS samo jedna linija
+                                                                                                                              ///3.Unos podataka u WOOCOMMERCE_ORDER_ITEMS samo jedna linija
                                                                                                                               $InsertWoData1 = " INSERT INTO loxah_woocommerce_order_items (order_item_name, order_item_type, order_id) VALUES ('".$PostName."', 'line_item', '".$getPostId["ID"]."')";
                                                                                                                               $link->query($InsertWoData1); 
 
-                                                                                                                                                                                                  ///4. Unos podataka u WOOCOMMERCE_ORDER_ITEMMETA
+                                                                                                                              ///4. Unos podataka u WOOCOMMERCE_ORDER_ITEMMETA
                                                                                                                               ///get product ID = nađi proizvod po SKU
                                                                                                                               $getSqlProductID = "select post_id from loxah_postmeta where meta_value like '".$SKU."'"; //nadji cipelu po SKU u bazi
                                                                                                                               $getProductID = mysqli_query($link, $getSqlProductID);
                                                                                                                               $productID = mysqli_fetch_assoc($getProductID); 
 
-                                                                                                                                                                                                  ////get order ID
+                                                                                                                              ////get order ID
                                                                                                                               $getSqlOrderID = "select order_item_id from loxah_woocommerce_order_items where order_id  = '".$getPostId["ID"]."'";
                                                                                                                               $getOrderID = mysqli_query($link, $getSqlOrderID);
                                                                                                                               $orderID =  mysqli_fetch_assoc($getOrderID);
@@ -408,7 +408,7 @@ else {
                                                                                                                             $link->query($InsertWooMetaData9);  //smanjeuje se komada
                                                                                                                             
                                                                                                                             #region poruka                                                                                                                                  #region hvatanje i zapis loga test
-                                                                                                                            $message = "USPJEŠNA PRODAJA I UNOS U PRODAJU SKU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                                                                                                            $message = "USPJEŠNA REZERVACIJA I UNOS U SKU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
                                                                                                                             $dataLog = "SKU :" .$SKU;
                                                                                                                             $dataToLog = array(date("d-m-Y H:i:s"),  
                                                                                                                                                 $_SERVER['REMOTE_ADDR'], //IP address
@@ -457,7 +457,7 @@ else {
                                         //echo '(NEMA NA STANJU ZA PRODAJU : '.$SKU.' )';
 
                                         #region hvatanje i zapis loga test
-                                        $message = "NEMA DOVOLJNO NA STANJU ZA PRODAJU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                        $message = "NEMA DOVOLJNO NA STANJU ZA REZERVACIJU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
                                         $dataLog = "SKU :" .$SKU;
                                         $dataToLog = array(date("d-m-Y H:i:s"),  
                                                              $_SERVER['REMOTE_ADDR'], //IP address
@@ -473,7 +473,7 @@ else {
                                                      
                                          $to = "igorsfera7@gmail.com";
                                          $subject = "Prodaja, artikla nema ga na stanju";
-                                         $txt = "Upravo je pokušano prodati artikl koji nije na stanju,"."\r\n".
+                                         $txt = "Upravo je pokušanarezervacija artikla koji nije na stanju,"."\r\n".
                                          "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
                                          "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
                                          "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
@@ -527,7 +527,7 @@ else {
         
                             $to = "igorsfera7@gmail.com";
                             $subject = "Prodaja bazzar - ERROR - NEMA PROIZVODA";
-                            $txt = "Upravo je pokušan prodat proizvod koji nije nađen u shopu "."\r\n".
+                            $txt = "Upravo je pokušana rezervacija proizvoda koji nije nađen u shopu "."\r\n".
                             "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
                             "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
                             "Proizvod (Bazzar id , SKU koji ne postoji) : ".$bazzarId. " ," .$SKU."\r\n".
