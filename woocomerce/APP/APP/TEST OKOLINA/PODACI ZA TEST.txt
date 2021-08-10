@@ -1,5 +1,5 @@
 [
-   {
+     {
       "title":"Bordo Tenisice",
       "source_id":"P85",
       "id":"JJ5QKVN",
@@ -7,7 +7,8 @@
       "sku":" Bordo Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":3299,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"waiting_acceptance"
    },
    {
       "title":"Ženske tenisice sa kariranom mašnicom",
@@ -17,17 +18,19 @@
       "sku":" Ženske tenisice sa kariranom mašnicom - 38 - Order M2QX5E",
       "purchase_price_cents":3299,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"waiting_acceptance"
    },
    {
       "title":"Zlatne Metalizirane Tenisice",
       "source_id":"M284",
       "id":"AXMEXDZ",
-      "variant":"38",
+      "variant":"36",
       "sku":" Zlatne Metalizirane Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":3299,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"cancelled"
    },
    {
       "title":"Zelene Mint Tenisice",
@@ -37,7 +40,8 @@
       "sku":" Zelene Mint Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":9193,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"cancelled"
    },
    {
       "title":"Crne Tenisice",
@@ -47,6 +51,7 @@
       "sku":" Crne Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":9193,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"cancelled"
    }
 ]

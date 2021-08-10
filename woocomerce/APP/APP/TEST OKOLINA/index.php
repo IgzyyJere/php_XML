@@ -127,6 +127,7 @@ else {
                         $komada = $obj->quantity; 
                         $title = $obj->title; 
                         $bazzarSKU = $obj->sku;
+                        $bazzar_status = $obj->order_status; //upgrade polje, najvažnije polje
 
                         $BazzarInvoiceID = substr($bazzarSKU, strpos($bazzarSKU, "Order") +5); //bazzar day id
 
@@ -134,6 +135,10 @@ else {
                         $getSqlProductID = "select post_id from loxah_postmeta where meta_value like '".$SKU."'";
                         $getProductID = mysqli_query($link, $getSqlProductID);
                         $productID = mysqli_fetch_assoc($getProductID); 
+
+
+
+
 
                         ///SKU CHECK
                         if($productID["post_id"] !== null)
@@ -237,7 +242,9 @@ else {
                                                           if($checkForGo === true){
                                                                // echo '(SVE JE OK OVDJE KNJIŽIMO STANJE : '.$SKU.' )';
 
-
+                                                               //AKO JE PROIZVOD REZERVIRAN JER MOŽE BITI I ODGOŽEN!!
+                                                               if($bazzar_status === "waiting_acceptance")
+                                                               {
 
                                                                                                                      //update qunatity
                                                                                                                       $UpdateSqlQuantity = "UPDATE loxah_postmeta SET meta_value = " .$komadOstalo. " WHERE meta_id = ".$stockNumber["meta_id"];
@@ -271,6 +278,7 @@ else {
                                                                                                                         $getPostId = mysqli_fetch_assoc($postId); 
 
                                                                                                                                  //2. insert post meta podaci o prodaji
+
                                                                                                                                   $InsertMetaData1 = "
                                                                                                                                   INSERT INTO loxah_postmeta
                                                                                                                                   (post_id, meta_key, meta_value) VALUES (".$getPostId["ID"].", '_order_stock_reduced','yes')";
@@ -396,14 +404,14 @@ else {
 
                                                                                                                                   $InsertWooMetaData1 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_product_id', '".$productID["post_id"]."')";
                                                                                                                                   $InsertWooMetaData2 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_variation_id', '".$VId["ID"]."')";
-                                                                                                                                  $InsertWooMetaData3 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_qty', '1')";
+                                                                                                                                  $InsertWooMetaData3 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_qty', '".$komada."')"; ///bug! stavi koliko je naručeno
                                                                                                                                   $InsertWooMetaData4 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_tax_class', '')"; 
                                                                                                                                   $InsertWooMetaData5 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_line_subtotal', '".$price."')"; 
                                                                                                                                   $InsertWooMetaData6 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_line_subtotal_tax', '0')";
                                                                                                                                   $InsertWooMetaData7 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_line_tax', '0')";
                                                                                                                                   $InsertWooMetaData8 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','pa_velicina', '".$variantData."')"; 
                                                                                                                                   $InsertWooMetaData9 = "INSERT INTO loxah_woocommerce_order_itemmeta (order_item_id, meta_key, meta_value) VALUES ('".$orderID["order_item_id"]."','_reduced_stock', '".$komada."')";   
-                                                                                                                                                                                                                                                                          $link->query($InsertWooMetaData1);  //koji je to proizvod
+                                                                                                                                $link->query($InsertWooMetaData1);  //koji je to proizvod
                                                                                                                                 $link->query($InsertWooMetaData2);  //variant id broj cipele
                                                                                                                                 $link->query($InsertWooMetaData3);  //komada
                                                                                                                                 $link->query($InsertWooMetaData4);  //porez
@@ -413,40 +421,68 @@ else {
                                                                                                                                 $link->query($InsertWooMetaData8);  //veličina cipele
                                                                                                                                 $link->query($InsertWooMetaData9);  //smanjeuje se komada
                                                                                                                                 
-                                                                                                                                #region poruka                                                                                                                                  #region hvatanje i zapis loga test
-                                                                                                                                $message = "USPJEŠNA PRODAJA I UNOS U PRODAJU SKU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
-                                                                                                                                $dataLog = "SKU :" .$SKU;
-                                                                                                                                $dataToLog = array(date("d-m-Y H:i:s"),  
-                                                                                                                                                    $_SERVER['REMOTE_ADDR'], //IP address
-                                                                                                                                                    $message, 
-                                                                                                                                                    $dataLog
-                                                                                                                                                    );
-                                                                                                                                
-                                                                                                                                //ZAPIS LOG U FILE
-                                                                                                                                $data = implode(" - ", $dataToLog);
-                                                                                                                                $data .= PHP_EOL;
-                                                                                                                                $pathToFile = 'logSales.log';
-                                                                                                                                file_put_contents($pathToFile, $data, FILE_APPEND);
-                                                                                                                                            
-                                                                                                                                $to = "igorsfera7@gmail.com";
-                                                                                                                                $subject = "Prodaja artikla na Bazzaru";
-                                                                                                                                $txt = "Upravo je prodan artikl na bazzar shopu,"."\r\n".
-                                                                                                                                "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
-                                                                                                                                "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
-                                                                                                                                "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
-                                                                                                                                "Naziv proizvoda : ".$title ."\r\n".
-                                                                                                                                "Broj cipele : ".$variantData."\r\n".
-                                                                                                                                "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                                                                                                                                $headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
-                                                                                                                                // "CC: info@mojecipele.com";
-                                                                                                                                
-                                                                                                                                mail($to,$subject,$txt,$headers);
-                                                                                                                                $ErrorInsert = "
-                                                                                                                                INSERT INTO tbl_BazzarELog
-                                                                                                                                (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
-                                                                                                                                ('$date',        'OK','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
-                                                                                                                                $linkError->query($ErrorInsert);
-                                                                                                                                #endregion 
+                                                                #region poruka  
+                                                                                                                               
+                                                                $message = "USPJEŠNA REZERVACIJA I UNOS U PRODAJE SKU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                                                $subject = "Rezervacija artikla na Bazzaru";
+                                                                $txt = "Upravo je REZERVIRAN artikl na bazzar shopu,"."\r\n".
+                                                                "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
+                                                                "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
+                                                                "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
+                                                                "Naziv proizvoda : ".$title ."\r\n".
+                                                                "Broj cipele : ".$variantData."\r\n".
+                                                                "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
+
+                                                                $ErrorInsert = "
+                                                                INSERT INTO tbl_BazzarELog
+                                                                (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
+                                                                ('$date',        'OK-TST','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
+                                                                $linkError->query($ErrorInsert);
+
+                                                                }
+
+                                                                else{
+                                                                $message = "OTKAZANA PRODAJA SKU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                                                $subject = "OTKAZANO!";
+                                                                $txt = "Upravo je OTKAZANA PRODAJA artikla na bazzar shopu,"."\r\n".
+                                                                "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
+                                                                "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
+                                                                "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
+                                                                "Naziv proizvoda : ".$title ."\r\n".
+                                                                "Broj cipele : ".$variantData."\r\n".
+                                                                "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
+
+                                                                $ErrorInsert = "
+                                                                INSERT INTO tbl_BazzarELog
+                                                                (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
+                                                                ('$date',        'OTKAZAN-TST','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
+                                                                $linkError->query($ErrorInsert);
+                                                                }
+
+
+                                                                #region hvatanje i zapis loga test
+                                                                
+                                                                $dataLog = "SKU :" .$SKU;
+                                                                $dataToLog = array(date("d-m-Y H:i:s"),  
+                                                                                    $_SERVER['REMOTE_ADDR'], //IP address
+                                                                                    $message, 
+                                                                                    $dataLog
+                                                                                    );
+                                                                
+                                                                //ZAPIS LOG U FILE
+                                                                $data = implode(" - ", $dataToLog);
+                                                                $data .= PHP_EOL;
+                                                                $pathToFile = 'logSales.log';
+                                                                file_put_contents($pathToFile, $data, FILE_APPEND);
+                                                                            
+                                                                $to = "igorsfera7@gmail.com";
+                                                              
+                                                                $headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
+                                                                // "CC: info@mojecipele.com";
+                                                                
+                                                                mail($to,$subject,$txt,$headers);
+                                                            
+                                                                #endregion 
 
 
                                                                                                                  
@@ -454,7 +490,7 @@ else {
 
 
                                                                                                                       
-                                                                                                                      }//end ako je unos uspiješan
+                                                                                   }//end ako je unos uspiješan
                                                                                    //NE OVDJE
                                                                                    // mysql_free_result($getProductID);
                                                                                    // mysql_free_result($getVariantId);
@@ -479,10 +515,48 @@ else {
                                           else
                                           {
 
-                                            //echo '(NEMA NA STANJU ZA PRODAJU : '.$SKU.' )';
+                                           // echo '(NEMA NA STANJU ZA PRODAJU : '.$SKU.' )';
+
+                                            if($bazzar_status == "cancelled")
+                                            {
+                                              $message = "OTKAZANA PRODAJA : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                              $subject = "otkazana pordaja, moraš provjeriti stanje cipele";
+                                              $txt = "Upravo je OTKAZAN artikl koji nije na stanju,"."\r\n".
+                                              "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
+                                              "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
+                                              "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
+                                              "Naziv proizvoda : ".$title ."\r\n".
+                                              "Broj cipele : ".$variantData."\r\n".
+                                              "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
+
+                                              $ErrorInsert = "
+                                              INSERT INTO tbl_BazzarELog
+                                              (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
+                                              ('$date', 'OTKAZAN-TST','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
+                                              $linkError->query($ErrorInsert);
+                                             
+                                            }
+
+                                            else{
+                                              $message = "NEMA DOVOLJNO NA STANJU ZA REZERVACIJU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                              $subject = "Prodaja, artikla nema ga na stanju";
+                                              $txt = "Upravo je pokušana rezervacija artikla koji nije na stanju,"."\r\n".
+                                              "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
+                                              "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
+                                              "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
+                                              "Naziv proizvoda : ".$title ."\r\n".
+                                              "Broj cipele : ".$variantData."\r\n".
+                                              "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
+                                              $ErrorInsert = "
+                                              INSERT INTO tbl_BazzarELog
+                                              (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
+                                              ('$date', 'ERROR-TST','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
+                                              $linkError->query($ErrorInsert);
+                                              
+                                            }
 
                                             #region hvatanje i zapis loga test
-                                            $message = "NEMA DOVOLJNO NA STANJU ZA PRODAJU : ".$SKU.", bazzarID : ". $bazzarId. ", Bazzar InvoiceID : ".$BazzarInvoiceID.", komada se prodaje :".$komada." ,broj cipele :".$variantData;
+                                            
                                             $dataLog = "SKU :" .$SKU;
                                             $dataToLog = array(date("d-m-Y H:i:s"),  
                                                                  $_SERVER['REMOTE_ADDR'], //IP address
@@ -497,24 +571,15 @@ else {
                                              file_put_contents($pathToFile, $data, FILE_APPEND);
                                                          
                                              $to = "igorsfera7@gmail.com";
-                                             $subject = "Prodaja, artikla nema ga na stanju";
-                                             $txt = "Upravo je pokušano prodati artikl koji nije na stanju,"."\r\n".
-                                             "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
-                                             "BAZZAR SALES ID : ".$BazzarInvoiceID."\r\n".
-                                             "Proizvod (Bazzar id , SKU): ".$bazzarId. " ," .$SKU."\r\n".
-                                             "Naziv proizvoda : ".$title ."\r\n".
-                                             "Broj cipele : ".$variantData."\r\n".
-                                             "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
+                                           
                                              $headers = "From: BazzarReport@mojecipele.com"; //"\r\n" .
                                              // "CC: info@mojecipele.com";
                                              
                                              mail($to,$subject,$txt,$headers);
-                                             $ErrorInsert = "
-                                             INSERT INTO tbl_BazzarELog
-                                             (dateTimeevent, status, Opis_Error, ipAdress, SKU, bazzarID, BazzarSKUID) VALUES 
-                                             ('$date',        'ERROR','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
-                                             $linkError->query($ErrorInsert);
-                                             //echo ".$ErrorInsert.";
+                                             
+                                             
+                                            
+                                           
 
                                           }//end of oautofstock
                             

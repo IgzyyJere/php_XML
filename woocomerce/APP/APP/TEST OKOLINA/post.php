@@ -30,7 +30,8 @@ if(isset($_POST['submit'])) {
       "sku":" Bordo Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":3299,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"waiting_acceptance"
    },
    {
       "title":"Ženske tenisice sa kariranom mašnicom",
@@ -40,7 +41,8 @@ if(isset($_POST['submit'])) {
       "sku":" Ženske tenisice sa kariranom mašnicom - 38 - Order M2QX5E",
       "purchase_price_cents":3299,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"waiting_acceptance"
    },
    {
       "title":"Zlatne Metalizirane Tenisice",
@@ -51,6 +53,7 @@ if(isset($_POST['submit'])) {
       "purchase_price_cents":3299,
       "currency":"kn",
       "quantity":1
+      "order_status":"canceled"
    },
    {
       "title":"Zelene Mint Tenisice",
@@ -60,7 +63,8 @@ if(isset($_POST['submit'])) {
       "sku":" Zelene Mint Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":9193,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"canceled
    },
    {
       "title":"Crne Tenisice",
@@ -70,13 +74,14 @@ if(isset($_POST['submit'])) {
       "sku":" Crne Tenisice - 38 - Order M2QX5E",
       "purchase_price_cents":9193,
       "currency":"kn",
-      "quantity":1
+      "quantity":1,
+      "order_status":"canceled
    }
 
 
 
 
-          ]',
+    ]',
       CURLOPT_HTTPHEADER => array(
         'Content-Type: application/json',
         'Cookie: PH_HPXY_CHECK=s1',
