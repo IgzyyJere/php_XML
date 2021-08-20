@@ -497,6 +497,16 @@ $linkError->query($ErrorInsert);
 
 
 
+---prices
+https://stackoverflow.com/questions/49736722/update-all-product-variation-sale-prices-of-a-woocommerce-variable-product
+
+
+SELECT * FROM `loxah_postmeta` WHERE post_id = "3735"
+
+razlikuje se po meta_key
+
+
+
 
 
 
