@@ -206,7 +206,7 @@ else {
                                                           ('$date',        'ERROR','".$message."', '".$_SERVER['REMOTE_ADDR']."' , '$SKU', '$BazzarInvoiceID', '$bazzarId')"; 
                                                           $linkError->query($ErrorInsert);
 
-                                                          $to = "igorsfera7@gmail.com";
+                                                          $to = "info@mojecipele.com";
                                                           $subject = "Pokušaj rezervacije bazzar - NEMA DOVOLJNO NA LAGERU, NARUĐBA JE PREVELIKA";
                                                           $txt = "Upravo je pokušana prodaja artikla na bazzar shopu kojeg nema dovoljno na lageru za prodaju,"."\r\n".
                                                           "broj proizvoda :".$countProductJson."\r\n".
@@ -216,8 +216,8 @@ else {
                                                           "Broj cipele : ".$variantData."\r\n".
                                                           "Stanje cipele  : ".$onStock."\r\n".
                                                           "Post ID proizvoda koji je nađen : " . $productID["post_id"] . ",  SKU(".$SKU.")";
-                                                          $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                                                          "CC: info@mojecipele.com";
+                                                          $headers = "From: BazzarReport@mojecipele.com"."\r\n";
+                                                          //"CC: info@mojecipele.com";
                                                           mail($to,$subject,$txt,$headers);
 
                                                           $checkForGo = false;
@@ -463,10 +463,10 @@ else {
                                                                                                                             $pathToFile = 'logSales.log';
                                                                                                                             file_put_contents($pathToFile, $data, FILE_APPEND);
                                                                                                                                         
-                                                                                                                            $to = "igorsfera7@gmail.com";
+                                                                                                                            $to = "info@mojecipele.com";
                                                                                                                         
-                                                                                                                            $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                                                                                                                            "CC: info@mojecipele.com";
+                                                                                                                            $headers = "From: BazzarReport@mojecipele.com"."\r\n";
+                                                                                                                            //"CC: info@mojecipele.com";
                                                                                                                             
                                                                                                                             mail($to,$subject,$txt,$headers);
 
@@ -581,7 +581,7 @@ else {
                              
                       
         
-                            $to = "igorsfera7@gmail.com";
+                            $to = "info@mojecipele.com";
                             $subject = "Prodaja bazzar - ERROR - NEMA PROIZVODA";
                             $txt = "Upravo je pokušana rezervacija proizvoda koji nije nađen u shopu "."\r\n".
                             "broj proizvoda :" .$countProductJson. " od :" .$countSumProductJson."\r\n". 
@@ -589,8 +589,8 @@ else {
                             "Proizvod (Bazzar id , SKU koji ne postoji) : ".$bazzarId. " ," .$SKU."\r\n".
                             "Naziv proizvoda : ".$title ."\r\n".
                             "Broj cipele : ".$variantData."\r\n".
-                            $headers = "From: BazzarReport@mojecipele.com"."\r\n" .
-                            "CC: info@mojecipele.com";
+                            $headers = "From: BazzarReport@mojecipele.com"."\r\n";
+                            //"CC: info@mojecipele.com";
                             mail($to,$subject,$txt,$headers);
         
                     } //END NEMA SKU CHECK
