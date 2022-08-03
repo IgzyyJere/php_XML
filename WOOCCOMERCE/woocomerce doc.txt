@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------------------------------------------------
 * 11.03.2021 WOOCMERCE DEV API
 *Autor : Igor Jerčić	
-*
+*Bug report : 22.07.2022 problem se javlja ako je brend 
 *
 -------------------------------------------------------------------------------------------------------------------------
 
@@ -435,8 +435,6 @@ SELECT * from loxah_posts where post_type like 'product_variation' and post_stat
 and post_excerpt LIKE '%38'
 
 --4830
-
-
 
 select meta_id from loxah_postmeta where post_id = 4830 and meta_key like '_stock_status'
 

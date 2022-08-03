@@ -11,43 +11,44 @@ mysqli_set_charset($link,"utf8");
 $xmlString = '<?xml version="1.0" encoding="utf-8"?>';
 $xmlString .= '<root>';
 
-//main query
+
 $container = mysqli_query($link, $Contextz_Q->queryProduct);
 
 
-//main
+
 while($row = mysqli_fetch_assoc($container))
 {
 
-  //filtriranje texta cipele
+
   $tekst_content = $row["post_content"];
   $opis_content = htmlentities($tekst_content, ENT_XML1);
 
-  ///parent varable
+
   $parentQueryVariable = "SELECT * from loxah_posts
   where post_type like 'product_variation' and post_status like 'publish' and post_parent = ".$row['ID'];
   $variables_container = mysqli_query($link, $parentQueryVariable);
 
-  ///SKU
+
   $parentQuerySKU = "SELECT * FROM loxah_postmeta WHERE meta_key like '%sku' and post_id = ".$row['ID'];
   $sku_container = mysqli_query($link, $parentQuerySKU);
 
 
-  //image fix
+
   $imageFixQ =  "SELECT * FROM loxah_postmeta WHERE meta_key like '_thumbnail_id' and post_id = ".$row['ID'];
   $imageFixquery = mysqli_query($link, $imageFixQ);
 
   $xmlString .= '<row>';
-          //naslov
+        
           $xmlString .= '<title>'.$row['post_title'].'</title>';
-          //$xmlString .= '<description>'.$opis_content.'</description>', "\n";
+  
           $xmlString .= '<description><![CDATA['.$opis_content.']]></description>'; 
 
             while($row_sku = mysqli_fetch_assoc($sku_container))
             {
               $xmlString .= '<id>'.$row_sku['meta_value'].'</id>';
-
-                       //image
+              
+                     $xmlString .= '<sku>'.$row_sku['meta_value'].'</sku>'; ///samo sku proizvoda
+                     
                        $kk = $row_sku['meta_value'];
                        $imageQuery = "SELECT * FROM loxah_posts where post_name like '$kk' and post_type like 'attachment'";
                        $image_container = mysqli_query($link, $imageQuery);
@@ -70,7 +71,7 @@ while($row = mysqli_fetch_assoc($container))
 
                 
 
-          //$xmlString .= '<stock>'.$row["meta_value"].'</stock>'; nema ukupno samo pojedinčano po brojevima
+     
           $xmlString .= '<id_control>'.$row["ID"].'</id_control>';
          
                 $xmlString .='<variants>';
@@ -78,11 +79,12 @@ while($row = mysqli_fetch_assoc($container))
                     while($row_variables = mysqli_fetch_assoc($variables_container))
                     {
                       $xmlString .= '<variant>';
-                        $filterBroj = preg_replace('/[^0-9]/', '', $row_variables['post_title']);
+                        //$filterBroj = preg_replace('/[^0-9]/', '', $row_variables['post_title']);
+                        $filterBroj = preg_replace('/[^0-9]/', '', $row_variables['post_excerpt']); //ako je alizee i radi na svima
                         $xmlString .= '<variant_title>'.$filterBroj.'</variant_title>'; //broj cipele
                         $xmlString .= '<variant_title_id>'.$row_variables['ID'].'</variant_title_id>'; //id broja cipele
 
-                                //stock broja cipele
+                             
                                 $stockByNumQuery= "SELECT * FROM loxah_postmeta where meta_key like '_stock' and post_id = ".$row_variables['ID'];
                                 $stock_variabales = mysqli_query($link, $stockByNumQuery);
                                 while($row_stockVariables = mysqli_fetch_assoc($stock_variabales)){
@@ -103,8 +105,8 @@ while($row = mysqli_fetch_assoc($container))
                                      
                      }
           $xmlString .='</variants>';
-$xmlString .= '</row>'; //end proizvod
-}// KRAJ LOOPa stanova prodaja
+$xmlString .= '</row>'; 
+}
 
 $xmlString .= '</root>';
 
@@ -115,8 +117,8 @@ $dom->preserveWhiteSpace = FALSE;
 $dom->loadXML($xmlString);
 
 $dom->formatOutput = TRUE;
-//Save XML as a file
 $dom->save('xmlData/bazzar_mc.xml');
+
 
 
 
@@ -174,4 +176,3 @@ echo '<!DOCTYPE html>
 </html>';
 
 ?>
-
