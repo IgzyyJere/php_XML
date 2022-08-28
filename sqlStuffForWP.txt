@@ -41,17 +41,16 @@ SELECT * FROM `wp_options` where option_name = 'db_version'
 
 S*SYm2z5b?7J
 
-
-mojecipe_cici2
-
-5.5.3
+------------------------------------------------------------------------------------------------
+CIJENE
 
 
 
-Main_M_f_Vuco  
-0Hh9lgsEH^VcRipw!g%N%pwS
+https://stackoverflow.com/questions/45825554/woocommerce-mysql-to-update-price-of-products-in-specific-category
 
---------------------------------IVA (SEO)
+https://www.codegrepper.com/code-examples/sql/woocommerce+product+price+database
 
-Work_!SeoManager
-lozinka : KA*qvvOrdzjFbO&GdAik4#dc
+
+
+
+
