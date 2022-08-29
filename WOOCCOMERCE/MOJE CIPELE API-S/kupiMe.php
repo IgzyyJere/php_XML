@@ -158,16 +158,27 @@ while($row = mysqli_fetch_assoc($container))
                     
 
 
+
                       $saleActionPriceQuery = "SELECT * FROM loxah_postmeta where meta_key LIKE '_sale_price' and post_id = " .$row_variables['ID'];
                       $sale_price_action = mysqli_query($link, $saleActionPriceQuery);
                       $dataPrice_action = mysqli_fetch_assoc($sale_price_action);
                       $xmlString .= '<discounted_price>'.$dataPrice_action['meta_value'].'</discounted_price>';
-      
+                                
       
                       $salePriceQuery = "SELECT * FROM loxah_postmeta where meta_key LIKE '_regular_price' and post_id = " .$row_variables['ID'];
                       $sale_price = mysqli_query($link, $salePriceQuery);
                       $dataPrice = mysqli_fetch_assoc($sale_price);
-                      $xmlString .= '<base_price>'.$dataPrice['meta_value'].'</base_price>';
+
+                      $errorPrice = $dataPrice_action['meta_value'];
+                      if($errorPrice != false || $errorPrice != '')
+                      {
+                        $xmlString .= '<base_price>'.$errorPrice.'</base_price>';
+                        
+                      }
+                      else{
+                        $xmlString .= '<base_price>'.$dataPrice['meta_value'].'</base_price>';
+                      }
+                    
          
                       $xmlString .= '</variant>';            
                      }
