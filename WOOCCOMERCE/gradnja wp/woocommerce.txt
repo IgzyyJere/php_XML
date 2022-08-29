@@ -1,0 +1,26 @@
+dom gradnja
+
+
+Woccommerce > includes > wc-formatting : wc-formatting.php
+
+610 linija
+	$euro = get_field('eu_pricecijena');
+	$conversion_rate =  7.53;
+	$convertedKunaEuro = round ($price / $conversion_rate, 2);
+	
+	
+	Za varijacije kod
+	https://www.businessbloomer.com/woocommerce-add-custom-field-product-variation/
+	
+	
+	
+	
+	
+	
+----ZA UPIT
+D:\XAMPP\htdocs\gradnja\wp-content\themes\woodmart\inc\integrations\woocommerce\modules\wishlist\class-ui.php
+	linija 340
+	
+
+prebačeno u :
+D:\XAMPP\htdocs\gradnja\wp-content\themes\woodmart\inc\modules\layouts\wpb\shortcodes\single-product\meta.php
