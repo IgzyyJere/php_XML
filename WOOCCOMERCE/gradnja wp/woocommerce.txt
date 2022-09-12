@@ -1,26 +1,101 @@
-dom gradnja
+/////KONVERZIJA KN U EU
+/////
+///// DOKUMETN : wc-formatting-functions.php
+///// PRIPAZITI NA UPDATE JER SE BRIŠE
+///// VRIJEDI ZA : Mojecipele, dom gradnja
 
 
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 Woccommerce > includes > wc-formatting : wc-formatting.php
 
 610 linija
 	$euro = get_field('eu_pricecijena');
-	$conversion_rate =  7.53;
+	$conversion_rate =  7.53450;
 	$convertedKunaEuro = round ($price / $conversion_rate, 2);
 	
 	
+
 	Za varijacije kod
 	https://www.businessbloomer.com/woocommerce-add-custom-field-product-variation/
 	
 	
 	
-	
-	
-	
-----ZA UPIT
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////UPIT O PROIZVODU
+/////
+///// DOKUMETN : wc-formatting-functions.php, THEME JS 
+///// PRIPAZITI NA UPDATE JER SE BRIŠE
+///// VRIJEDI ZA : dom gradnja
+///// UVIJET JE DA IMA ACF KONFIGURIRAN
+///// KAKO RADI : Kako radi ?
+
+proizvod mora biti out of stock i kvačica na acf polju
+
+-------------------------------js kod koji prikriva oznake stavlja se u woodmart js kod
+if (jQuery(".wpcf7-form-control" )) {
+    jQuery( ".out-of-stock" ).hide();
+	 jQuery( ".wd-sticky-btn-shown" ).hide();
+	//alert();
+}
+
+-----------------------------js kod koji ide u global
+if (jQuery(".wpcf7-form-control" )) {
+   
+	  jQuery(".wd-sticky-btn-shown").hide();
+	 jQuery(".woodmart-sticky-btn").hide();
+}
+
+
+
+
+----ZA UPIT na mjestu PHP
 D:\XAMPP\htdocs\gradnja\wp-content\themes\woodmart\inc\integrations\woocommerce\modules\wishlist\class-ui.php
-	linija 340
+
+
+	<?php
+			///IGOR EDIT ULOVI PRODUCT ID ZA UPIT!
+			global $product;
+			$id_product = $product->get_id();
+			$upitForma = get_field('upit_o_proizvodu');
+	?>
+
+
+		<?php 
+			$key = implode("','",$upitForma); 
+			if($key)
+			{
+				//echo '<button type="submit" value="'.$id_product.'" class="single_add_to_cart_button button alt">Postavi upit o dolasku i cijeni proizvoda</button>';
+				//echo '<a href = "'. $current_url .'" class="single_add_to_cart_button button alt">Postavi upit o dolasku i cijeni proizvoda</a>';
+                //echo do_shortcode('[cf7form cf7key="upit-o-proizvodu"]');
+                echo do_shortcode('[contact-form-7 id="58811" title="Proizvod upit 2"]');
+			
+			}
+			?>
+
+
+
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////NC cijena 30 dana izmjena
+/////
+///// 
+///// PRIPAZITI NA UPDATE JER SE BRIŠE
+///// VRIJEDI ZA : dom gradnja
+///// UVIJET JE DA IMA ACF KONFIGURIRAN
+///// 
+
+
+
+			$NCforma = get_field('zadnja_akcijska_cijena');
+
 	
 
-prebačeno u :
-D:\XAMPP\htdocs\gradnja\wp-content\themes\woodmart\inc\modules\layouts\wpb\shortcodes\single-product\meta.php
+
+
+
+			if($NCforma > 0)
+			{
+                	echo '<span class="meta-label">NC u 30 dana :</span><p>'.$NCforma. '</p>';
+			}
+	
