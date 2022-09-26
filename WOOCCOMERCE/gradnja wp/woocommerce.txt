@@ -28,8 +28,7 @@ Woccommerce > includes > wc-formatting : wc-formatting.php
 ///// VRIJEDI ZA : dom gradnja
 ///// UVIJET JE DA IMA ACF KONFIGURIRAN
 ///// KAKO RADI : Kako radi ?
-
-proizvod mora biti out of stock i kvačica na acf polju
+proizvod mora biti out of stock i kvačica na acf polju i mora biti out of stock
 
 -------------------------------js kod koji prikriva oznake stavlja se u woodmart js kod
 if (jQuery(".wpcf7-form-control" )) {
@@ -44,7 +43,6 @@ if (jQuery(".wpcf7-form-control" )) {
 	  jQuery(".wd-sticky-btn-shown").hide();
 	 jQuery(".woodmart-sticky-btn").hide();
 }
-
 
 
 
@@ -77,25 +75,47 @@ D:\XAMPP\htdocs\gradnja\wp-content\themes\woodmart\inc\integrations\woocommerce\
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////NC cijena 30 dana izmjena
-/////
+///// NC cijena 30 dana izmjena
+/////C:\Users\igzyy\Downloads\woodmart\inc\integrations\woocommerce\modules\wishlist\class-ui.php
 ///// 
 ///// PRIPAZITI NA UPDATE JER SE BRIŠE
 ///// VRIJEDI ZA : dom gradnja
 ///// UVIJET JE DA IMA ACF KONFIGURIRAN
-///// 
-
-
-
-			$NCforma = get_field('zadnja_akcijska_cijena');
-
-	
-
-
-
+///// PHP 7.4
 
 			if($NCforma > 0)
 			{
                 	echo '<span class="meta-label">NC u 30 dana :</span><p>'.$NCforma. '</p>';
 			}
 	
+
+
+////////////////////////////////UPDATE NAKON BUG PROBLEMA////////////////////////////////////////////
+
+DOKUMENT : /home/cdfyuk/public_html/wp-content/themes/woodmart/woocommerce/single-product/title.php
+
+
+
+<?php 
+	$NCforma = get_field('zadnja_akcijska_cijena');
+	global $product;
+	$id_product = $product->get_id();
+	$upitForma = get_field('upit_o_proizvodu');
+    if($NCforma > 0)
+	{
+        	echo '<span class="meta-label">NC u 30 dana :</span><p>'.$NCforma. '</p>';
+	}
+	
+		$key = implode("','",$upitForma); 
+			
+			
+		if($key)
+		{
+        echo do_shortcode('[contact-form-7 id="58811" title="Proizvod upit 2"]');
+			
+		}
+?>
+
+
+Rješenje :
+https://stackoverflow.com/questions/53437611/add-a-contact-form-to-out-of-stock-product-variations-in-woocommerce
