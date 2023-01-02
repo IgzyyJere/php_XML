@@ -6,8 +6,6 @@ var $passW = "rLwW0wm@4Eh;";
 
 
 
-
-
 var $queryProduct = "SELECT * FROM loxah_posts
 LEFT JOIN loxah_postmeta ON (loxah_posts.ID = loxah_postmeta.post_id)
 WHERE  post_type = 'product' AND loxah_postmeta.meta_key like '_stock'
@@ -143,9 +141,6 @@ ORDER BY post_date DESC";
                                  AND loxah_term_taxonomy.term_id = 886
                                  ORDER BY post_date DESC";
 
-
-
-
                                  
 
 //KUĆE NAJAM
@@ -159,14 +154,7 @@ ORDER BY post_date DESC";
 
 
 
-
-
-
-
-
 //Samo za test i rješavanje buga s lokacijama
-
-
 var $queryOglasi_test = "SELECT * FROM loxah_posts
 LEFT JOIN loxah_term_relationships ON (loxah_posts.ID = loxah_term_relationships.object_id)
 LEFT JOIN loxah_term_taxonomy ON (loxah_term_relationships.term_taxonomy_id = loxah_term_taxonomy.term_taxonomy_id)
