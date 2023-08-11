@@ -1,0 +1,36 @@
+DELETE relations.*, taxes.*, terms.*
+FROM loxah_term_relationships AS relations
+INNER JOIN loxah_term_taxonomy AS taxes
+ON relations.term_taxonomy_id=taxes.term_taxonomy_id
+INNER JOIN loxah_terms AS terms
+ON taxes.term_id=terms.term_id
+WHERE object_id IN (SELECT ID FROM loxah_posts WHERE post_type='product');
+ 
+DELETE FROM loxah_postmeta WHERE post_id IN (SELECT ID FROM loxah_posts WHERE post_type = 'product');
+DELETE FROM loxah_posts WHERE post_type = 'product';
+
+DELETE pm FROM loxah_postmeta pm LEFT JOIN loxah_posts wp ON wp.ID = pm.post_id WHERE wp.ID IS NULL;
+
+delete from `loxah_termmeta`
+where 
+	`term_id` in ( 
+		SELECT `term_id`
+		FROM `loxah_term_taxonomy`
+		WHERE `taxonomy` in ('product_cat', 'product_type', 'product_visibility', 'product_brand') 
+	);
+
+delete from `loxah_terms`  
+where 
+	`term_id` in ( 
+		SELECT `term_id`
+		FROM `loxah_term_taxonomy`
+		WHERE `taxonomy` in ('product_cat', 'product_type', 'product_visibility', 'product_brand') 
+	);
+	
+DELETE FROM `loxah_term_taxonomy` WHERE `taxonomy` in ('product_cat', 'product_type', 'product_visibility', 'product_brand');
+
+DELETE meta FROM loxah_termmeta meta LEFT JOIN loxah_terms terms ON terms.term_id = meta.term_id WHERE terms.term_id IS NULL;
+
+DELETE FROM loxah_woocommerce_attribute_taxonomies;
+
+DELETE FROM loxah_woocommerce_sessions;
