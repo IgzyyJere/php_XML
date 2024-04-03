@@ -107,7 +107,7 @@ switch($method){
 
 
 
-
+//close me!!
 mysqli_close($db);
 
 ?>
