@@ -235,6 +235,7 @@ $(document).ready(function() {
              mysqli_free_result($result2);
              echo "<p> broj : ".$rowcount2."</p>";
               ?>
+           
 
     </div>
 </body>
