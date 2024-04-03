@@ -10,8 +10,9 @@
 //);
 
 
+//oprezno s ovim
+//require_once './Framework/connector_class.php';
 require_once './Framework/connector_class.php';
-
 
 $ConnectionClass = new Connector();
 
