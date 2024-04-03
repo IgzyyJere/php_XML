@@ -102,7 +102,7 @@ echo '<table class="table">
 <thead">
 <tr>
 <th>Ime posta</th>
-<th>Sadr탑aj</th>
+<th>Sadržaj</th>
 <th>link</th>
 <th>datum objave</th>
 <th>Kategorija</th>
